@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+- v11
+- v10
+- v8
+script:
+- npm ci
+- npm test
+deploy:
+  provider: npm
+  email: YOUR_EMAIL
+  api_key: YOUR_AUTH_TOKEN
+  on:
+    tags: true
