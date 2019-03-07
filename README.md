@@ -6,7 +6,7 @@ This SDK works in conjucntion with the [kyc-service](https://github.com/cmdotcom
 ## Browser Compatibility
 | Chrome |  FF  | Safari |  IE  | Chrome Android | Mobile Safari | IE Mob |
 | :----: | :--: | :----: | :--: | :------------: | :-----------: | :----: |
-|    ✓   |  ?  |    ?   |  ?  |       ?        |       ?       |    ?   |
+|   ✓   |  ✓   |    ?   |  11  |       ?        |       ?       |    ?   |
 
 
 ## Development
