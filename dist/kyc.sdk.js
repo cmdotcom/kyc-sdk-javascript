@@ -708,8 +708,7 @@
                     nextbutton.addEventListener('click', function () {
                         var form = target.querySelector('form'), values = {};
                         if (!!form) {
-                            var formData = new FormData(form);
-                            check.value = formname_1 == check.id ? formData.get(formname_1) : JSON.stringify(formData.getAll(formname_1) || []);
+                            check.value = formname_1 == check.id ? ((form.querySelector('[name="' + formname_1 + '"]') || { value: '' })['value'] || '') : JSON.stringify(ap_1.slice.call(form.querySelectorAll('[name="' + formname_1 + '"]')).map(function (field) { return field.value || ''; }));
                         }
                         if (!!next_1) {
                             buildLoader(target);

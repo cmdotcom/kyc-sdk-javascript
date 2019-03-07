@@ -952,8 +952,11 @@
 
                                 if (!!form) {
 
-                                    const formData = new FormData(form)
-                                    check.value = formname == check.id ? formData.get(formname) : JSON.stringify(formData.getAll(formname) || []);
+
+
+
+
+                                    check.value = formname == check.id ? ((form.querySelector('[name="'+formname+'"]')||{value:''})['value']||''): JSON.stringify(ap.slice.call(form.querySelectorAll('[name="'+formname+'"]')).map(function(field){return field.value||''}));
 
                                 }
                                 if (!!next) {

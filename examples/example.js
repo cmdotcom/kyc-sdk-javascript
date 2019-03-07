@@ -68,7 +68,7 @@ var formisLoaded = false,
             var formData = new FormData(form)
             formfields.map(function (field) {
                 field.value = field.label
-                field.link[field.label] = formData.get(field.label)
+                field.link[field.label] = (form.querySelector('[name="'+field.label+'"]')||{value:''}).value||'';
 
             });
 

@@ -13,6 +13,7 @@ This SDK works in conjucntion with the [kyc-service](https://github.com/cmdotcom
 
 ### Setup
 
+Make Sure you have [Node](https:/nodejs.org/en) installed (LTS) 
 First run `npm i` to install all (dev) dependencies before continuing.
 
 ### Developing
@@ -20,3 +21,6 @@ First run `npm i` to install all (dev) dependencies before continuing.
 run `gulp watch` to automatically update the changes in the ./src folder (this uses `gulp build` but doe not clean up the build folder)
 
 run `gulp` or `gulp build` to create a distribution  in the ./dist folder
+
+### Demo
+You can start the 
