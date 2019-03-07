@@ -8,7 +8,7 @@
         });
     }
     var kycTemplate, showWarning = false, authorisationEndPoint, kycApiEndPoint, KYCToken;
-    var kyc_sdk = 'kyc_sdk', version = '0.0.1', uploads = {}, initialised = new Date(), defaultTemplateString = '/*<!-- Define the template for the dossier-list --><ul data-kyc-dossier-list><li data-kyc-dossier-item><span><kyc-dossier-name></kyc-dossier-name></span><span><kyc-dossier-status></kyc-dossier-status></span><span><kyc-dossier-created></kyc-dossier-created></span></li></ul><div data-kyc-task-list><h1 data-kyc-dossier-title><button data-kyc-to-dossiers></button><kyc-text></kyc-text></h1><ul><li data-kyc-task-item><span><kyc-task-name></kyc-task-name></span><span><kyc-task-status></kyc-task-status></span></li></ul></div><!-- Define the template for a single dossier --><div data-kyc-dossier><h1 data-kyc-dossier-title><button data-kyc-to-dossiers></button><kyc-text></kyc-text></h1><div data-kyc-dossier-tasks-navigation></div><!-- Define the template for a single task in a dossier --><form data-kyc-task><h2 data-kyc-task-title><button data-kyc-to-tasks></button><kyc-text></kyc-text></h2><!-- Define the template for a single check in a task in a dossier --><div data-kyc-check><label><kyc-check-description></kyc-check-description></label><kyc-input><input data-kyc-input class="form-control"> <textarea data-kyc-textarea class="form-control"></textarea> <select class="form-control" data-kyc-select-input></select><div data-kyc-options class="form-control form-options row"><div data-kyc-checkbox class="col-12 col-md-4 form-check"><label class="multiline"><input type="checkbox" data-kyc-checkbox-input> <span class="label"><span class="multiline"><kyc-text></kyc-text></span></span></label></div><div data-kyc-radiobutton class="col-12 col-md-4 form-radio"><label class="multiline"><input type="radio" data-kyc-radio-input> <span class="label"><span class="multiline"><kyc-text></kyc-text></span></span></label></div></div><div data-kyc-file class="form-control file-input cursor-pointer"><input type="file" class="form-control" data-kyc-file-input><div class="filepreview" data-kyc-file-preview></div></div></kyc-input><small><kyc-check-longdescription></kyc-check-longdescription></small></div><!-- Define the template the navigation between tasks in a dossier --><div data-kyc-task-navigation><button data-kyc-task-previous><kyc-text></kyc-text></button> <button data-kyc-task-next><kyc-text></kyc-text></button></div></form></div><!-- Define the template the loader --><div data-kyc-loader></div>*/', domReady = function (fn) {
+    var kyc_sdk = 'kyc_sdk', version = '0.0.1', uploads = {}, initialised = new Date(), defaultTemplateString = '/*<!-- Define the template for the dossier-list --><ul data-kyc-dossier-list><li data-kyc-dossier-item><span><kyc-dossier-name></kyc-dossier-name></span><span><kyc-dossier-status></kyc-dossier-status></span><span><kyc-dossier-created></kyc-dossier-created></span></li></ul><div data-kyc-task-list><h1 data-kyc-dossier-title><button data-kyc-to-dossiers></button><kyc-text></kyc-text></h1><ul><li data-kyc-task-item><span><kyc-task-name></kyc-task-name></span><span><kyc-task-status></kyc-task-status></span></li></ul></div><!-- Define the template for a single dossier --><div data-kyc-dossier><h1 data-kyc-dossier-title><button data-kyc-to-dossiers></button><kyc-text></kyc-text></h1><div data-kyc-dossier-tasks-navigation></div><!-- Define the template for a single task in a dossier --><form data-kyc-task><h2 data-kyc-task-title><button data-kyc-to-tasks></button><kyc-text></kyc-text></h2><!-- Define the template for a single check in a task in a dossier --><div data-kyc-check><label><kyc-check-description></kyc-check-description></label><kyc-input><input data-kyc-input class="form-control"> <textarea data-kyc-textarea class="form-control"></textarea> <select class="form-control" data-kyc-select-input></select><div data-kyc-options class="form-control form-options row"><div data-kyc-checkbox class="col-12 col-md-4 form-check"><label class="multiline"><input type="checkbox" data-kyc-checkbox-input> <span class="label"><span class="multiline"><kyc-text></kyc-text></span></span></label></div><div data-kyc-radiobutton class="col-12 col-md-4 form-radio"><label class="multiline"><input type="radio" data-kyc-radio-input> <span class="label"><span class="multiline"><kyc-text></kyc-text></span></span></label></div></div><div data-kyc-file class="form-control file-input cursor-pointer"><input type="file" class="form-control" data-kyc-file-input><div class="filepreview" data-kyc-file-preview></div></div></kyc-input><small><kyc-check-longdescription></kyc-check-longdescription></small></div><!-- Define the template the navigation between tasks in a dossier --><div data-kyc-task-navigation><button data-kyc-task-previous><kyc-text></kyc-text></button> <button data-kyc-task-next><kyc-text></kyc-text></button></div></form></div><!-- Define the template the loader --><div data-kyc-loader></div>*/', ap = Array.prototype, domReady = function (fn) {
         if (document.readyState != 'loading') {
             fn();
         }
@@ -396,6 +396,102 @@
             });
         }
         console.log(values);
+    }, Validators = {
+        IBAN: function isValidIBANNumber(input) {
+            var CODE_LENGTHS = {
+                AD: 24, AE: 23, AT: 20, AZ: 28, BA: 20, BE: 16, BG: 22, BH: 22, BR: 29,
+                CH: 21, CR: 21, CY: 28, CZ: 24, DE: 22, DK: 18, DO: 28, EE: 20, ES: 24,
+                FI: 18, FO: 18, FR: 27, GB: 22, GI: 23, GL: 18, GR: 27, GT: 28, HR: 21,
+                HU: 28, IE: 22, IL: 23, IS: 26, IT: 27, JO: 30, KW: 30, KZ: 20, LB: 28,
+                LI: 21, LT: 20, LU: 20, LV: 21, MC: 27, MD: 24, ME: 22, MK: 19, MR: 27,
+                MT: 31, MU: 30, NL: 18, NO: 15, PK: 24, PL: 28, PS: 29, PT: 25, QA: 29,
+                RO: 24, RS: 22, SA: 24, SE: 24, SI: 19, SK: 24, SM: 27, TN: 24, TR: 26
+            };
+            var iban = String(input).toUpperCase().replace(/[^A-Z0-9]/g, ''), code = iban.match(/^([A-Z]{2})(\d{2})([A-Z\d]+)$/), digits;
+            if (!code || iban.length !== CODE_LENGTHS[code[1]]) {
+                return false;
+            }
+            digits = (code[3] + code[1] + code[2]).replace(/[A-Z]/g, function (letter) {
+                return ((letter || '').toString().charCodeAt(0) - 55).toString();
+            });
+            return Validators.mod97(digits);
+        },
+        mod97: function (string) {
+            var checksum = string.slice(0, 2), fragment;
+            for (var offset = 2; offset < string.length; offset += 7) {
+                fragment = String(checksum) + string.substring(offset, offset + 7);
+                checksum = parseInt(fragment, 10) % 97;
+            }
+            return checksum;
+        }
+    }, validateInputOnEvent = function (event) {
+        var valueFormat = event.target.getAttribute('data-value-format');
+        switch (event.type) {
+            case 'prefill':
+                switch (valueFormat) {
+                    case 'PHONE_NUMBER':
+                        event.target.value = (event.target.value || '').replace(/[^0-9\s\+]/g, '').trim();
+                        break;
+                    case 'IBAN':
+                        event.target.value = (event.target.value || '').toUpperCase().replace(/[^A-Z0-9\s]/g, '').trim();
+                        break;
+                }
+                return;
+                break;
+            case 'tokyc':
+                switch (valueFormat) {
+                    case 'PHONE_NUMBER':
+                        event.target.value = (event.target.value || '').replace(/[\+]/g, '00').replace(/[^0-9]/g, '').trim();
+                        return;
+                        break;
+                }
+                break;
+            case 'change':
+                switch (valueFormat) {
+                    case 'IBAN':
+                        event.target.setCustomValidity(Validators.IBAN(event.target.value || '') ? 'Invalid IBAN' : '');
+                        break;
+                    case null:
+                    default:
+                        event.target.setCustomValidity(!!(event.target.required && (event.target.value || '').trim() === '') ? 'No empty strings' : '');
+                }
+                break;
+            case 'input':
+                if (!!event.inputType && event.inputType == 'insertFromPaste') {
+                    validateInputOnEvent({ target: event.target, type: 'prefill' });
+                }
+                break;
+            case 'keypress':
+                var code = event.keyCode || event.which, character = String.fromCharCode(code);
+                var allowedKeys = void 0;
+                switch (valueFormat) {
+                    case 'PHONE_NUMBER':
+                        allowedKeys = ["Backspace", "ArrowLeft", "ArrowRight", 8, 37, 39];
+                        if (!/[0-9\s\+]|\./.test(character)
+                            && allowedKeys.indexOf(code) < 0) {
+                            event.preventDefault();
+                            return;
+                        }
+                        break;
+                    case 'IBAN':
+                        allowedKeys = ["Backspace", "ArrowLeft", "ArrowRight", 8, 37, 39];
+                        if (!/[0-9\-\s\+]|\./.test(character)
+                            && allowedKeys.indexOf(code) < 0) {
+                            event.preventDefault();
+                            return;
+                        }
+                        break;
+                }
+                break;
+        }
+        var curform = (event.path || []).filter(function (el) {
+            return !!el && !!el.tagName && el.tagName === 'FORM';
+        }).shift();
+        if (!!curform && curform.tagName) {
+            ap.slice.call(curform.querySelectorAll('[data-kyc-task-next]')).map(function (nextbutton) {
+                nextbutton.disabled = !!curform && !curform.checkValidity();
+            });
+        }
     }, buildLoader = function (target) {
         target.innerHTML = '';
         var loader = getPartial('[data-kyc-loader]', target['kyc'].template);
@@ -405,7 +501,7 @@
         target.setAttribute('kyc-sdk-status', 'loading');
     }, buildDossiersList = function (target) {
         try {
-            var dossierlist = getPartial('[data-kyc-dossier-list]', target['kyc'].template), dossierrow_1 = dossierlist.querySelector('[data-kyc-dossier-item]'), ap = Array.prototype;
+            var dossierlist = getPartial('[data-kyc-dossier-list]', target['kyc'].template), dossierrow_1 = dossierlist.querySelector('[data-kyc-dossier-item]'), ap_1 = Array.prototype;
             var last_1 = dossierrow_1;
             target['kyc'].dossiers.map(function (dossier) {
                 var curDossierrow = dossierrow_1.cloneNode(true), namenode = curDossierrow.querySelector('kyc-dossier-name'), statusnode = curDossierrow.querySelector('kyc-dossier-status'), datenode = curDossierrow.querySelector('kyc-dossier-created');
@@ -439,7 +535,7 @@
         }
     }, buildTaskList = function (target, dossier) {
         try {
-            var tasklist = getPartial('[data-kyc-task-list]', target['kyc'].template), dossierTitleElement = tasklist.querySelector('[data-kyc-dossier-title] kyc-text'), taskrow_1 = tasklist.querySelector('[data-kyc-task-item]'), backbutton = tasklist.querySelector('[data-kyc-to-dossiers]'), ap = Array.prototype;
+            var tasklist = getPartial('[data-kyc-task-list]', target['kyc'].template), dossierTitleElement = tasklist.querySelector('[data-kyc-dossier-title] kyc-text'), taskrow_1 = tasklist.querySelector('[data-kyc-task-item]'), backbutton = tasklist.querySelector('[data-kyc-to-dossiers]');
             var last_2 = taskrow_1;
             if (!!dossierTitleElement) {
                 dossierTitleElement.parentNode.replaceChild(document.createTextNode(dossier.customerName), dossierTitleElement);
@@ -489,11 +585,11 @@
                 return transition.defaultGoTo;
             }).shift();
             try {
-                var dossierElement = getPartial('[data-kyc-dossier]', target['kyc'].template), ap_1 = Array.prototype;
-                ap_1.slice.call(dossierElement.querySelectorAll('[name]')).map(function (e) {
+                var dossierElement = getPartial('[data-kyc-dossier]', target['kyc'].template);
+                ap.slice.call(dossierElement.querySelectorAll('[name]')).map(function (e) {
                     e.removeAttribute('name');
                 });
-                var dossierTitleElement = dossierElement.querySelector('[data-kyc-dossier-title] kyc-text'), dossierNavigationElement = dossierElement.querySelector(' [data-kyc-dossier-tasks-navigation]'), taskFormElement = dossierElement.querySelector('[data-kyc-task]'), taskTitleElement = taskFormElement.querySelector('[data-kyc-task-title] kyc-text'), checkElement = taskFormElement.querySelector('[data-kyc-check]'), taskNavigationElement = taskFormElement.querySelector('[data-kyc-task-navigation]');
+                var dossierTitleElement = dossierElement.querySelector('[data-kyc-dossier-title] kyc-text'), dossierNavigationElement = dossierElement.querySelector(' [data-kyc-dossier-tasks-navigation]'), taskFormElement_1 = dossierElement.querySelector('[data-kyc-task]'), taskTitleElement = taskFormElement_1.querySelector('[data-kyc-task-title] kyc-text'), checkElement = taskFormElement_1.querySelector('[data-kyc-check]'), taskNavigationElement = taskFormElement_1.querySelector('[data-kyc-task-navigation]');
                 var newinput_1, formname_1 = check.id.trim(), last = checkElement;
                 if (!!dossierTitleElement) {
                     dossierTitleElement.parentNode.replaceChild(document.createTextNode(dossier.customerName), dossierTitleElement);
@@ -502,7 +598,7 @@
                     taskTitleElement.parentNode.replaceChild(document.createTextNode(task.name), taskTitleElement);
                 }
                 var curCheck = checkElement.cloneNode(true), inputElement_1 = curCheck.querySelector('kyc-input');
-                ap_1.slice.call(curCheck.querySelectorAll('kyc-check-description')).map(function (e) {
+                ap.slice.call(curCheck.querySelectorAll('kyc-check-description')).map(function (e) {
                     if (!!check.definition.description) {
                         e.parentNode.replaceChild(document.createTextNode(translate(check.definition.description)), e);
                     }
@@ -510,7 +606,7 @@
                         e.parentNode.removeChild(e);
                     }
                 });
-                ap_1.slice.call(curCheck.querySelectorAll('kyc-check-longdescription')).map(function (e) {
+                ap.slice.call(curCheck.querySelectorAll('kyc-check-longdescription')).map(function (e) {
                     if (!!check.definition.longDescription) {
                         e.parentNode.replaceChild(document.createTextNode(translate(check.definition.longDescription)), e);
                     }
@@ -538,7 +634,7 @@
                                         radio.setAttribute('value', keyvalue.name);
                                         radio.value = keyvalue.name;
                                         radio.checked = !!check.value && keyvalue.name.trim() === check.value.trim();
-                                        ap_1.slice.call(currentOption.querySelectorAll('kyc-text')).map(function (e) {
+                                        ap.slice.call(currentOption.querySelectorAll('kyc-text')).map(function (e) {
                                             e.parentNode.replaceChild(document.createTextNode(translate(!!keyvalue.explanation ? keyvalue.explanation : keyvalue.name)), e);
                                         });
                                         newinput_1.appendChild(currentOption);
@@ -572,7 +668,7 @@
                                     checkbox.checked = !!check.value && JSON.parse(check.value || '[]').filter(function (v) {
                                         return v.trim() == keyvalue.name.trim();
                                     }).length > 0;
-                                    ap_1.slice.call(currentOption.querySelectorAll('kyc-text')).map(function (e) {
+                                    ap.slice.call(currentOption.querySelectorAll('kyc-text')).map(function (e) {
                                         e.parentNode.replaceChild(document.createTextNode(translate(!!keyvalue.explanation ? keyvalue.explanation : keyvalue.name)), e);
                                     });
                                     newinput_1.appendChild(currentOption);
@@ -590,6 +686,7 @@
                                         newinput_1.setAttribute('placeholder', translate(check.definition.description));
                                         newinput_1.value = check.value || null;
                                         newinput_1.setAttribute('name', formname_1);
+                                        newinput_1.required = !(!!check.definition.optional);
                                         break;
                                     default:
                                         newinput_1 = inputElement_1.querySelector('[data-kyc-input]').cloneNode(true);
@@ -617,8 +714,21 @@
                                         }
                                         newinput_1.setAttribute('placeholder', translate(check.definition.description));
                                         newinput_1.setAttribute('name', check.id);
+                                        if (!!check.definition.method) {
+                                            newinput_1.setAttribute('data-method', check.definition.method);
+                                        }
+                                        if (!!check.definition.valueFormat) {
+                                            newinput_1.setAttribute('data-value-format', check.definition.valueFormat);
+                                        }
+                                        newinput_1.required = !(!!check.definition.optional);
                                         newinput_1.value = check.value || null;
+                                        validateInputOnEvent({ 'type': 'prefill', 'target': newinput_1 });
                                 }
+                                ['keypress', 'paste', 'change', 'input'].map(function (type) {
+                                    newinput_1.addEventListener(type, function (event) {
+                                        return validateInputOnEvent(event);
+                                    });
+                                });
                                 break;
                             case 'IDIN':
                                 newinput_1 = document.createElement('div');
@@ -637,8 +747,12 @@
                                     if (event.target.files && event.target.files[0]) {
                                         var reader = new FileReader();
                                         reader.onload = function (fileEvent) {
-                                            console.log(fileEvent);
+                                            console.log(fileEvent, event.target.files[0]);
+                                            if (!!fileEvent && !!fileEvent.target && !!fileEvent.target['result']) {
+                                                filepreview_1.setAttribute('style', 'background-image:url("' + fileEvent.target['result'] + '")');
+                                            }
                                         };
+                                        filepreview_1.innerHTML = event.target.files[0].name;
                                         reader.readAsDataURL(event.target.files[0]);
                                     }
                                     console.log(event);
@@ -670,16 +784,16 @@
                 }
                 inputElement_1.parentNode.replaceChild(newinput_1, inputElement_1);
                 checkElement.parentNode.replaceChild(curCheck, checkElement);
-                ap_1.slice.call(dossierElement.querySelectorAll('[data-kyc-to-dossiers]')).map(function (backbutton) {
-                    ap_1.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
+                ap.slice.call(dossierElement.querySelectorAll('[data-kyc-to-dossiers]')).map(function (backbutton) {
+                    ap.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
                         e.parentNode.replaceChild(document.createTextNode(translate('Back')), e);
                     });
                     backbutton.addEventListener('click', function () {
                         buildDossiersList(target);
                     });
                 });
-                ap_1.slice.call(dossierElement.querySelectorAll('[data-kyc-to-tasks]')).map(function (backbutton) {
-                    ap_1.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
+                ap.slice.call(dossierElement.querySelectorAll('[data-kyc-to-tasks]')).map(function (backbutton) {
+                    ap.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
                         e.parentNode.replaceChild(document.createTextNode(translate('Back')), e);
                     });
                     backbutton.addEventListener('click', function () {
@@ -687,8 +801,8 @@
                     });
                 });
                 if (target['kyc'].history.back.length > 0) {
-                    ap_1.slice.call(dossierElement.querySelectorAll('[data-kyc-task-previous]')).map(function (backbutton) {
-                        ap_1.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
+                    ap.slice.call(dossierElement.querySelectorAll('[data-kyc-task-previous]')).map(function (backbutton) {
+                        ap.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
                             e.parentNode.replaceChild(document.createTextNode(translate('Back')), e);
                         });
                         backbutton.addEventListener('click', function () {
@@ -697,35 +811,43 @@
                     });
                 }
                 else {
-                    ap_1.slice.call(dossierElement.querySelectorAll('[data-kyc-task-navigation] [data-kyc-task-previous]')).map(function (backbutton) {
+                    ap.slice.call(dossierElement.querySelectorAll('[data-kyc-task-navigation] [data-kyc-task-previous]')).map(function (backbutton) {
                         backbutton.parentNode.removeChild(backbutton);
                     });
                 }
-                ap_1.slice.call(dossierElement.querySelectorAll('[data-kyc-task-next]')).map(function (nextbutton) {
-                    ap_1.slice.call(nextbutton.querySelectorAll('kyc-text')).map(function (e) {
+                ap.slice.call(dossierElement.querySelectorAll('[data-kyc-task-next]')).map(function (nextbutton) {
+                    nextbutton.disabled = !!taskFormElement_1 && !taskFormElement_1.checkValidity();
+                    ap.slice.call(nextbutton.querySelectorAll('kyc-text')).map(function (e) {
                         e.parentNode.replaceChild(document.createTextNode(translate('Next')), e);
                     });
                     nextbutton.addEventListener('click', function () {
-                        var form = target.querySelector('form'), values = {};
-                        if (!!form) {
-                            check.value = formname_1 == check.id ? ((form.querySelector('[name="' + formname_1 + '"]') || { value: '' })['value'] || '') : JSON.stringify(ap_1.slice.call(form.querySelectorAll('[name="' + formname_1 + '"]')).map(function (field) { return field.value || ''; }));
-                        }
-                        if (!!next_1) {
+                        var values = {};
+                        if (!!taskFormElement_1 && taskFormElement_1.checkValidity()) {
+                            check.value = (formname_1 == check.id)
+                                ? validateInputOnEvent({
+                                    'type': 'tokyc',
+                                    'target': taskFormElement_1.querySelector('[name="' + formname_1 + '"]')
+                                })
+                                : JSON.stringify(ap.slice.call(taskFormElement_1.querySelectorAll('[name="' + formname_1 + '"]')).map(function (field) {
+                                    return validateInputOnEvent({ 'type': 'tokyc', 'target': field });
+                                }));
+                            if (!!next_1) {
+                                buildLoader(target);
+                                target['kyc'].history.back.push(function () {
+                                    buildLoader(target);
+                                    buildTaskForm(target, dossier, task, check.id);
+                                });
+                                buildTaskForm(target, dossier, task, next_1);
+                                return;
+                            }
                             buildLoader(target);
                             target['kyc'].history.back.push(function () {
                                 buildLoader(target);
                                 buildTaskForm(target, dossier, task, check.id);
                             });
-                            buildTaskForm(target, dossier, task, next_1);
+                            buildTaskList(target, dossier);
                             return;
                         }
-                        buildLoader(target);
-                        target['kyc'].history.back.push(function () {
-                            buildLoader(target);
-                            buildTaskForm(target, dossier, task, check.id);
-                        });
-                        buildTaskList(target, dossier);
-                        return;
                     });
                 });
                 target.innerHTML = '';

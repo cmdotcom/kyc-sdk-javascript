@@ -62,3 +62,6 @@ typings/
 
 # custom build folder
 build
+
+# custom developer secrets
+secret

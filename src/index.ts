@@ -10,7 +10,7 @@
                 };
             })
         }
-        var kycTemplate,
+        let kycTemplate,
             showWarning = false,
             authorisationEndPoint,
             kycApiEndPoint,
@@ -21,6 +21,8 @@
             uploads = {},
             initialised = new Date(),
             defaultTemplateString = '/*REPLACE_WITH_TEMPLATE_HTML*/',
+            ap = Array.prototype,
+
 
             domReady = function (fn) {
                 if (document.readyState != 'loading') {
@@ -164,8 +166,8 @@
                                 getMe(element);
                                 //getDossiers(element);
                             } else {
-                                const errorMessage="No kyc Token could be retrieved from " + authorisationEndPoint + "!";
-                                notify('error', element,{error:{ 'message': errorMessage,'object':result}});
+                                const errorMessage = "No kyc Token could be retrieved from " + authorisationEndPoint + "!";
+                                notify('error', element, {error: {'message': errorMessage, 'object': result}});
                                 console.warn(errorMessage, result);
 
                             }
@@ -193,8 +195,8 @@
 
                             getDossiers(element);
                         } else {
-                            const errorMessage="KYC identity could not be verified!";
-                            notify('error', element,{error:{ 'message': errorMessage,'object':result}});
+                            const errorMessage = "KYC identity could not be verified!";
+                            notify('error', element, {error: {'message': errorMessage, 'object': result}});
                             console.warn("KYC identity could not be verified!", result.error);
 
                         }
@@ -423,12 +425,12 @@
                 }
                 return str;
             },
-            notify = function (inEvent, target?: any,details?:any) {
+            notify = function (inEvent, target?: any, details?: any) {
                 let event;
 
                 if (!!inEvent && typeof inEvent == 'string' && !!target && !!target['kyc']) {
 
-                    inEvent = createEvent(inEvent.trim(), details||safeKyc(target))
+                    inEvent = createEvent(inEvent.trim(), details || safeKyc(target))
                 }
                 try {
                     event = JSON.parse(JSON.stringify(inEvent));
@@ -506,6 +508,136 @@
                 }
                 console.log(values)
             },
+            Validators = {
+                IBAN: function isValidIBANNumber(input) {
+                    var CODE_LENGTHS = {
+                        AD: 24, AE: 23, AT: 20, AZ: 28, BA: 20, BE: 16, BG: 22, BH: 22, BR: 29,
+                        CH: 21, CR: 21, CY: 28, CZ: 24, DE: 22, DK: 18, DO: 28, EE: 20, ES: 24,
+                        FI: 18, FO: 18, FR: 27, GB: 22, GI: 23, GL: 18, GR: 27, GT: 28, HR: 21,
+                        HU: 28, IE: 22, IL: 23, IS: 26, IT: 27, JO: 30, KW: 30, KZ: 20, LB: 28,
+                        LI: 21, LT: 20, LU: 20, LV: 21, MC: 27, MD: 24, ME: 22, MK: 19, MR: 27,
+                        MT: 31, MU: 30, NL: 18, NO: 15, PK: 24, PL: 28, PS: 29, PT: 25, QA: 29,
+                        RO: 24, RS: 22, SA: 24, SE: 24, SI: 19, SK: 24, SM: 27, TN: 24, TR: 26
+                    };
+                    var iban = String(input).toUpperCase().replace(/[^A-Z0-9]/g, ''), // keep only alphanumeric characters
+                        code = iban.match(/^([A-Z]{2})(\d{2})([A-Z\d]+)$/), // match and capture (1) the country code, (2) the check digits, and (3) the rest
+                        digits;
+                    // check syntax and length
+                    if (!code || iban.length !== CODE_LENGTHS[code[1]]) {
+                        return false;
+                    }
+                    // rearrange country code and check digits, and convert chars to ints
+                    digits = (code[3] + code[1] + code[2]).replace(/[A-Z]/g, function (letter) {
+                        return ((letter || '').toString().charCodeAt(0) - 55).toString();
+                    });
+                    // final check
+                    return Validators.mod97(digits);
+                },
+                mod97(string) {
+                    var checksum = string.slice(0, 2), fragment;
+                    for (var offset = 2; offset < string.length; offset += 7) {
+                        fragment = String(checksum) + string.substring(offset, offset + 7);
+                        checksum = parseInt(fragment, 10) % 97;
+                    }
+                    return checksum;
+                }
+            },
+
+
+            validateInputOnEvent = function (event) {
+
+                /**
+                 * Methods:
+                 * MANUAL_TEXT_INPUT, MANUAL_SINGLE_CHOICE_ENUM, MANUAL_MULTIPLE_CHOICE_ENUM, MANUAL_DATE_INPUT, IDIN, RAW_DOCUMENT_SCAN, DOCUMENT_FILE_UPLOAD, SELFIE_CHECK
+                 *
+                 * Formats:
+                 * SHORT_TEXT, LONG_TEXT, NATURAL_NUMBER, REAL_NUMBER, ALPHANUMERIC, EMAIL, PHONE_NUMBER, URL, IBAN
+                 **/
+
+                const valueFormat = event.target.getAttribute('data-value-format');
+                // console.log(event);
+                switch (event.type) {
+                    case 'prefill':
+                        switch (valueFormat) {
+                            case 'PHONE_NUMBER':
+                                event.target.value = (event.target.value || '').replace(/[^0-9\s\+]/g, '').trim();
+
+                                break;
+                            case 'IBAN':
+                                event.target.value = (event.target.value || '').toUpperCase().replace(/[^A-Z0-9\s]/g, '').trim();
+
+                                break;
+                        }
+                        return;
+                        break;
+                    case 'tokyc':
+                        switch (valueFormat) {
+                            case 'PHONE_NUMBER':
+                                event.target.value = (event.target.value || '').replace(/[\+]/g, '00').replace(/[^0-9]/g, '').trim();
+                                return;
+                                break;
+                        }
+                        break;
+                    case 'change':
+                        switch (valueFormat) {
+                            case 'IBAN':
+                                event.target.setCustomValidity(Validators.IBAN(event.target.value || '') ? 'Invalid IBAN' : '');
+                                break;
+                            case null:
+                            default:
+                                event.target.setCustomValidity(!!(event.target.required && (event.target.value || '').trim() === '') ? 'No empty strings' : '');
+                        }
+
+                        break;
+                    case 'input':
+                        if (!!event.inputType && event.inputType == 'insertFromPaste') {
+                            validateInputOnEvent({target: event.target, type: 'prefill'});
+
+                        }
+
+                        break;
+                    case 'keypress':
+                        const code = event.keyCode || event.which,
+                            character = String.fromCharCode(code);
+                        let allowedKeys;
+
+                        switch (valueFormat) {
+                            case 'PHONE_NUMBER':
+                                allowedKeys = ["Backspace", "ArrowLeft", "ArrowRight", 8, 37, 39];
+                                if (
+                                    !/[0-9\s\+]|\./.test(character)
+                                    && allowedKeys.indexOf(code) < 0
+                                ) {
+                                    event.preventDefault();
+                                    return;
+                                }
+                                break;
+                            case 'IBAN':
+                                allowedKeys = ["Backspace", "ArrowLeft", "ArrowRight", 8, 37, 39];
+                                if (
+                                    !/[0-9\-\s\+]|\./.test(character)
+                                    && allowedKeys.indexOf(code) < 0
+                                ) {
+                                    event.preventDefault();
+                                    return;
+                                }
+                                break;
+
+                        }
+                        break;
+                }
+                const curform = (event.path || []).filter(function (el) {
+                    return !!el && !!el.tagName && el.tagName === 'FORM';
+                }).shift();
+                if (!!curform && curform.tagName) {
+
+                    ap.slice.call(curform.querySelectorAll('[data-kyc-task-next]')).map(function (nextbutton) {
+                        nextbutton.disabled = !!curform && !curform.checkValidity()
+                    });
+                }
+
+
+            },
             buildLoader = function (target: HTMLElement) {
                 target.innerHTML = '';
                 const
@@ -570,8 +702,7 @@
                         tasklist = getPartial('[data-kyc-task-list]', target['kyc'].template),
                         dossierTitleElement = tasklist.querySelector('[data-kyc-dossier-title] kyc-text'),
                         taskrow = tasklist.querySelector('[data-kyc-task-item]'),
-                        backbutton = tasklist.querySelector('[data-kyc-to-dossiers]'),
-                        ap = Array.prototype;
+                        backbutton = tasklist.querySelector('[data-kyc-to-dossiers]');
                     let last = taskrow;
 
                     if (!!dossierTitleElement) {
@@ -643,8 +774,7 @@
                     }).shift();
 
                     try {
-                        const dossierElement = getPartial('[data-kyc-dossier]', target['kyc'].template),
-                            ap = Array.prototype;
+                        const dossierElement = getPartial('[data-kyc-dossier]', target['kyc'].template);
 
                         ap.slice.call(dossierElement.querySelectorAll('[name]')).map(function (e) {
                             e.removeAttribute('name');
@@ -679,7 +809,6 @@
                             } else {
                                 e.parentNode.removeChild(e);
                             }
-
 
                         });
                         ap.slice.call(curCheck.querySelectorAll('kyc-check-longdescription')).map(function (e) {
@@ -787,7 +916,6 @@
 
                                 break;
                             default:
-
                                 switch (check.definition.method) {
                                     case 'MANUAL_TEXT_INPUT':
                                     case 'MANUAL_DATE_INPUT':
@@ -797,6 +925,7 @@
                                                 newinput.setAttribute('placeholder', translate(check.definition.description));
                                                 newinput.value = check.value || null;
                                                 newinput.setAttribute('name', formname)
+                                                newinput.required = !(!!check.definition.optional);
                                                 break;
                                             default:
                                                 newinput = inputElement.querySelector('[data-kyc-input]').cloneNode(true);
@@ -825,9 +954,23 @@
                                                 }
                                                 newinput.setAttribute('placeholder', translate(check.definition.description));
                                                 newinput.setAttribute('name', check.id)
+                                                if (!!check.definition.method) {
+                                                    newinput.setAttribute('data-method', check.definition.method)
+                                                }
+                                                if (!!check.definition.valueFormat) {
+                                                    newinput.setAttribute('data-value-format', check.definition.valueFormat)
+                                                }
+                                                newinput.required = !(!!check.definition.optional);
                                                 newinput.value = check.value || null;
-                                        }
+                                                validateInputOnEvent({'type': 'prefill', 'target': newinput});
 
+
+                                        }
+                                        ['keypress', 'paste', 'change', 'input'].map(function (type) {
+                                            newinput.addEventListener(type, function (event) {
+                                                return validateInputOnEvent(event)
+                                            });
+                                        })
                                         break;
                                     case 'IDIN':
                                         newinput = document.createElement('div');
@@ -849,10 +992,14 @@
                                             if (event.target.files && event.target.files[0]) {
                                                 const reader = new FileReader();
                                                 reader.onload = function (fileEvent) {
-                                                    console.log(fileEvent)
-                                                    //filepreview
-                                                }
+                                                    console.log(fileEvent,event.target.files[0])
 
+                                                    //filepreview
+                                                    if(!!fileEvent && !!fileEvent.target && !!fileEvent.target['result']) {
+                                                        filepreview.setAttribute('style', 'background-image:url("' + fileEvent.target['result']+ '")');
+                                                    }
+                                                }
+                                                filepreview.innerHTML = event.target.files[0].name;
                                                 reader.readAsDataURL(event.target.files[0]);
                                             }
                                             console.log(event)
@@ -941,45 +1088,50 @@
 
 
                         ap.slice.call(dossierElement.querySelectorAll('[data-kyc-task-next]')).map(function (nextbutton) {
-                            ap.slice.call(nextbutton.querySelectorAll('kyc-text')).map(function (e) {
 
+                            nextbutton.disabled = !!taskFormElement && !taskFormElement.checkValidity()
+
+                            ap.slice.call(nextbutton.querySelectorAll('kyc-text')).map(function (e) {
                                 e.parentNode.replaceChild(document.createTextNode(translate('Next')), e);
 
                             });
                             nextbutton.addEventListener('click', function () {
-                                const form = target.querySelector('form'),
-                                    values = {};
+                                const values = {};
+                                if (!!taskFormElement && taskFormElement.checkValidity()) {
 
-                                if (!!form) {
+                                    check.value = (formname == check.id)
+                                        ? validateInputOnEvent({
+                                            'type': 'tokyc',
+                                            'target': taskFormElement.querySelector('[name="' + formname + '"]')
+                                        })
+                                        : JSON.stringify(ap.slice.call(taskFormElement.querySelectorAll('[name="' + formname + '"]')).map(function (field) {
+                                            return validateInputOnEvent({'type': 'tokyc', 'target': field});
+                                        }));
+
+                                    /*POST DATA*/
+
+                                    if (!!next) {
 
 
-
-
-
-                                    check.value = formname == check.id ? ((form.querySelector('[name="'+formname+'"]')||{value:''})['value']||''): JSON.stringify(ap.slice.call(form.querySelectorAll('[name="'+formname+'"]')).map(function(field){return field.value||''}));
-
-                                }
-                                if (!!next) {
-
-
+                                        buildLoader(target);
+                                        target['kyc'].history.back.push(function () {
+                                            buildLoader(target);
+                                            buildTaskForm(target, dossier, task, check.id);
+                                        });
+                                        buildTaskForm(target, dossier, task, next)
+                                        return;
+                                    }
                                     buildLoader(target);
+
                                     target['kyc'].history.back.push(function () {
                                         buildLoader(target);
                                         buildTaskForm(target, dossier, task, check.id);
                                     });
-                                    buildTaskForm(target, dossier, task, next)
+                                    buildTaskList(target, dossier);
                                     return;
                                 }
-                                buildLoader(target);
-
-                                target['kyc'].history.back.push(function () {
-                                    buildLoader(target);
-                                    buildTaskForm(target, dossier, task, check.id);
-                                });
-                                buildTaskList(target, dossier);
-                                return;
-
                             })
+
                         });
 
 
@@ -1035,43 +1187,13 @@
                     element.setAttribute('kyc-sdk-status', 'ready')
                     buildLoader(element);
                     element.appendChild(view);
-                    /*   setTimeout(function () {
-                           context.taskId = 'jaja';
-                           status.changed = new Date();
-                           event = createEvent('change', {status: status, context: context});
-                           notify(event, element);
 
-                       }, 1000)*/
                 } else {
                     element.setAttribute('kyc-sdk-status', 'ready')
                     element.kyc.status.reset = new Date(),
                         element.kyc.context = context,
                         event = createEvent('reset', safeKyc(element));
                 }
-
-                /*  http({
-                      url: '../moqup/task_multiplechecks.json',
-                      callback: function (result) {
-                          if (!!result.success) {
-                              buildform(element, result.success.checks[0]);
-                              console.info(result.success);
-                          } else {
-                              console.error(result.error);
-                          }
-                      }
-                  });
-              }
-              http({
-                  url: '../moqup/task_multiplechecks.json',
-                  callback: function (result) {
-                      if (!!result.success) {
-                          buildform(element, result.success.checks[0]);
-                          console.info(result.success);
-                      } else {
-                          console.error(result.error);
-                      }
-                  }
-              });*/
                 notify(event, element);
                 getToken(element);
 
