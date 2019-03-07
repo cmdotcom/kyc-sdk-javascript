@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>KYC Javascript SDK Example</title>
+
+    <link href="https://cm.com/en-gb/app/aurora/css/v2/aurora.css" rel="stylesheet">
+    <link href="example.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <form id="login" style="display:none;" class="col-12 m-t-80">
+            <h1>KYC SDK credentials</h1>
+            <p>
+                please Provide the details to make connection to your KYC authorisation endpoint.
+            </p>
+
+            <div class="rows row"></div>
+
+            <div class="submitrows">
+                <button type="button" onclick="validateLoginFrom()" class="btn btn-primary">
+                    submit
+                </button>
+            </div>
+        </form>
+        <div id="myKYCelement" class="col-12 m-t-80" onload="console.log('kycEvent',event)">
+            <!-- Define the template for the dossier-list -->
+            <div class="list-group m-t-24 row" data-kyc-dossier-list>
+
+                <div data-kyc-dossier-item class="list-group-content row cursor-pointer">
+
+
+                    <div class="table-column itext-nowrap text-truncate col-4  text-left">
+                        <kyc-dossier-name></kyc-dossier-name>
+                    </div>
+                    <div class="table-column text-nowrap text-truncate col-4 text-center">
+                        <kyc-dossier-status></kyc-dossier-status>
+                    </div>
+                    <div class="table-column text-nowrap text-truncate col-4 text-right p-r-16">
+                        <kyc-dossier-created></kyc-dossier-created>
+                    </div>
+
+
+                </div>
+            </div>
+            <div data-kyc-task-list>
+
+                <h1 data-kyc-dossier-title>
+                    <button type="button" class="btn btn-secondary-icon " data-kyc-to-dossiers>
+                        <span class="cm-icon cm-icon-previous cursor-pointer" aria-hidden="true"></span>
+                    </button>
+                    <kyc-text></kyc-text>
+                </h1>
+
+
+                <div class="list-group m-t-24 row">
+
+                    <div data-kyc-task-item class="list-group-content row cursor-pointer">
+
+
+                        <div class="table-column itext-nowrap text-truncate col-9  text-left">
+                            <kyc-task-name></kyc-task-name>
+                        </div>
+                        <div class="table-column text-nowrap text-truncate col-3 p-r-16 text-right">
+                            <kyc-task-status></kyc-task-status>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Define the template for a single dossier -->
+            <div data-kyc-dossier>
+                <h1 data-kyc-dossier-title>
+                    <button type="button" class="btn btn-secondary-icon " data-kyc-to-dossiers>
+                        <span class="cm-icon cm-icon-previous cursor-pointer" aria-hidden="true"></span>
+                    </button>
+                    <kyc-text></kyc-text>
+                </h1>
+                <div data-kyc-dossier-tasks-navigation>
+
+                </div>
+
+                <!-- Define the template for a single task in a dossier -->
+                <form data-kyc-task>
+                    <h2 data-kyc-task-title>
+                        <button type="button" class="btn btn-secondary-icon " data-kyc-to-tasks>
+                            <span class="cm-icon cm-icon-previous cursor-pointer" aria-hidden="true"></span>
+                        </button>
+                        <kyc-text></kyc-text>
+                    </h2>
+                    <!-- Define the template for a single check in a task in a dossier -->
+                    <div data-kyc-check class="row m-t-8 m-b-8">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="form-input">
+                                        <kyc-input>
+                                            <input data-kyc-input class="form-control">
+                                            <textarea data-kyc-textarea class="form-control"></textarea>
+                                            <select class="form-control" data-kyc-select-input></select>
+                                            <div data-kyc-options class="form-control  form-options row">
+                                                <div data-kyc-checkbox class="col-12 col-md-4 form-check">
+                                                    <label class="multiline">
+                                                        <input type="checkbox" data-kyc-checkbox-input/>
+                                                        <span class="label">
+                                                            <span class="multiline"><kyc-text></kyc-text></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                                <div data-kyc-radiobutton class="col-12 col-md-4 form-radio">
+                                                    <label class="multiline">
+                                                        <input type="radio" data-kyc-radio-input>
+                                                        <span class="label">
+                                                            <span class="multiline"><kyc-text></kyc-text></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                            </div>
+
+
+                                            <div data-kyc-file class="form-control file-input cursor-pointer">
+                                                <input type="file" class="form-control" data-kyc-file-input>
+                                                <div class="filepreview" data-kyc-file-preview></div>
+                                            </div>
+
+                                        </kyc-input>
+                                        <label>
+                                            <kyc-check-description></kyc-check-description>
+                                        </label>
+                                        <div class="form-input-validation">
+                                            <kyc-check-longdescription></kyc-check-longdescription>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Define the template the navigation between tasks in a dossier -->
+                    <div data-kyc-task-navigation class="row m-t-8 m-b-8">
+                        <div class="col-6 text-left">
+                            <button type="button" class="btn btn-secondary" data-kyc-task-previous>
+                                <kyc-text></kyc-text>
+                            </button>
+                        </div>
+                        <div class="col-6 text-right">
+                            <button type="button" class="btn btn-primary" data-kyc-task-next>
+                                <kyc-text></kyc-text>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Define the template the loader -->
+            <cm-indicator data-kyc-loader></cm-indicator>
+        </div>
+    </div>
+</div>
+
+<script src="kyc_config.js"></script>
+<script src="example.js"></script>
+<script src="../dist/kyc.sdk.min.js"></script>
+
+<script src="https://cm.com/en-gb/app/aurora/js/webcomponents-loader.js"></script>
+<script src="https://cm.com/en-gb/app/aurora/js/aurora-components-legacy.js"></script>
+</body>
+</html>

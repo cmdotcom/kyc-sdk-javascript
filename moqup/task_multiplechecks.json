@@ -1,0 +1,73 @@
+{
+  "id": "510400a7-952c-42c3-8b99-8d0bb76e809a",
+  "name": "Provide bank account information",
+  "status": "REJECTED",
+  "shared": true,
+  "visible": true,
+  "checks": [
+    {
+      "id": "640ff6f7-b32b-4635-bf06-c8125541cb5e",
+      "definition": {
+        "description": "Bank name",
+        "longDescription": "Please provide the name of the bank used by your company.",
+        "optional": false,
+        "visible": true,
+        "method": "MANUAL_TEXT_INPUT",
+        "valueFormat": "SHORT_TEXT"
+      },
+      "status": "SUBMITTED"
+    },
+    {
+      "id": "2a5679b2-4312-4d99-90e5-41be1d06f7df",
+      "definition": {
+        "description": "Name of account holder",
+        "longDescription": "Please provide the name under which your company is described in its bank statement.",
+        "optional": false,
+        "visible": true,
+        "method": "MANUAL_TEXT_INPUT",
+        "valueFormat": "LONG_TEXT"
+      },
+      "status": "ACCEPTED"
+    },
+    {
+      "id": "5ef77eb0-f6c8-46f2-8d97-bb23f10d94d4",
+      "definition": {
+        "description": "IBAN",
+        "longDescription": "Please provide the account number (IBAN) of the bank account used by your company.",
+        "optional": false,
+        "visible": true,
+        "method": "MANUAL_TEXT_INPUT",
+        "valueFormat": "IBAN"
+      },
+      "status": "REJECTED"
+    },
+    {
+      "id": "43bbd8da-03ed-40b6-9a41-241796f8c303",
+      "definition": {
+        "description": "Bank statement",
+        "longDescription": "Please provide a copy of the most recent bank statement of your company which is at your disposal. The document should include entries such as account number, account holder name, date of issuing etc.",
+        "optional": false,
+        "visible": true,
+        "method": "RAW_DOCUMENT_SCAN"
+      },
+      "status": "OPEN"
+    }
+  ],
+  "sequence": {
+    "initialCheckId": "640ff6f7-b32b-4635-bf06-c8125541cb5e",
+    "transitions": [
+      {
+        "from": "640ff6f7-b32b-4635-bf06-c8125541cb5e",
+        "defaultGoTo": "2a5679b2-4312-4d99-90e5-41be1d06f7df"
+      },
+      {
+        "from": "2a5679b2-4312-4d99-90e5-41be1d06f7df",
+        "defaultGoTo": "5ef77eb0-f6c8-46f2-8d97-bb23f10d94d4"
+      },
+      {
+        "from": "5ef77eb0-f6c8-46f2-8d97-bb23f10d94d4",
+        "defaultGoTo": "43bbd8da-03ed-40b6-9a41-241796f8c303"
+      }
+    ]
+  }
+}

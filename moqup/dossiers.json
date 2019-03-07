@@ -1,0 +1,34 @@
+{
+  "clientId": "92569d1e-7140-4b59-b92d-f9e7aaf8c165",
+  "clientName": "CM KYC Demo",
+  "dossiers": [
+    {
+      "id": "b9f8b82b-6893-4c22-8bd9-81c269c4f3e1",
+      "customerName": "Test John Doe",
+      "status": "SUBMITTED",
+      "createdAt": 1551086953103,
+      "externalReference": "72f32e99-8435-4fff-a58c-9fdbda68f6af"
+    },
+    {
+      "id": "a7cfcdfa-45e7-4ebd-b81c-93e75ec2c099",
+      "customerName": "Test John Doe",
+      "status": "ACCEPTED",
+      "createdAt": 1551091893385,
+      "externalReference": "72f32e99-8435-4fff-a58c-9fdbda68f6af"
+    },
+    {
+      "id": "18d8e306-46e8-4255-96a8-24bec28c4f05",
+      "customerName": "Test John Doe",
+      "status": "REJECTED",
+      "createdAt": 1551091937415,
+      "externalReference": "72f32e99-8435-4fff-a58c-9fdbda68f6af"
+    },
+    {
+      "id": "d706bbbc-cd22-452b-8c32-83f3fe219566",
+      "customerName": "Test John Doe",
+      "status": "OPEN",
+      "createdAt": 1551092095002,
+      "externalReference": "72f32e99-8435-4fff-a58c-9fdbda68f6af"
+    }
+  ]
+}

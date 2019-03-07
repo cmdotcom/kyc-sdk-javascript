@@ -1,0 +1,11 @@
+{
+  "id": "b9f8b82b-6893-4c22-8bd9-81c269c4f3e1",
+  "customerName": "Test John Doe",
+  "client": {
+    "id": "92569d1e-7140-4b59-b92d-f9e7aaf8c165",
+    "name": "CM KYC Demo"
+  },
+  "status": "SUBMITTED",
+  "externalReference": "72f32e99-8435-4fff-a58c-9fdbda68f6af",
+  "createdAt": 1551086953103
+}

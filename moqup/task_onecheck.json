@@ -1,0 +1,34 @@
+{
+  "id": "8f27a49f-c843-488a-b175-b46fddd640a0",
+  "name": "Verify signatory invites",
+  "status": "OPEN",
+  "shared": true,
+  "visible": true,
+  "checks": [
+    {
+      "id": "0b424194-a34c-4899-bddd-9aba7e89b986",
+      "definition": {
+        "description": "Have all relevant signatories been invited?",
+        "longDescription": "Please confirm that all relevant signatories of your company (i.e. persons registered as such in the chamber of commerce or corresponding regulatory body) have been invited for this KYC process. If not,  please revert from the current task and invite the missing signatories in the app's \"Persons\" tab.",
+        "optional": false,
+        "visible": true,
+        "method": "MANUAL_SINGLE_CHOICE_ENUM",
+        "enumSpecification": [
+          {
+            "name": "Yes - all relevant signatories have been invited",
+            "explanation": ""
+          },
+          {
+            "name": "I'm not sure who is the signatory of my company",
+            "explanation": ""
+          }
+        ]
+      },
+      "status": "OPEN"
+    }
+  ],
+  "sequence": {
+    "initialCheckId": "0b424194-a34c-4899-bddd-9aba7e89b986",
+    "transitions": []
+  }
+}

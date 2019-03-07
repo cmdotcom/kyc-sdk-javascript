@@ -1,0 +1,73 @@
+<!-- Define the template for the dossier-list -->
+<div data-kyc-dossier-list>
+    <div data-kyc-dossier-item>
+        <kyc-dossier-name></kyc-dossier-name>
+        <kyc-dossier-status></kyc-dossier-status>
+        <kyc-dossier-created></kyc-dossier-created>
+    </div>
+</div>
+<div data-kyc-task-list>
+    <h1 data-kyc-dossier-title>
+        <kyc-text></kyc-text>
+    </h1>
+    <div data-kyc-task-list>
+        <kyc-task-name></kyc-task-name>
+        <kyc-task-status></kyc-task-status>
+    </div>
+</div>
+<!-- Define the template for a single dossier -->
+<div data-kyc-dossier>
+    <h1 data-kyc-dossier-title>
+        <kyc-text></kyc-text>
+    </h1>
+    <div data-kyc-dossier-tasks-navigation>
+
+    </div>
+
+
+    <!-- Define the template for a single task in a dossier -->
+    <form data-kyc-task>
+        <h2 data-kyc-task-title>
+            <kyc-text></kyc-text>
+        </h2>
+        <!-- Define the template for a single check in a task in a dossier -->
+        <div data-kyc-check>
+            <label>
+                <kyc-check-description></kyc-check-description>
+            </label>
+            <kyc-input>
+                <input data-kyc-input class="form-control">
+                <textarea data-kyc-textarea class="form-control"></textarea>
+                <label data-kyc-checkbox>
+                    <input type="checkbox"/>
+                    <kyc-text></kyc-text>
+                </label>
+                <label data-kyc-radiobutton>
+                    <input type="radio"/>
+                    <kyc-text></kyc-text>
+                </label>
+                <div data-kyc-file>
+                    <div data-kyc-file-preview></div>
+                    <input data-kyc-file-input>
+                </div>
+            </kyc-input>
+
+            <small>
+                <kyc-check-longdescription></kyc-check-longdescription>
+            </small>
+        </div>
+        <!-- Define the template the navigation between tasks in a dossier -->
+        <div data-kyc-task-navigation>
+
+            <button type="button" data-kyc-task-previous>
+                <kyc-text></kyc-text>
+            </button>
+            <button type="button" data-kyc-task-next>
+                <kyc-text></kyc-text>
+            </button>
+
+        </div>
+    </form>
+</div>
+<!-- Define the template the loader -->
+<cm-indicator data-kyc-loader></cm-indicator>

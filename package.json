@@ -21,5 +21,22 @@
   "bugs": {
     "url": "https://github.com/cmdotcom/kyc-sdk-javascript/issues"
   },
-  "homepage": "https://github.com/cmdotcom/kyc-sdk-javascript#readme"
+  "homepage": "https://github.com/cmdotcom/kyc-sdk-javascript#readme",
+  "directories": {
+    "example": "examples"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-sequence": "^1.0.0",
+    "gulp-string-replace": "^1.1.2",
+    "gulp-typescript": "^5.0.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^5.0.1",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {}
 }

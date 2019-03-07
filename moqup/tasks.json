@@ -1,0 +1,58 @@
+[
+  {
+    "id": "c1973801-1ac8-4695-8a4e-45e094056d9f",
+    "name": "Provide company details",
+    "status": "ACCEPTED",
+    "shared": true,
+    "visible": true
+  },
+  {
+    "id": "c42f73a6-eaea-42f0-9c02-3e5bf489b729",
+    "name": "Describe your company's business activities",
+    "status": "REJECTED",
+    "shared": true,
+    "visible": true
+  },
+  {
+    "id": "2fac1d82-3b7e-4604-8207-003fc72f1779",
+    "name": "Provide contact person info",
+    "status": "SUBMITTED",
+    "shared": true,
+    "visible": true
+  },
+  {
+    "id": "fd0b3e0c-6c0f-47ca-bf3d-29a930379b3b",
+    "name": "Describe the ownership structure of your company",
+    "status": "OPEN",
+    "shared": true,
+    "visible": true
+  },
+  {
+    "id": "510400a7-952c-42c3-8b99-8d0bb76e809a",
+    "name": "Provide bank account information",
+    "status": "OPEN",
+    "shared": true,
+    "visible": true
+  },
+  {
+    "id": "703bd463-dde5-4647-81b9-df2ba8ce0215",
+    "name": "Specify the required payment methods",
+    "status": "OPEN",
+    "shared": true,
+    "visible": true
+  },
+  {
+    "id": "e57b7f15-42bd-4b12-9cb7-b12290887787",
+    "name": "Provide implementation details",
+    "status": "OPEN",
+    "shared": true,
+    "visible": true
+  },
+  {
+    "id": "8f27a49f-c843-488a-b175-b46fddd640a0",
+    "name": "Verify signatory invites",
+    "status": "OPEN",
+    "shared": true,
+    "visible": true
+  }
+]
