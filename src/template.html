@@ -13,6 +13,7 @@
     </li>
 </ul>
 
+<!-- Define the template for the task-list in a dossier-->
 <div data-kyc-task-list>
     <h1 data-kyc-dossier-title>
         <button data-kyc-to-dossiers>
@@ -38,10 +39,6 @@
         </button>
         <kyc-text></kyc-text>
     </h1>
-    <div data-kyc-dossier-tasks-navigation>
-
-    </div>
-
     <!-- Define the template for a single task in a dossier -->
     <form data-kyc-task>
         <h2 data-kyc-task-title>
@@ -55,41 +52,31 @@
                 <kyc-check-description></kyc-check-description>
             </label>
             <kyc-input>
-                <input data-kyc-input class="form-control">
-                <textarea data-kyc-textarea class="form-control"></textarea>
-                <select class="form-control" data-kyc-select-input></select>
-                <div data-kyc-options class="form-control  form-options row">
-                    <div data-kyc-checkbox class="col-12 col-md-4 form-check">
-                        <label class="multiline">
+                <input data-kyc-input>
+                <textarea data-kyc-textarea></textarea>
+                <select data-kyc-select-input></select>
+                <div data-kyc-options>
+                    <div data-kyc-checkbox>
+                        <label>
                             <input type="checkbox" data-kyc-checkbox-input/>
-                            <span class="label">
-                                                            <span class="multiline"><kyc-text></kyc-text></span>
-                                                        </span>
+                            <kyc-text></kyc-text></span>
                         </label>
                     </div>
-                    <div data-kyc-radiobutton class="col-12 col-md-4 form-radio">
-                        <label class="multiline">
+                    <div data-kyc-radiobutton >
+                        <label >
                             <input type="radio" data-kyc-radio-input>
-                            <span class="label">
-                                                            <span class="multiline"><kyc-text></kyc-text></span>
-                                                        </span>
+                            <kyc-text></kyc-text>
                         </label>
                     </div>
-
                 </div>
-
-
-                <div data-kyc-file class="form-control file-input cursor-pointer">
+                <div data-kyc-file >
                     <input type="file" class="form-control" data-kyc-file-input>
                     <div class="filepreview" data-kyc-file-preview></div>
                 </div>
-
             </kyc-input>
-
             <small>
                 <kyc-check-longdescription></kyc-check-longdescription>
             </small>
-
         </div>
         <!-- Define the template the navigation between tasks in a dossier -->
         <div data-kyc-task-navigation>

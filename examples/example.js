@@ -1,3 +1,4 @@
+/* KYC SERVERSIDE AND CONFIG PREPARATION*/
 var formisLoaded = false,
     formfields =
         [
@@ -135,9 +136,82 @@ var formisLoaded = false,
 
     }
 
+/*ToggleCSS functionality*/
+
+var toggableCSS = [],
+istoggling=false;
+
+function toggleCssReady() {
+
+    document.querySelector('body').classList.remove('csstoggling')
+}
+
+
+
+function toggleCss() {
+    if(!istoggling) {
+        istoggling=true;
+        document.querySelector('body').removeAttribute('data-toggle-css');
+        if (toggableCSS.length == 0 && !!document.querySelector('link[data-toggle-css]')) {
+            [].slice.call(document.querySelectorAll('link[data-toggle-css]')).map(function (link) {
+                toggableCSS.push({name: link.getAttribute('data-toggle-css'), href: link.getAttribute('href')});
+                link.parentNode.removeChild(link);
+            })
+        }
+        if (toggableCSS.length > 0) {
+
+            var checked = document.querySelector('.togglecss input[type="radio"]:checked');
+            if (!checked) {
+                checked = document.querySelector('.togglecss input[type="radio"]');
+                checked.checked = true;
+            }
+            checked = checked.getAttribute('value') || null;
+
+
+            if (!!checked) {
+
+
+                [].slice.call(document.querySelectorAll('link[rel="stylesheet"]')).map(function (link) {
+                    if (toggableCSS.filter(function (css) {
+                        return css.href == link.getAttribute('href')
+                    }).length > 0) {
+
+                        link.parentNode.removeChild(link);
+                    }
+                })
+
+                toggableCSS.map(function (css) {
+                    console.log(css, checked)
+                    if (css.name == checked) {
+                        var link = document.createElement('link');
+                        link.type = 'text/css';
+                        link.rel = 'stylesheet';
+                        link.href = css.href;
+
+                        document.getElementsByTagName('head')[0].appendChild(link);
+                        var img = document.createElement('img');
+                        img.onerror = function (event) {
+                            istoggling=false;
+                            document.querySelector('body').setAttribute('data-toggle-css', css.name);
+
+
+                        }
+                        img.src = css.href;
+                    }
+                })
+            }
+
+        }
+    }
+
+
+}
+
+
 /* INITIALIZE OUR login from when the page is loadedIS LOADED*/
 
 window.addEventListener('load', function (e) {
+    toggleCss();
     buildStartform();
     // test if the event has a property kyctype an it equals to 'ready'
     if (!!e && !!e.kyctype && e.kyctype == 'ready') {

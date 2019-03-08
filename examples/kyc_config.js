@@ -63,9 +63,9 @@ my_kyc_config = {
      * @param {object}  inMetaDataObject The to be prefilled metaDataObject depending on the Task at hand
      * @returns {object}  outMetaDataObject The prefilled metaDataObject depending on the values known by the SDK Consumerknown values.
      */
-    prefill: function (inMetaDataObject) {
+    prefill: function (inMetaDataObject,callback) {
         //Custom SDK Consumer Code
-        return outMetaDataObject || inMetaDataObject;
+        callback?callback(outMetaDataObject || inMetaDataObject):(outMetaDataObject || inMetaDataObject);
     },
     /**
      * Optional function that is called when the KYC SDK throws an event Changes (changed dossier, task, ckeck);

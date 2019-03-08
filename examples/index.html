@@ -1,12 +1,25 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>KYC Javascript SDK Example</title>
 
-    <link href="https://cm.com/en-gb/app/aurora/css/v2/aurora.css" rel="stylesheet">
-    <link href="example.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="KYC Javascript SDK Example">
+    <meta name="robots" content="noindex">
+    <meta name="author" content="CM">
+    <meta name="google" content="notranslate" />
+
+    <base href="">
+
+    <link href="https://cdn.cm.com/cm/favicon-32x32.png" rel="icon">
+    <link href="https://cdn.cm.com/cm/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <link  href="example.css" rel="stylesheet">
+    <link data-toggle-css="aurora" href="aurora.css" rel="stylesheet">
+    <link data-toggle-css="kyc" href="../dist/kyc.sdk.css" rel="stylesheet">
+
 
 </head>
 <body>
@@ -80,9 +93,7 @@
                     </button>
                     <kyc-text></kyc-text>
                 </h1>
-                <div data-kyc-dossier-tasks-navigation>
 
-                </div>
 
                 <!-- Define the template for a single task in a dossier -->
                 <form data-kyc-task>
@@ -160,7 +171,16 @@
         </div>
     </div>
 </div>
-
+<div class="togglecss">
+    <label>
+        <input type="radio" name="stylesheet" value="aurora" checked onchange="toggleCss()">
+        <span>CM Aurora Look</span>
+    </label>
+    <label>
+        <input type="radio" name="stylesheet" value="kyc" onchange="toggleCss()">
+        <span>KYC SDK Look</span>
+    </label>
+</div>
 <script src="kyc_config.js"></script>
 <script src="example.js"></script>
 <script src="../dist/kyc.sdk.min.js"></script>
