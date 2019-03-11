@@ -57,7 +57,6 @@
         }
         xhr.withCredentials = options.withCredentials || false;
         xhr.addEventListener("load", function () {
-            console.log(xhr);
             if (xhr.readyState == 4) {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     try {
@@ -158,87 +157,114 @@
             'url': kycApiEndPoint + '/api/v1/users/' + KYCToken.data.uuid + '/dossiers',
             callback: function (result) {
                 if (!!result.success) {
+                    var dossiers = (result.success.filter(function (client) {
+                        return !!KYCToken.data.clientId && client.clientId == KYCToken.data.clientId;
+                    }).shift() || { dossiers: [] }).dossiers;
+                    if (!element) {
+                        var event_1 = createEvent('dossiers', { dossiers: dossiers });
+                        notify(event_1, window);
+                        return;
+                    }
                     element['kyc'].status.changed = new Date();
-                    element['kyc'].dossiers = ((result.success.filter(function (client) {
-                        return true;
-                    }) || []).map(function (client) {
-                        return client.dossiers;
-                    }).shift() || []).filter(function (dossier) {
+                    element['kyc'].dossiers = dossiers.filter(function (dossier) {
                         return true;
                     });
                     notify('dossiers', element);
                     if (element['kyc'].dossiers.length > 0) {
                         buildDossiersList(element);
                     }
+                    return;
                 }
-                else {
-                    console.warn("KYC dossiers could not be fetched!", result.error);
-                }
+                console.warn("KYC dossiers could not be fetched!", result.error);
             }
         };
         callApi(options);
-    }, getTasks = function (element, dossierId) {
-        var curDossier = element['kyc'].dossiers.filter(function (dossier) {
+    }, getTasks = function (dossierId, element) {
+        var curDossier = !!element ? element['kyc'].dossiers.filter(function (dossier) {
             return dossier.id == dossierId;
-        }).shift();
-        if (!!curDossier) {
-            if (!!curDossier.tasks) {
-                buildTaskList(element, curDossier);
-                return;
-            }
-            var options = {
-                'url': kycApiEndPoint + '/api/v1/dossiers/' + dossierId + '/tasks',
-                callback: function (result) {
-                    if (!!result.success) {
+        }).shift() : null;
+        var options = {
+            'url': kycApiEndPoint + '/api/v1/dossiers/' + dossierId + '/tasks',
+            callback: function (result) {
+                if (!!result.success) {
+                    if (!element) {
+                        var event_2 = createEvent('tasks', { tasks: result.success });
+                        notify(event_2, window);
+                        return;
+                    }
+                    element['kyc'].status.changed = new Date();
+                    if (!!curDossier) {
                         curDossier.tasks = result.success;
                         buildTaskList(element, curDossier);
                     }
-                    else {
-                        console.warn("KYC dossier tasks could not be fetched!", result.error);
-                    }
+                    notify('tasks', element);
+                    return;
                 }
-            };
+                console.warn("KYC dossier tasks could not be fetched!", result.error);
+            }
+        };
+        if (!!element) {
+            if (!!curDossier) {
+                if (!!curDossier.tasks) {
+                    buildTaskList(element, curDossier);
+                    return;
+                }
+                callApi(options);
+                return;
+            }
+            else {
+                console.warn("KYC dossier could not be fetched!");
+            }
+        }
+        callApi(options);
+        return;
+    }, getTask = function (taskId, dossierId, element) {
+        var curTask;
+        var curDossier = !!element ? element['kyc'].dossiers.filter(function (dossier) {
+            return dossier.id == dossierId;
+        }).shift() : null, options = {
+            'url': kycApiEndPoint + '/api/v1/tasks/' + taskId,
+            callback: function (result) {
+                if (!!result.success) {
+                    if (!element) {
+                        var event_3 = createEvent('task', { task: result.success });
+                        notify(event_3, window);
+                        return;
+                    }
+                    element['kyc'].status.changed = new Date();
+                    if (!!curDossier && curTask) {
+                        element['kyc'].status.changed = new Date();
+                        curTask = result.success;
+                        buildTaskForm(element, curDossier, curTask);
+                    }
+                    notify('task', element);
+                    return;
+                }
+                console.warn("KYC dossier tasks could not be fetched!", result.error);
+            }
+        };
+        if (!!element) {
+            if (!!curDossier) {
+                if (!!curDossier.tasks) {
+                    curTask = curDossier.tasks.filter(function (task) {
+                        return task.id == taskId;
+                    }).shift();
+                    if (curTask) {
+                        if (curTask.checks) {
+                            buildTaskForm(element, curDossier, curTask);
+                            return;
+                        }
+                        callApi(options);
+                    }
+                    return;
+                }
+                else {
+                    console.warn("KYC dossier could not be fetched!");
+                }
+            }
             callApi(options);
             return;
         }
-        console.warn("KYC dossier could not be fetched!");
-    }, getTask = function (element, dossierId, taskId) {
-        var curDossier, curTask;
-        curDossier = element['kyc'].dossiers.filter(function (dossier) {
-            return dossier.id == dossierId;
-        }).map(function (dossier) {
-            return dossier;
-        }).shift();
-        if (curDossier) {
-            if (!!curDossier.tasks) {
-                curTask = curDossier.tasks.filter(function (task) {
-                    return task.id == taskId;
-                }).shift();
-                if (curTask) {
-                    if (curTask.checks) {
-                        buildTaskForm(element, curDossier, curTask);
-                        return;
-                    }
-                    var options = {
-                        'url': kycApiEndPoint + '/api/v1/tasks/' + taskId,
-                        callback: function (result) {
-                            if (!!result.success) {
-                                curTask = result.success;
-                                setTimeout(function () {
-                                    buildTaskForm(element, curDossier, curTask);
-                                }, 1000);
-                            }
-                            else {
-                                console.warn("KYC dossier tasks could not be fetched!", result.error);
-                            }
-                        }
-                    };
-                    callApi(options);
-                    return;
-                }
-            }
-        }
-        console.warn("KYC dossier could not be fetched!");
     }, checkSdkConditions = function (elementId, inContext) {
         if (!window['kyc_config']) {
             if (!!showWarning) {
@@ -376,7 +402,10 @@
         if (!!partial) {
             return partial.cloneNode(true);
         }
-        console.warn('A templating error has occured.!', { selector: selector, template: sourcetoUse.innerHTML });
+        console.warn('A templating error has occured.!', {
+            selector: selector,
+            template: sourcetoUse.innerHTML
+        });
         return null;
     }, goBack = function (element) {
         var lasthistory = element['kyc'].history.back.pop();
@@ -395,7 +424,6 @@
                 }
             });
         }
-        console.log(values);
     }, Validators = {
         IBAN: function isValidIBANNumber(input) {
             var CODE_LENGTHS = {
@@ -430,7 +458,7 @@
             case 'prefill':
                 switch (valueFormat) {
                     case 'PHONE_NUMBER':
-                        event.target.value = (event.target.value || '').replace(/[^0-9\s\+]/g, '').trim();
+                        event.target.value = (event.target.value || '').replace(/[^0-9\s\+]/g, '').trim().replace(/^00+/g, '+');
                         break;
                     case 'IBAN':
                         event.target.value = (event.target.value || '').toUpperCase().replace(/[^A-Z0-9\s]/g, '').trim();
@@ -442,9 +470,12 @@
                 switch (valueFormat) {
                     case 'PHONE_NUMBER':
                         event.target.value = (event.target.value || '').replace(/[\+]/g, '00').replace(/[^0-9]/g, '').trim();
-                        return;
+                        break;
+                    default:
+                        event.target.value = (event.target.value || '').trim();
                         break;
                 }
+                return event.target.value;
                 break;
             case 'change':
                 switch (valueFormat) {
@@ -520,7 +551,7 @@
                     buildLoader(target);
                     target['kyc'].history.back = [];
                     target['kyc'].history.next = [];
-                    getTasks(target, dossier.id);
+                    getTasks(dossier.id, target);
                 });
                 last_1 = curDossierrow;
             });
@@ -528,6 +559,7 @@
             target.innerHTML = '';
             target.appendChild(dossierlist);
             target.setAttribute('kyc-sdk-status', 'dossiers');
+            notify('dossierlist', target);
         }
         catch (error) {
             console.warn('A templating error has occured while building the dossier list!', error);
@@ -560,7 +592,7 @@
                     buildLoader(target);
                     target['kyc'].history.back = [];
                     target['kyc'].history.next = [];
-                    getTask(target, dossier.id, task.id);
+                    getTask(task.id, dossier.id, target);
                 });
                 last_2 = curTaskrow;
             });
@@ -568,6 +600,7 @@
             target.innerHTML = '';
             target.appendChild(tasklist);
             target.setAttribute('kyc-sdk-status', 'tasks');
+            notify('tasklist', target);
         }
         catch (error) {
             console.warn('A templating error has occured while building the dossier task list!', error);
@@ -598,6 +631,7 @@
                     taskTitleElement.parentNode.replaceChild(document.createTextNode(task.name), taskTitleElement);
                 }
                 var curCheck = checkElement.cloneNode(true), inputElement_1 = curCheck.querySelector('kyc-input');
+                var focusel_1;
                 ap.slice.call(curCheck.querySelectorAll('kyc-check-description')).map(function (e) {
                     if (!!check.definition.description) {
                         e.parentNode.replaceChild(document.createTextNode(translate(check.definition.description)), e);
@@ -637,6 +671,9 @@
                                         ap.slice.call(currentOption.querySelectorAll('kyc-text')).map(function (e) {
                                             e.parentNode.replaceChild(document.createTextNode(translate(!!keyvalue.explanation ? keyvalue.explanation : keyvalue.name)), e);
                                         });
+                                        if (!focusel_1) {
+                                            focusel_1 = currentOption;
+                                        }
                                         newinput_1.appendChild(currentOption);
                                     });
                                 }
@@ -656,6 +693,9 @@
                                         currentOption_1.innerHTML = translate(!!keyvalue.explanation ? keyvalue.explanation : keyvalue.name);
                                         newinput_1.appendChild(currentOption_1);
                                     });
+                                    if (!focusel_1) {
+                                        focusel_1 = newinput_1;
+                                    }
                                 }
                                 break;
                             case 'MANUAL_MULTIPLE_CHOICE_ENUM':
@@ -672,6 +712,9 @@
                                         e.parentNode.replaceChild(document.createTextNode(translate(!!keyvalue.explanation ? keyvalue.explanation : keyvalue.name)), e);
                                     });
                                     newinput_1.appendChild(currentOption);
+                                    if (!focusel_1) {
+                                        focusel_1 = currentOption;
+                                    }
                                 });
                                 break;
                         }
@@ -687,6 +730,9 @@
                                         newinput_1.value = check.value || null;
                                         newinput_1.setAttribute('name', formname_1);
                                         newinput_1.required = !(!!check.definition.optional);
+                                        if (!focusel_1) {
+                                            focusel_1 = newinput_1;
+                                        }
                                         break;
                                     default:
                                         newinput_1 = inputElement_1.querySelector('[data-kyc-input]').cloneNode(true);
@@ -722,6 +768,9 @@
                                         }
                                         newinput_1.required = !(!!check.definition.optional);
                                         newinput_1.value = check.value || null;
+                                        if (!focusel_1) {
+                                            focusel_1 = newinput_1;
+                                        }
                                         validateInputOnEvent({ 'type': 'prefill', 'target': newinput_1 });
                                 }
                                 ['keypress', 'paste', 'change', 'input'].map(function (type) {
@@ -739,23 +788,49 @@
                             case 'DOCUMENT_FILE_UPLOAD':
                             case 'SELFIE_CHECK':
                                 newinput_1 = inputElement_1.querySelector('[data-kyc-file]').cloneNode(true);
-                                var fileinput = newinput_1.querySelector('[data-kyc-file-input]'), placeholder = inputElement_1.querySelector('kyc-placeholder'), filepreview_1 = newinput_1.querySelector('[data-kyc-file-preview]');
+                                var fileinput = newinput_1.querySelector('[data-kyc-file-input]'), placeholder = inputElement_1.querySelector('kyc-placeholder'), filepreview_1 = newinput_1.querySelector('[data-kyc-file-preview]'), realinput = document.createElement('input');
+                                realinput.setAttribute('type', 'hidden');
+                                realinput.required = !(!!check.definition.optional);
+                                realinput.value = check.value || null;
+                                realinput.setAttribute('name', formname_1);
+                                newinput_1.appendChild(realinput);
+                                if (!!check.definition.method) {
+                                    realinput.setAttribute('data-method', check.definition.method);
+                                }
+                                if (!!check.definition.valueFormat) {
+                                    realinput.setAttribute('data-value-format', check.definition.valueFormat);
+                                }
                                 fileinput.setAttribute('type', 'file');
                                 fileinput.setAttribute('placeholder', translate(check.definition.description));
+                                if (!focusel_1) {
+                                    focusel_1 = fileinput;
+                                }
                                 filepreview_1.innerHTML = translate(check.definition.description);
                                 fileinput.addEventListener('change', function (event) {
                                     if (event.target.files && event.target.files[0]) {
                                         var reader = new FileReader();
                                         reader.onload = function (fileEvent) {
-                                            console.log(fileEvent, event.target.files[0]);
                                             if (!!fileEvent && !!fileEvent.target && !!fileEvent.target['result']) {
-                                                filepreview_1.setAttribute('style', 'background-image:url("' + fileEvent.target['result'] + '")');
+                                                var options = {
+                                                    'url': kycApiEndPoint + '/api/v1/uploads/',
+                                                    params: fileEvent.target['result'],
+                                                    method: 'POST',
+                                                    callback: function (result) {
+                                                        if (!!result.success && !!result.success.uuid) {
+                                                            uploads[result.success.uuid] = !!fileEvent && !!fileEvent.target && fileEvent.target['result'] ? fileEvent.target['result'] : '';
+                                                            filepreview_1.setAttribute('style', 'background-image:url("' + uploads[result.success.uuid] + '")');
+                                                        }
+                                                        else {
+                                                            console.warn("The upload  did not succeed!", result.error);
+                                                        }
+                                                    }
+                                                };
+                                                callApi(options);
                                             }
                                         };
                                         filepreview_1.innerHTML = event.target.files[0].name;
                                         reader.readAsDataURL(event.target.files[0]);
                                     }
-                                    console.log(event);
                                 });
                                 if (!!check.value) {
                                     if (!!uploads[check.value]) {
@@ -764,7 +839,7 @@
                                     else {
                                         var options = {
                                             'url': kycApiEndPoint + '/api/v1/uploads/' + check.value,
-                                            method: 'POST',
+                                            method: 'GET',
                                             callback: function (result) {
                                                 if (!!result.success) {
                                                     uploads[check.value] = result.success;
@@ -815,6 +890,36 @@
                         backbutton.parentNode.removeChild(backbutton);
                     });
                 }
+                var gotoNext_1 = function (next) {
+                    if (!!next) {
+                        buildLoader(target);
+                        target['kyc'].history.back.push(function () {
+                            buildLoader(target);
+                            buildTaskForm(target, dossier, task, check.id);
+                        });
+                        buildTaskForm(target, dossier, task, next);
+                        return;
+                    }
+                    buildLoader(target);
+                    target['kyc'].history.back.push(function () {
+                        buildLoader(target);
+                        buildTaskForm(target, dossier, task, check.id);
+                    });
+                    var options = {
+                        'url': kycApiEndPoint + '/api/v1/tasks/' + task.id,
+                        method: 'POST',
+                        params: JSON.stringify(task),
+                        callback: function (result) {
+                            if (!!result.success) {
+                                buildTaskList(target, dossier);
+                            }
+                            else {
+                                console.warn("The task could not be saved!", result.error);
+                            }
+                        }
+                    };
+                    callApi(options);
+                };
                 ap.slice.call(dossierElement.querySelectorAll('[data-kyc-task-next]')).map(function (nextbutton) {
                     nextbutton.disabled = !!taskFormElement_1 && !taskFormElement_1.checkValidity();
                     ap.slice.call(nextbutton.querySelectorAll('kyc-text')).map(function (e) {
@@ -831,21 +936,7 @@
                                 : JSON.stringify(ap.slice.call(taskFormElement_1.querySelectorAll('[name="' + formname_1 + '"]')).map(function (field) {
                                     return validateInputOnEvent({ 'type': 'tokyc', 'target': field });
                                 }));
-                            if (!!next_1) {
-                                buildLoader(target);
-                                target['kyc'].history.back.push(function () {
-                                    buildLoader(target);
-                                    buildTaskForm(target, dossier, task, check.id);
-                                });
-                                buildTaskForm(target, dossier, task, next_1);
-                                return;
-                            }
-                            buildLoader(target);
-                            target['kyc'].history.back.push(function () {
-                                buildLoader(target);
-                                buildTaskForm(target, dossier, task, check.id);
-                            });
-                            buildTaskList(target, dossier);
+                            gotoNext_1(next_1);
                             return;
                         }
                     });
@@ -853,6 +944,10 @@
                 target.innerHTML = '';
                 target.appendChild(dossierElement);
                 target.setAttribute('kyc-sdk-status', 'task');
+                if (focusel_1) {
+                    focusel_1.focus();
+                }
+                notify('taskform', target);
             }
             catch (error) {
                 console.warn('A templating error has occured while building the dossier task check form!', error);
@@ -911,10 +1006,28 @@
             get version() {
                 return version;
             },
-            init: init
+            init: init,
+            getDossier: function () {
+                if (!!KYCToken) {
+                    return getDossiers();
+                }
+                return { error: 'no valid Identification' };
+            },
+            getTasks: function (dossierId) {
+                if (!!KYCToken) {
+                    return getTasks(dossierId);
+                }
+                return { error: 'no valid Identification' };
+            },
+            getTask: function (taskId) {
+                if (!!KYCToken) {
+                    return getTask(taskId);
+                }
+                return { error: 'no valid Identification' };
+            }
         };
-        var event_1 = createEvent('ready', { status: { initialised: initialised, version: version } });
-        notify(event_1, window);
+        var event_4 = createEvent('ready', { status: { initialised: initialised, version: version } });
+        notify(event_4, window);
         showWarning = true;
         domReady(function () {
             if (checkSdkConditions()) {

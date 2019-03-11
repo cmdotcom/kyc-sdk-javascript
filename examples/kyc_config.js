@@ -80,23 +80,26 @@ my_kyc_config = {
          *  event.type is on of [ 'changed','initialised','ready']
          *  event.target can be 'kyc_sdk' (the KYC SDK script) or the KYC SDK container, defined by the elementId in the kyc_config)
          */
-        console.log(event)
+        console.info(event)
         switch (event.type) {
             case 'changed':
                 //something has changed
                 break;
             case 'identifiaction':
             //the user is identified
-
+            case 'dossierlist':
+            //kyc dossierlist has been build
+            case 'tasklist':
+            //the tasklist has been build
+            case 'taskform':
+            //the taskform has been build
             case 'dossiers':
-            //kyc dossiers have been loaded
-            case 'dossier':
-            //the dossier has been loaded
+                //kyc dossiers have been loaded
             case 'tasks':
-            //the tasks have been loaded
+                //the tasks have been loaded
             case 'task':
                 //the task has been loaded
-                console.log(event.detail)
+                console.info(event.detail)
                 break;
             case 'initialised':
                 if (event.target && event.target.classList) {

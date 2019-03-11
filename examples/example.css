@@ -51,14 +51,15 @@ body > platform-header   ~ .togglecss{
 body[data-toggle-css] > .togglecss > label > input[type="radio"]:checked + span {
     opacity: 1;
 }
-body> *:not(.togglecss){
+body> .container{
 
     opacity: 0;
 }
-body[data-toggle-css]:not([data-toggle-css=""])> *:not(.togglecss) {
+body[data-toggle-css]:not([data-toggle-css=""])> .container {
 
     opacity: 1!important;
 }
+
 body[data-toggle-css="kyc"]{
     font-family: Verdana;
 }
