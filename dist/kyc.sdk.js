@@ -293,6 +293,10 @@
             }
             return false;
         }
+        var origwarning = showWarning;
+        if (window['kyc_config']) {
+            showWarning = true;
+        }
         if (!window['kyc_config'].authorisationEndPoint) {
             if (!!showWarning) {
                 console.warn("No kyc authorisationEndPoint on the kyc_config object!");
@@ -318,27 +322,33 @@
         }
         if (!elementId) {
             if (!window['kyc_config'].elementId) {
-                if (!!showWarning) {
+                if (!!origwarning) {
                     console.warn("No elementId object found on the kyc_config object!");
+                    console.warn("Assuming Direct SDK Access!");
                 }
-                return false;
+                return {
+                    element: window,
+                    context: JSON.parse(JSON.stringify(inContext))
+                };
             }
-            elementId = window['kyc_config'].elementId;
-        }
-        if (!(!!elementId)) {
-            if (!!showWarning) {
-                console.warn("No elementId is given!");
+            else {
+                elementId = window['kyc_config'].elementId;
+                if (!(!!elementId)) {
+                    if (!!showWarning) {
+                        console.warn("No elementId is given!");
+                    }
+                    return false;
+                }
             }
-            return false;
         }
-        if (document.getElementById(elementId)) {
-            return {
-                element: document.getElementById(elementId),
-                context: JSON.parse(JSON.stringify(inContext))
-            };
-        }
-        if (!(!!elementId)) {
-            if (!!showWarning) {
+        if (!!elementId) {
+            if (document.getElementById(elementId)) {
+                return {
+                    element: document.getElementById(elementId),
+                    context: JSON.parse(JSON.stringify(inContext))
+                };
+            }
+            else if (!!showWarning) {
                 console.warn("The HTML element with id '" + elementId + "'  is not present in the DOM tree!");
             }
             return false;
@@ -546,6 +556,9 @@
             });
         }
     }, buildLoader = function (target) {
+        if (!target || !target.appendChild) {
+            return;
+        }
         target.innerHTML = '';
         var loader = getPartial('[data-kyc-loader]', target['kyc'].template);
         if (!!loader) {
@@ -553,6 +566,9 @@
         }
         target.setAttribute('kyc-sdk-status', 'loading');
     }, buildNoDossiersList = function (target) {
+        if (!target) {
+            return;
+        }
         try {
             var dossierlist = getPartial('[data-kyc-dossier-list]', target['kyc'].template), dossierrow = dossierlist.querySelector('[data-kyc-dossier-item]'), errorrow = dossierlist.querySelector('[data-kyc-dossier-none]'), errornode = errorrow.querySelector('kyc-dossier-error');
             if (!!errornode) {
@@ -572,6 +588,9 @@
             return;
         }
     }, buildDossiersList = function (target) {
+        if (!target || !target.appendChild) {
+            return;
+        }
         try {
             var dossierlist = getPartial('[data-kyc-dossier-list]', target['kyc'].template), dossierrow_1 = dossierlist.querySelector('[data-kyc-dossier-item]'), errorrow = dossierlist.querySelector('[data-kyc-dossier-none]'), ap_1 = Array.prototype;
             var last_1 = dossierrow_1;
@@ -608,6 +627,9 @@
             return;
         }
     }, buildTaskList = function (target, dossier) {
+        if (!target || !target.appendChild) {
+            return;
+        }
         try {
             var tasklist = getPartial('[data-kyc-task-list]', target['kyc'].template), dossierTitleElement = tasklist.querySelector('[data-kyc-dossier-title] kyc-text'), taskrow_1 = tasklist.querySelector('[data-kyc-task-item]'), backbuttons = tasklist.querySelectorAll('[data-kyc-to-dossiers]'), overrulestatus_1 = ['ACCEPTED', 'SUBMITTED'].indexOf(dossier.status) > -1 ? dossier.status : null;
             var last_2 = taskrow_1;
@@ -656,6 +678,9 @@
             return;
         }
     }, buildTaskOverView = function (target, dossier, task) {
+        if (!target || !target.appendChild) {
+            return;
+        }
         try {
             var dossierElement = getPartial('[data-kyc-dossier]', target['kyc'].template);
             ap.slice.call(dossierElement.querySelectorAll('[name]')).map(function (e) {
@@ -805,6 +830,9 @@
             console.warn('A templating error has occured while building the dossier task check form!', error);
         }
     }, buildTaskForm = function (target, dossier, task, checkid) {
+        if (!target || !target.appendChild) {
+            return;
+        }
         var overrulestatus = ['ACCEPTED', 'SUBMITTED'].indexOf(dossier.status) > -1 ? dossier.status : (['ACCEPTED', 'SUBMITTED'].indexOf(task.status) > -1 ? task.status : null);
         if (!!overrulestatus) {
             buildTaskOverView(target, dossier, task);
@@ -1185,33 +1213,41 @@
         if (!checked) {
             return false;
         }
-        showWarning = true;
+        if (!!elementId) {
+            showWarning = true;
+        }
         element = checked.element;
         context = checked.context;
-        if (!element.kyc) {
-            status = {
-                initialised: new Date(),
-                version: version
-            };
-            event = createEvent('initialised', { status: status, context: context });
-            element.kyc = {
-                context: checked.context,
-                status: status,
-                template: template(element.innerHTML.trim()),
-                history: {
-                    back: [],
-                    next: []
+        if (!!element) {
+            if (!element.kyc) {
+                status = {
+                    initialised: new Date(),
+                    version: version
+                };
+                event = createEvent('initialised', { status: status, context: context });
+                element.kyc = {
+                    context: checked.context,
+                    status: status,
+                    template: template(element.innerHTML.trim()),
+                    history: {
+                        back: [],
+                        next: []
+                    }
+                };
+                if (!!element.setAttribute) {
+                    element.setAttribute('kyc-sdk-status', 'ready');
+                    buildLoader(element);
+                    element.appendChild(view);
                 }
-            };
-            element.setAttribute('kyc-sdk-status', 'ready');
-            buildLoader(element);
-            element.appendChild(view);
-        }
-        else {
-            element.setAttribute('kyc-sdk-status', 'ready');
-            element.kyc.status.reset = new Date(),
-                element.kyc.context = context,
-                event = createEvent('reset', safeKyc(element));
+            }
+            else {
+                if (!!element.setAttribute) {
+                    element.setAttribute('kyc-sdk-status', 'ready');
+                }
+                element.kyc.status.reset = new Date(),
+                    element.kyc.context = context,
+                    event = createEvent('reset', safeKyc(element));
+            }
         }
         notify(event, element);
         getToken(element);
@@ -1247,7 +1283,6 @@
         };
         var event_4 = createEvent('ready', { status: { initialised: initialised, version: version } });
         notify(event_4, window);
-        showWarning = true;
         domReady(function () {
             if (checkSdkConditions()) {
                 init();

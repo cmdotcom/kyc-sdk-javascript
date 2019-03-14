@@ -328,6 +328,7 @@ window.addEventListener('load', function (e) {
         //KYC SDK is Loaded
         console.log('KYC SDK is Loaded');
 
+
     }
 })
 

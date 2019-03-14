@@ -138,7 +138,9 @@
             },
             getToken = function (element: HTMLElement) {
                 if (KYCToken && KYCToken.userToken) {
+
                     getMe(element)
+
 
                 } else {
                     const options = {
@@ -413,6 +415,10 @@
                     }
                     return false;
                 }
+                const origwarning=showWarning;
+                if (window['kyc_config']) {
+                    showWarning=true;
+                }
                 if (!window['kyc_config'].authorisationEndPoint) {
                     if (!!showWarning) {
                         console.warn("No kyc authorisationEndPoint on the kyc_config object!");
@@ -438,32 +444,40 @@
                 }
                 if (!elementId) {
                     if (!window['kyc_config'].elementId) {
-                        if (!!showWarning) {
+                        if (!!origwarning) {
                             console.warn("No elementId object found on the kyc_config object!");
+                            console.warn("Assuming Direct SDK Access!");
                         }
-                        return false;
+                            return {
+                                element: window,
+                                context: JSON.parse(JSON.stringify(inContext))
+                            };
+
+                        //  return false;
+                    } else {
+                        elementId = window['kyc_config'].elementId;
+                        if (!(!!elementId)) {
+                            if (!!showWarning) {
+                                console.warn("No elementId is given!");
+                            }
+                            return false;
+                        }
                     }
-                    elementId = window['kyc_config'].elementId;
                 }
 
-                if (!(!!elementId)) {
-                    if (!!showWarning) {
-                        console.warn("No elementId is given!");
-                    }
-                    return false;
-                }
-                if (document.getElementById(elementId)) {
-                    return {
-                        element: document.getElementById(elementId),
-                        context: JSON.parse(JSON.stringify(inContext))
-                    };
-                }
-                if (!(!!elementId)) {
-                    if (!!showWarning) {
+
+                if (!!elementId) {
+                    if (document.getElementById(elementId)) {
+                        return {
+                            element: document.getElementById(elementId),
+                            context: JSON.parse(JSON.stringify(inContext))
+                        };
+                    } else if (!!showWarning) {
                         console.warn("The HTML element with id '" + elementId + "'  is not present in the DOM tree!");
                     }
                     return false;
                 }
+
             },
             createEvent = function (type, detail) {
                 let event;
@@ -735,6 +749,10 @@
 
             },
             buildLoader = function (target: HTMLElement) {
+                if (!target ||!target.appendChild) {
+                    //window
+                    return;
+                }
                 target.innerHTML = '';
                 const
                     loader = getPartial('[data-kyc-loader]', target['kyc'].template);
@@ -745,6 +763,9 @@
 
             },
             buildNoDossiersList = function (target: HTMLElement) {
+                if (!target) {
+                    return;
+                }
                 try {
                     const
                         dossierlist = getPartial('[data-kyc-dossier-list]', target['kyc'].template),
@@ -773,6 +794,10 @@
 
             },
             buildDossiersList = function (target: HTMLElement) {
+                if (!target ||!target.appendChild) {
+                    //window
+                    return;
+                }
                 try {
                     const
                         dossierlist = getPartial('[data-kyc-dossier-list]', target['kyc'].template),
@@ -827,6 +852,10 @@
 
             },
             buildTaskList = function (target: HTMLElement, dossier) {
+                if (!target ||!target.appendChild) {
+                    //window
+                    return;
+                }
                 try {
                     const
                         tasklist = getPartial('[data-kyc-task-list]', target['kyc'].template),
@@ -898,7 +927,10 @@
 
             },
             buildTaskOverView = function (target: HTMLElement, dossier, task) {
-
+                if (!target ||!target.appendChild) {
+                    //window
+                    return;
+                }
                 try {
                     const dossierElement = getPartial('[data-kyc-dossier]', target['kyc'].template);
 
@@ -1118,6 +1150,10 @@
                 }
             },
             buildTaskForm = function (target: HTMLElement, dossier, task, checkid?: string) {
+                if (!target ||!target.appendChild) {
+                    //window
+                    return;
+                }
                 const overrulestatus = ['ACCEPTED', 'SUBMITTED'].indexOf(dossier.status) > -1 ? dossier.status : (['ACCEPTED', 'SUBMITTED'].indexOf(task.status) > -1 ? task.status : null);
                 if (!!overrulestatus) {
                     buildTaskOverView(target, dossier, task);
@@ -1626,35 +1662,47 @@
                 if (!checked) {
                     return false;
                 }
-                showWarning = true;
+                if(!!elementId) {
+                    showWarning = true;
+                }
 
                 element = checked.element;
                 context = checked.context;
 
-                if (!element.kyc) {
-                    status = {
-                        initialised: new Date(),
-                        version: version
-                    }
-                    event = createEvent('initialised', {status: status, context: context});
-                    element.kyc = {
-                        context: checked.context,
-                        status: status,
-                        template: template(element.innerHTML.trim()),
-                        history: {
-                            back: [],
-                            next: []
+                if (!!element) {
+                    if (!element.kyc) {
+                        status = {
+                            initialised: new Date(),
+                            version: version
                         }
-                    };
-                    element.setAttribute('kyc-sdk-status', 'ready')
-                    buildLoader(element);
-                    element.appendChild(view);
 
-                } else {
-                    element.setAttribute('kyc-sdk-status', 'ready')
-                    element.kyc.status.reset = new Date(),
-                        element.kyc.context = context,
-                        event = createEvent('reset', safeKyc(element));
+                        event = createEvent('initialised', {status: status, context: context});
+
+                        element.kyc = {
+                            context: checked.context,
+                            status: status,
+                            template: template(element.innerHTML.trim()),
+                            history: {
+                                back: [],
+                                next: []
+                            }
+                        };
+
+                        if (!!element.setAttribute) {
+                            element.setAttribute('kyc-sdk-status', 'ready')
+                            buildLoader(element);
+                            element.appendChild(view);
+                        }
+
+
+                    } else {
+                        if (!!element.setAttribute) {
+                            element.setAttribute('kyc-sdk-status', 'ready')
+                        }
+                        element.kyc.status.reset = new Date(),
+                            element.kyc.context = context,
+                            event = createEvent('reset', safeKyc(element));
+                    }
                 }
                 notify(event, element);
                 getToken(element);
@@ -1692,7 +1740,7 @@
             };
             const event = createEvent('ready', {status: {initialised: initialised, version: version}});
             notify(event, window);
-            showWarning = true;
+           // showWarning = true;
             domReady(function () {
                 if (checkSdkConditions()) {
 
