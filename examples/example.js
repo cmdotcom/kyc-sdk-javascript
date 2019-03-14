@@ -118,7 +118,7 @@ var formisLoaded = false,
         var form = document.querySelector('form#login');
         if (!!form && form.checkValidity()) {
             formfields.map(function (field) {
-                if(!!field.link) {
+                if (!!field.link) {
 
                     var value = (form.querySelector('[name="' + field.label + '"]') || {value: ''}).value || '';
                     if (field.type == 'tel') {
@@ -136,7 +136,40 @@ var formisLoaded = false,
             kyc_sdk.init();
         }
     },
-    validiateInput = function (event) {
+    validateKeypress = function (event) {
+        var code = event.keyCode || event.which,
+            character = String.fromCharCode(code),
+            allowedKeys;
+        if (event.target.type == 'tel') {
+            //PHONE NUMBER
+
+
+            allowedKeys = ["Backspace", "ArrowLeft", "ArrowRight", 8, 37, 39];
+            if (
+                (/[\s\+]|\./.test(character) && !!event.target.value.trim())
+                || (
+                    !/[0-9\s\+]|\./.test(character)
+                    && allowedKeys.indexOf(code) < 0
+                )
+            ) {
+                event.preventDefault();
+                return;
+            }
+
+
+        }
+
+
+    },
+    validateInput = function (event) {
+
+        if (event.target.type == 'tel') {
+            //PHONE NUMBER
+
+            event.target.setCustomValidity(!(!!((event.target.value || '').replace(/[\+]/g, '00').replace(/[^0-9]/g, '').trim())) ? 'Invalid PhoneNumber' : '');
+
+
+        }
 
         if (event.target.checkValidity()) {
             event.target.parentNode.classList.remove('error');
@@ -169,16 +202,16 @@ var formisLoaded = false,
             document.querySelector('form#login').setAttribute('style', '');
             innerHTML = '';
             formrows.innerHTML = innerHTML;
-            var endHtml=''
+            var endHtml = ''
             formfields.map(function (field) {
                 if (field.type == 'seperator') {
                     innerHTML +=
-                        endHtml+
+                        endHtml +
                         '   <div class="col-12 form-group-box">' +
                         '       <h2>' + field.label + '</h2>' +
                         ' <div class="row ">';
 
-                    endHtml= '</div> </div>';
+                    endHtml = '</div> </div>';
 
 
                 } else {
@@ -187,7 +220,7 @@ var formisLoaded = false,
                         '      <div class="form-group" align="left">' +
                         '          <div class="form-row">' +
                         '              <div class="form-input">' +
-                        '                  <input oninput="validiateInput(event)"  onchange="validiateInput(event)" name="' + field.label + '" ' + (field.required ? 'required' : '') + ' type="' + (field.type || 'text') + '" value="' + (field.value || '') + '" class="form-control"  placeholder="enter ' + field.label + '">' +
+                        '                  <input onkeypress="validateKeypress(event)" oninput="validateInput(event)"  inkeyup="" onchange="validateInput(event)" name="' + field.label + '" ' + (field.required ? 'required' : '') + ' type="' + (field.type || 'text') + '" value="' + (field.value || '') + '" class="form-control"  placeholder="enter ' + field.label + '">' +
                         '                 <label >' + field.label + (field.required ? '<sup class="required">*</sup>' : '') + '</label>' +
                         '              </div>' +
                         '          </div>' +
@@ -196,7 +229,7 @@ var formisLoaded = false,
                 }
 
             })
-            innerHTML +=  endHtml
+            innerHTML += endHtml
 
             formrows.innerHTML = innerHTML;
             if (formrows.querySelector('input[value=""][required]')) {
@@ -204,9 +237,8 @@ var formisLoaded = false,
             }
             button.disabled = !!form && !form.checkValidity();
 
+
         }
-
-
     }
 
 /*ToggleCSS functionality*/

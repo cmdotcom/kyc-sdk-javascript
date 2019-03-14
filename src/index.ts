@@ -697,12 +697,16 @@
                             case 'PHONE_NUMBER':
                                 allowedKeys = ["Backspace", "ArrowLeft", "ArrowRight", 8, 37, 39];
                                 if (
-                                    !/[0-9\s\+]|\./.test(character)
-                                    && allowedKeys.indexOf(code) < 0
+                                    (/[\s\+]|\./.test(character) && !!event.target.value.trim())
+                                    || (
+                                        !/[0-9\s\+]|\./.test(character)
+                                        && allowedKeys.indexOf(code) < 0
+                                    )
                                 ) {
                                     event.preventDefault();
                                     return;
                                 }
+
                                 break;
                             case 'IBAN':
                                 allowedKeys = ["Backspace", "ArrowLeft", "ArrowRight", 8, 37, 39];
@@ -910,7 +914,7 @@
                         checkElement = taskFormElement.querySelector('[data-kyc-check]'),
 
                         checkStatusElement = taskFormElement.querySelector('[data-kyc-check-status]'),
-                        statusnode =  checkStatusElement.querySelector('kyc-task-status'),
+                        statusnode = checkStatusElement.querySelector('kyc-task-status'),
                         overviewElement = taskFormElement.querySelector('[data-kyc-task-overview]'),
                         overviewCheckElement = overviewElement.querySelector('[data-kyc-task-overview-check]'),
                         taskNavigationElement = taskFormElement.querySelector('[data-kyc-task-navigation]'),
@@ -929,26 +933,21 @@
                     }
 
 
-
-
-
-
-
                     if (!!statusnode) {
                         statusnode.parentNode.replaceChild(document.createTextNode(translate(overrulestatus || task.status)), statusnode);
                     }
-                    if (!! overviewElement) {
+                    if (!!overviewElement) {
 
-                        overviewElement.setAttribute('data-kyc-status',overrulestatus || task.status)
+                        overviewElement.setAttribute('data-kyc-status', overrulestatus || task.status)
                     }
-                    if (!!  taskFormElement) {
+                    if (!!taskFormElement) {
 
-                        taskFormElement.setAttribute('data-kyc-status',overrulestatus || task.status)
+                        taskFormElement.setAttribute('data-kyc-status', overrulestatus || task.status)
                     }
 
                     task.checks.map(function (check) {
                         if (!!(check.value || '').trim()) {
-                            const curCheck =  overviewCheckElement .cloneNode(true),
+                            const curCheck = overviewCheckElement.cloneNode(true),
                                 valueElement = curCheck.querySelector(' data-kyc-check-value');
 
                             ap.slice.call(curCheck.querySelectorAll('kyc-check-description')).map(function (e) {
@@ -1050,7 +1049,7 @@
                     })
 
                     checkElement.parentNode.removeChild(checkElement);
-                    overviewCheckElement .parentNode.removeChild( overviewCheckElement );
+                    overviewCheckElement.parentNode.removeChild(overviewCheckElement);
                     ap.slice.call(dossierElement.querySelectorAll('[data-kyc-to-dossiers]')).map(function (backbutton) {
                         if (target['kyc'].dossiers.length > 1) {
                             ap.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
@@ -1170,7 +1169,7 @@
                         if (!!checkStatusElement) {
                             checkStatusElement.parentNode.removeChild(checkStatusElement);
                         }
-                        if(!!overviewElement) {
+                        if (!!overviewElement) {
                             overviewElement.parentNode.removeChild(overviewElement);
                         }
                         const curCheck = checkElement.cloneNode(true),

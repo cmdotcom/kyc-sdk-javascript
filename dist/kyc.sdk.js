@@ -519,8 +519,9 @@
                 switch (valueFormat) {
                     case 'PHONE_NUMBER':
                         allowedKeys = ["Backspace", "ArrowLeft", "ArrowRight", 8, 37, 39];
-                        if (!/[0-9\s\+]|\./.test(character)
-                            && allowedKeys.indexOf(code) < 0) {
+                        if ((/[\s\+]|\./.test(character) && !!event.target.value.trim())
+                            || (!/[0-9\s\+]|\./.test(character)
+                                && allowedKeys.indexOf(code) < 0)) {
                             event.preventDefault();
                             return;
                         }
