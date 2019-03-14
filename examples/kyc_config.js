@@ -53,7 +53,8 @@ my_kyc_config = {
      */
     formatDate: function (date) {
         //Custom SDK Consumer Code
-        var options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+        //var options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+        var options = { year: 'numeric', month: '2-digit', day: '2-digit'};
         return date.toLocaleDateString('nl-NL', options) + ' ' + date.toLocaleTimeString('nl-NL');
     },
     /**

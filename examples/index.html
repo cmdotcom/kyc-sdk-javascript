@@ -9,14 +9,14 @@
     <meta name="description" content="KYC Javascript SDK Example">
     <meta name="robots" content="noindex">
     <meta name="author" content="CM">
-    <meta name="google" content="notranslate" />
+    <meta name="google" content="notranslate"/>
 
     <base href="">
 
     <link href="https://cdn.cm.com/cm/favicon-32x32.png" rel="icon">
     <link href="https://cdn.cm.com/cm/apple-touch-icon.png" rel="apple-touch-icon">
 
-    <link  href="example.css" rel="stylesheet">
+    <link href="example.css" rel="stylesheet">
     <link data-toggle-css="aurora" href="aurora.css" rel="stylesheet">
     <link data-toggle-css="kyc" href="../dist/kyc.sdk.css" rel="stylesheet">
 
@@ -28,7 +28,8 @@
         <form id="login" style="display:none;" class="col-12 m-t-80">
             <h1>KYC SDK credentials</h1>
             <p>
-                please Provide the details to make connection to your KYC authorisation endpoint.
+                Please provide the details to make connection to your KYC authorisation endpoint.
+                <small>Fields with a <sup class="required">*</sup> are required</small>
             </p>
 
             <div class="rows row"></div>
@@ -40,20 +41,35 @@
             </div>
         </form>
         <div id="myKYCelement" class="col-12 m-t-80" onload="console.log('kycEvent',event)">
+
             <!-- Define the template for the dossier-list -->
             <div class="list-group m-t-24 row" data-kyc-dossier-list>
-
-                <div data-kyc-dossier-item class="list-group-content row cursor-pointer">
+                <div data-kyc-dossier-none class="list-group-content row error">
+                    <span>
+                       </kyc-dossier-error>
+                    </span>
+                </div>
+                <div data-kyc-dossier-item class="list-group-content row">
 
 
                     <div class="table-column itext-nowrap text-truncate col-4  text-left">
                         <kyc-dossier-name></kyc-dossier-name>
                     </div>
-                    <div class="table-column text-nowrap text-truncate col-4 text-center">
-                        <kyc-dossier-status></kyc-dossier-status>
-                    </div>
-                    <div class="table-column text-nowrap text-truncate col-4 text-right p-r-16">
-                        <kyc-dossier-created></kyc-dossier-created>
+                    <div class="table-column text-nowrap text-truncate col-6 text-right p-r-16">
+                        <span class="kyc-created">
+                                   <small><kyc-dossier-created></kyc-dossier-created></small>
+                        </span>
+
+                        <span class="kyc-status">
+                                 <kyc-dossier-status></kyc-dossier-status>
+                        </span>
+                        <span class="cm-icon cm-icon-check cl-green-100 status-SUBMITTED" aria-hidden="true"></span>
+                        <span class="cm-icon cm-icon-face-excited cl-green-100 status-ACCEPTED"
+                              aria-hidden="true"></span>
+
+                        <span class="cm-icon cm-icon-edit status-OPEN" aria-hidden="true"></span>
+                        <span class="cm-icon cm-icon-face-sad  cl-red-100 status-REJECTED" aria-hidden="true"></span>
+
                     </div>
 
 
@@ -71,14 +87,23 @@
 
                 <div class="list-group m-t-24 row">
 
-                    <div data-kyc-task-item class="list-group-content row cursor-pointer">
+                    <div data-kyc-task-item class="list-group-content row">
 
 
                         <div class="table-column itext-nowrap text-truncate col-9  text-left">
                             <kyc-task-name></kyc-task-name>
                         </div>
                         <div class="table-column text-nowrap text-truncate col-3 p-r-16 text-right">
-                            <kyc-task-status></kyc-task-status>
+                            <span class="kyc-status">
+                                <kyc-task-status></kyc-task-status>
+                            </span>
+                            <span class="cm-icon cm-icon-check cl-green-100 status-SUBMITTED" aria-hidden="true"></span>
+                            <span class="cm-icon cm-icon-face-excited cl-green-100 status-ACCEPTED"
+                                  aria-hidden="true"></span>
+
+                            <span class="cm-icon cm-icon-edit status-OPEN" aria-hidden="true"></span>
+                            <span class="cm-icon cm-icon-face-sad  cl-red-100 status-REJECTED"
+                                  aria-hidden="true"></span>
                         </div>
 
                     </div>
@@ -102,14 +127,30 @@
                             <span class="cm-icon cm-icon-previous cursor-pointer" aria-hidden="true"></span>
                         </button>
                         <kyc-text></kyc-text>
+                        <div data-kyc-check-status class="pull-right">
+
+                             <span class="kyc-status">
+                               <kyc-task-status></kyc-task-status>
+                            </span>
+                            <span class="cm-icon cm-icon-check cl-green-100 status-SUBMITTED" aria-hidden="true"></span>
+                            <span class="cm-icon cm-icon-face-excited cl-green-100 status-ACCEPTED"
+                                  aria-hidden="true"></span>
+
+                            <span class="cm-icon cm-icon-edit status-OPEN" aria-hidden="true"></span>
+                            <span class="cm-icon cm-icon-face-sad  cl-orange-100 status-REJECTED"
+                                  aria-hidden="true"></span>
+                        </div>
                     </h2>
+
+
                     <!-- Define the template for a single check in a task in a dossier -->
+
                     <div data-kyc-check class="row m-t-8 m-b-8">
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="form-row">
                                     <div class="form-input">
-                                        <kyc-input>
+                                        <kyc-input>div data-kyc-overview class="form-control form-options row">
                                             <input data-kyc-input class="form-control">
                                             <textarea data-kyc-textarea class="form-control"></textarea>
                                             <select class="form-control" data-kyc-select-input></select>
@@ -151,6 +192,40 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <!-- Define the template for the check overview in a task in a dossier -->
+                    <div data-kyc-task-overview class="row m-t-8 m-b-8">
+                        <h3 class="col-12  m-t-8 m-b-8 ">
+                            <div class=" status-SUBMITTED">
+                                This Task is Submitted
+                                <span class="cm-icon cm-icon-check cl-green-100 status-SUBMITTED"
+                                      aria-hidden="true"></span>
+                            </div>
+                            <div class="status-ACCEPTED">
+                                This Task is Accepted
+                                <span class="cm-icon cm-icon-face-excited cl-green-100 status-ACCEPTED"
+                                      aria-hidden="true"></span>
+                            </div>
+
+                        </h3>
+                        <div class="col-12" data-kyc-task-overview-check>
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="form-input">
+                                        <label>
+                                            <kyc-check-description></kyc-check-description>
+                                        </label>
+                                        <p class="form-input-value">
+                                            <data-kyc-check-value></data-kyc-check-value>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <!-- Define the template the navigation between tasks in a dossier -->
                     <div data-kyc-task-navigation class="row m-t-8 m-b-8">
                         <div class="col-6 text-left">

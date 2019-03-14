@@ -1,8 +1,13 @@
 <!-- Define the template for the dossier-list -->
 <ul data-kyc-dossier-list>
+    <li data-kyc-dossier-none>
+        <span>
+             <kyc-dossier-error></kyc-dossier-error>
+        </span>
+    </li>
     <li data-kyc-dossier-item>
         <span>
-            <kyc-dossier-name></kyc-dossier-name>
+           <kyc-dossier-name></kyc-dossier-name>
         </span>
         <span>
             <kyc-dossier-status></kyc-dossier-status>
@@ -59,17 +64,18 @@
                     <div data-kyc-checkbox>
                         <label>
                             <input type="checkbox" data-kyc-checkbox-input/>
-                            <kyc-text></kyc-text></span>
+                            <kyc-text></kyc-text>
+                            </span>
                         </label>
                     </div>
-                    <div data-kyc-radiobutton >
-                        <label >
+                    <div data-kyc-radiobutton>
+                        <label>
                             <input type="radio" data-kyc-radio-input>
                             <kyc-text></kyc-text>
                         </label>
                     </div>
                 </div>
-                <div data-kyc-file >
+                <div data-kyc-file>
                     <input type="file" class="form-control" data-kyc-file-input>
                     <div class="filepreview" data-kyc-file-preview></div>
                 </div>
@@ -77,6 +83,15 @@
             <small>
                 <kyc-check-longdescription></kyc-check-longdescription>
             </small>
+        </div>
+        <!-- Define the template for the check overview in a task in a dossier -->
+        <div data-kyc-check-overview>
+            <label>
+                <kyc-check-description></kyc-check-description>
+            </label>
+            <p>
+                <data-kyc-check-value></data-kyc-check-value>
+            </p>
         </div>
         <!-- Define the template the navigation between tasks in a dossier -->
         <div data-kyc-task-navigation>

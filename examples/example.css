@@ -5,9 +5,10 @@
 #myKYCelement.ready {
     display: block;
 }
-body{
-    margin:0px;
-    padding:0px;
+
+body {
+    margin: 0px;
+    padding: 0px;
 }
 
 body > .togglecss {
@@ -27,7 +28,7 @@ body > .togglecss > label {
     position: relative;
     height: 20px;
     margin: 0px 0px 8px 0px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 body > .togglecss > label > span {
@@ -44,73 +45,128 @@ body > .togglecss > label > input[type="radio"] {
 
 }
 
-body > platform-header   ~ .togglecss{
-    top:100px
+body > platform-header ~ .togglecss {
+    top: 100px
 }
 
 body[data-toggle-css] > .togglecss > label > input[type="radio"]:checked + span {
     opacity: 1;
 }
-body> .container{
+
+body > .container {
 
     opacity: 0;
 }
-body[data-toggle-css]:not([data-toggle-css=""])> .container {
 
-    opacity: 1!important;
+body[data-toggle-css]:not([data-toggle-css=""]) > .container {
+
+    opacity: 1 !important;
 }
 
-body[data-toggle-css="kyc"]{
+body[data-toggle-css="kyc"] {
     font-family: Verdana;
 }
-body[data-toggle-css="kyc"] > .container{
-   margin:80px;
+
+body[data-toggle-css="kyc"] > .container {
+    margin: 80px;
 }
-body[data-toggle-css="kyc"] > platform-header ~ .container{
-    margin:120px 80px 80px;
+
+body[data-toggle-css="kyc"] > platform-header ~ .container {
+    margin: 120px 80px 80px;
 }
-body[data-toggle-css="kyc"] #login{
+
+body[data-toggle-css="kyc"] #login {
     position: relative;
-    width:750px;
-    max-width: calc( 100vw - 20px);
-    margin:0px auto;
+    width: 750px;
+    max-width: calc(100vw - 20px);
+    margin: 0px auto;
 }
-body[data-toggle-css="kyc"] #login .form-input{
+body #login >p >small{
+  display:block;
+    font-size: inherit;
+    position: relative;
+}
+body[data-toggle-css="kyc"] #login .form-input {
     display: flex;
     flex-direction: column;
     position: relative;
 
 }
+
 body[data-toggle-css="kyc"] #login .form-input label {
 
     order: 1;
     display: block;
-    margin-bottom:8px;
+    margin-bottom: 8px;
     font-weight: bold;
 
-
 }
-body[data-toggle-css="kyc"] #login  input,
-body[data-toggle-css="kyc"] #login  button,
-body[data-toggle-css="kyc"] #login  input[type="button"],
-body[data-toggle-css="kyc"] #login  input[type="submit"]{
 
-    padding:8px;
+body #login .form-input label > .required , body #login .required{
+    color: #F03A47;
+    position: relative;
+    display: inline-block;
+
+    font-weight: bold;
 }
-body[data-toggle-css="kyc"] #login  button,
-body[data-toggle-css="kyc"] #login  input[type="button"],
-body[data-toggle-css="kyc"] #login  input[type="submit"]{
+body #login .form-input label > .required{
+    margin-left: 4px;
+}
+
+body[data-toggle-css="kyc"] #login
+body #login .form-group-box{
+    padding:16px;
+    border-top:2px solid rgba(60,72,89,0.1);
+
+    margin-bottom:16px;
+}
+
+
+
+body[data-toggle-css="kyc"] #login input,
+body[data-toggle-css="kyc"] #login button,
+body[data-toggle-css="kyc"] #login input[type="button"],
+body[data-toggle-css="kyc"] #login input[type="submit"] {
+
+    padding: 8px;
+}
+
+body[data-toggle-css="kyc"] #login button,
+body[data-toggle-css="kyc"] #login input[type="button"],
+body[data-toggle-css="kyc"] #login input[type="submit"] {
     text-transform: uppercase;
-    cursor:pointer;
+    cursor: pointer;
 }
-body[data-toggle-css="kyc"] #login  button:disabled,
-body[data-toggle-css="kyc"] #login  input[type="button"]:disabled,
-body[data-toggle-css="kyc"] #login  input[type="submit"]:disabled{
-    opacity:0.6;
-    cursor:not-allowed;
+
+body[data-toggle-css="kyc"] #login button:disabled,
+body[data-toggle-css="kyc"] #login input[type="button"]:disabled,
+body[data-toggle-css="kyc"] #login input[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
-body[data-toggle-css="kyc"] #login .form-input input{
-    margin-bottom:1em;
+
+body[data-toggle-css="kyc"] #login .form-input input {
+    margin-bottom: 1em;
     order: 2;
 }
+[data-kyc-status] .kyc-status~ [class*="status-"],
+[data-kyc-dossier-item] .kyc-status~ [class*="status-"]{
+    font-size: 24px;
+    margin-left:8px;
+    transform: translateY(6px);
+}
+[data-kyc-dossier-item] .kyc-status,
+[data-kyc-task-item] .kyc-status,
+[data-kyc-check-status] .kyc-status,
+[data-kyc-status] [class*="status-"]{
 
+    text-align: center;
+    display: none !important;
+}
+[data-kyc-status="SUBMITTED"] .status-SUBMITTED[class*="status-"],
+[data-kyc-status="OPEN"] .status-OPEN[class*="status-"],
+[data-kyc-status="REJECTED"] .status-REJECTED[class*="status-"],
+[data-kyc-status="ACCEPTED"] .status-ACCEPTED[class*="status-"]
+{
+    display: inline-block  !important;;
+}

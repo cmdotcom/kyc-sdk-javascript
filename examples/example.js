@@ -3,73 +3,131 @@ var formisLoaded = false,
     formfields =
         [
             {
+                label: 'API Endpoints',
+                type: 'seperator',
+
+
+            },
+            {
+                label: 'authorisationEndPoint',
+                type: 'url',
+                value: '',
+                link: my_kyc_config,
+                required: true,
+            },
+            {
+                label: 'kycApiEndPoint',
+                type: 'url',
+                value: '',
+                link: my_kyc_config,
+                required: true,
+            },
+            {
+                label: 'Enduser Identification',
+                type: 'seperator',
+
+
+            },
+            {
                 label: 'clientId',
                 type: 'text',
                 value: '',
                 link: my_kyc_config.context,
+                required: true,
             },
-            {
-                label: 'templateId',
-                type: 'text',
-                value: '',
-                link: my_kyc_config.context,
-            },
+
             {
                 label: 'customerName',
                 type: 'text',
                 value: '',
                 link: my_kyc_config.context,
+                required: true,
             },
             {
                 label: 'externalReference',
                 type: 'text',
                 value: '',
                 link: my_kyc_config.context,
+                required: true,
             },
             {
                 label: 'firstName',
                 type: 'text',
                 value: '',
                 link: my_kyc_config.context,
+                required: true,
             },
             {
                 label: 'lastName',
                 type: 'text',
                 value: '',
                 link: my_kyc_config.context,
+                required: true,
             },
             {
                 label: 'msisdn',
-                type: 'text',
+                type: 'tel',
                 value: '',
                 link: my_kyc_config.context,
+                required: true,
             },
             {
                 label: 'userIdentifier',
                 type: 'text',
                 value: '',
                 link: my_kyc_config.context,
+                required: true,
+            },
+
+            {
+                label: 'Optional Values',
+                type: 'seperator',
+
+
             },
             {
-                label: 'authorisationEndPoint',
-                type: 'url',
+                label: 'templateId',
+                type: 'text',
                 value: '',
-                link: my_kyc_config
+                link: my_kyc_config.context,
+                required: false,
             },
             {
-                label: 'kycApiEndPoint',
-                type: 'url',
+                label: 'dossierId',
+                type: 'text',
                 value: '',
-                link: my_kyc_config
+                link: my_kyc_config.context,
+                required: false,
+            },
+            {
+                label: 'taskidId',
+                type: 'text',
+                value: '',
+                link: my_kyc_config.context,
+                required: false,
+            },
+            {
+                label: 'checkId',
+                type: 'text',
+                value: '',
+                link: my_kyc_config.context,
+                required: false,
             }
         ],
     validateLoginFrom = function () {
         var form = document.querySelector('form#login');
         if (!!form && form.checkValidity()) {
-            var formData = new FormData(form)
             formfields.map(function (field) {
-                field.value = field.label
-                field.link[field.label] = (form.querySelector('[name="'+field.label+'"]')||{value:''}).value||'';
+                if(!!field.link) {
+
+                    var value = (form.querySelector('[name="' + field.label + '"]') || {value: ''}).value || '';
+                    if (field.type == 'tel') {
+                        value = (value || '').replace(/[\+]/g, '00').replace(/[^0-9]/g, '').trim();
+
+
+                    }
+                    field.link[field.label] = value;
+                }
 
             });
 
@@ -107,30 +165,42 @@ var formisLoaded = false,
                 }, 500);
                 return;
             }
-            formisLoaded=true;
+            formisLoaded = true;
             document.querySelector('form#login').setAttribute('style', '');
             innerHTML = '';
             formrows.innerHTML = innerHTML;
-
+            var endHtml=''
             formfields.map(function (field) {
-                innerHTML +=
+                if (field.type == 'seperator') {
+                    innerHTML +=
+                        endHtml+
+                        '   <div class="col-12 form-group-box">' +
+                        '       <h2>' + field.label + '</h2>' +
+                        ' <div class="row ">';
 
-                    '   <div class="col-12 col-md-6 p-r-16">' +
-                    '      <div class="form-group" align="left">' +
-                    '          <div class="form-row">' +
-                    '              <div class="form-input">' +
-                    '                  <input oninput="validiateInput(event)"  onchange="validiateInput(event)" name="' + field.label + '" required type="' + (field.type || 'text') + '" value="' + (field.value || '') + '" class="form-control"  placeholder="enter ' + field.label + '">' +
-                    '                 <label >' + field.label + '</label>' +
-                    '              </div>' +
-                    '          </div>' +
-                    '      </div>' +
-                    '   </div>';
+                    endHtml= '</div> </div>';
+
+
+                } else {
+                    innerHTML +=
+                        '   <div class="col-12 col-md-6 p-r-16">' +
+                        '      <div class="form-group" align="left">' +
+                        '          <div class="form-row">' +
+                        '              <div class="form-input">' +
+                        '                  <input oninput="validiateInput(event)"  onchange="validiateInput(event)" name="' + field.label + '" ' + (field.required ? 'required' : '') + ' type="' + (field.type || 'text') + '" value="' + (field.value || '') + '" class="form-control"  placeholder="enter ' + field.label + '">' +
+                        '                 <label >' + field.label + (field.required ? '<sup class="required">*</sup>' : '') + '</label>' +
+                        '              </div>' +
+                        '          </div>' +
+                        '      </div>' +
+                        '   </div>';
+                }
 
             })
+            innerHTML +=  endHtml
 
             formrows.innerHTML = innerHTML;
-            if(formrows.querySelector('input[value=""]')){
-                formrows.querySelector('input[value=""]').focus();
+            if (formrows.querySelector('input[value=""][required]')) {
+                formrows.querySelector('input[value=""][required]').focus();
             }
             button.disabled = !!form && !form.checkValidity();
 
@@ -142,8 +212,8 @@ var formisLoaded = false,
 /*ToggleCSS functionality*/
 
 var toggableCSS = [],
-istoggling=false;
-toggleisReady=false;
+    istoggling = false;
+toggleisReady = false;
 
 function toggleCssReady() {
 
@@ -151,10 +221,9 @@ function toggleCssReady() {
 }
 
 
-
 function toggleCss(pageload) {
-    if(!istoggling) {
-        istoggling=true;
+    if (!istoggling) {
+        istoggling = true;
 
         if (toggableCSS.length == 0 && !!document.querySelector('link[data-toggle-css]')) {
             [].slice.call(document.querySelectorAll('link[data-toggle-css]')).map(function (link) {
@@ -163,7 +232,7 @@ function toggleCss(pageload) {
             })
         }
 
-        if (toggableCSS.length > 0 && (!toggleisReady ||!pageload)) {
+        if (toggableCSS.length > 0 && (!toggleisReady || !pageload)) {
             document.querySelector('body').removeAttribute('data-toggle-css');
             var checked = document.querySelector('.togglecss input[type="radio"]:checked');
             if (!checked) {
@@ -172,9 +241,9 @@ function toggleCss(pageload) {
             }
             checked = checked.getAttribute('value') || null;
 
-            toggleisReady=true;
+            toggleisReady = true;
 
-            if (!!checked ) {
+            if (!!checked) {
                 [].slice.call(document.querySelectorAll('link[rel="stylesheet"]')).map(function (link) {
                     if (toggableCSS.filter(function (css) {
                         return css.href == link.getAttribute('href')
@@ -194,10 +263,10 @@ function toggleCss(pageload) {
                         document.getElementsByTagName('head')[0].appendChild(link);
                         var img = document.createElement('img');
                         img.onerror = function (event) {
-                            istoggling=false;
-                            setTimeout(function() {
+                            istoggling = false;
+                            setTimeout(function () {
                                 document.querySelector('body').setAttribute('data-toggle-css', css.name);
-                            },200)
+                            }, 200)
 
 
                         }
@@ -210,7 +279,7 @@ function toggleCss(pageload) {
 
 
         }
-        istoggling=false;
+        istoggling = false;
     }
 
 
