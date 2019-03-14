@@ -226,7 +226,6 @@
                             element['kyc'].status.changed = new Date();
                             //filter the dossiers on the clientId and customerName/externalReference
 
-                            console.log(element['kyc'].context);
                             element['kyc'].dossiers = dossiers.filter(function (dossier) {
                                 /*If templateId is known  return only that dossier**/
                                 if (!!dossier.templateId && !!element['kyc'].context.templateId) {
@@ -521,7 +520,7 @@
                 try {
                     event = JSON.parse(JSON.stringify(inEvent));
                 } catch (err) {
-                    console.log(err, inEvent, typeof inEvent);
+                    console.warn(err, inEvent, typeof inEvent);
                     return;
                 }
                 event.isTrusted = true;
@@ -895,7 +894,7 @@
 
             },
             buildTaskOverView = function (target: HTMLElement, dossier, task) {
-                console.log('overview');
+
                 try {
                     const dossierElement = getPartial('[data-kyc-dossier]', target['kyc'].template);
 

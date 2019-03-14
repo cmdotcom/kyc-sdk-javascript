@@ -166,7 +166,6 @@
                         return;
                     }
                     element['kyc'].status.changed = new Date();
-                    console.log(element['kyc'].context);
                     element['kyc'].dossiers = dossiers.filter(function (dossier) {
                         if (!!dossier.templateId && !!element['kyc'].context.templateId) {
                             return dossier.templateId == element['kyc'].context.templateId;
@@ -390,7 +389,7 @@
             event = JSON.parse(JSON.stringify(inEvent));
         }
         catch (err) {
-            console.log(err, inEvent, typeof inEvent);
+            console.warn(err, inEvent, typeof inEvent);
             return;
         }
         event.isTrusted = true;
@@ -656,7 +655,6 @@
             return;
         }
     }, buildTaskOverView = function (target, dossier, task) {
-        console.log('overview');
         try {
             var dossierElement = getPartial('[data-kyc-dossier]', target['kyc'].template);
             ap.slice.call(dossierElement.querySelectorAll('[name]')).map(function (e) {
