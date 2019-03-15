@@ -121,7 +121,9 @@ body #login .form-group-box{
     margin-bottom:16px;
 }
 
-
+platform-header .sidenav-wrapper{
+    display: none!important;
+}
 
 body[data-toggle-css="kyc"] #login input,
 body[data-toggle-css="kyc"] #login button,

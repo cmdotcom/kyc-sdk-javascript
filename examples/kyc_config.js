@@ -81,7 +81,7 @@ my_kyc_config = {
          *  event.type is on of [ 'changed','initialised','ready']
          *  event.target can be 'kyc_sdk' (the KYC SDK script) or the KYC SDK container, defined by the elementId in the kyc_config)
          */
-        console.info(event)
+console.info('KYC EVENT',event.type,event.detail)
         switch (event.type) {
             case 'changed':
                 //something has changed
@@ -100,7 +100,11 @@ my_kyc_config = {
                 //the tasks have been loaded
             case 'task':
                 //the task has been loaded
-                console.info(event.detail)
+            case 'savetask':
+                //the task has been saved
+                break;
+            case 'error':
+                //something went wrong (defined in action)
                 break;
             case 'initialised':
                 if (event.target && event.target.classList) {

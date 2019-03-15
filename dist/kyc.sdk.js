@@ -68,7 +68,13 @@
                     callback({ success: response, xhr: xhr });
                 }
                 else {
-                    callback({ error: 'invalid http status', xhr: xhr });
+                    try {
+                        response = JSON.parse(xhr.response || xhr.responseText);
+                    }
+                    catch (e) {
+                        response = 'invalid http status';
+                    }
+                    callback({ error: response, xhr: xhr });
                 }
             }
         });
@@ -124,9 +130,7 @@
                         getMe(element);
                     }
                     else {
-                        var errorMessage = "No kyc Token could be retrieved from " + authorisationEndPoint + "!";
-                        notify('error', element, { error: { 'message': errorMessage, 'object': result } });
-                        console.warn(errorMessage, result);
+                        throwError("No kyc Token could be retrieved from " + authorisationEndPoint + "!", 'saveTask', result, { authorisationEndPoint: authorisationEndPoint }, element);
                     }
                 }
             };
@@ -143,12 +147,24 @@
                     element['kyc'].context.msisdn = result.success.msisdn;
                     notify('identification', element);
                     getDossiers(element);
+                    return;
                 }
-                else {
-                    var errorMessage = "KYC identity could not be verified!";
-                    notify('error', element, { error: { 'message': errorMessage, 'object': result } });
-                    console.warn("KYC identity could not be verified!", result.error);
+                var errorMessage = "KYC identity could not be verified!", action = 'getMe';
+                console.warn(errorMessage, result.error);
+                if (!element) {
+                    var event_1 = createEvent('error', {
+                        action: action,
+                        'message': errorMessage,
+                        'error': result.error
+                    });
+                    notify(event_1, window);
+                    return;
                 }
+                var details = safeKyc(element);
+                details['action'] = action;
+                details['message'] = errorMessage;
+                details['error'] = result.error;
+                notify('error', element, details);
             }
         };
         callApi(options);
@@ -161,8 +177,8 @@
                         return !!KYCToken.data.clientId && client.clientId == KYCToken.data.clientId;
                     }).shift() || { dossiers: [] }).dossiers;
                     if (!element) {
-                        var event_1 = createEvent('dossiers', { dossiers: dossiers });
-                        notify(event_1, window);
+                        var event_2 = createEvent('dossiers', { dossiers: dossiers });
+                        notify(event_2, window);
                         return;
                     }
                     element['kyc'].status.changed = new Date();
@@ -191,7 +207,7 @@
                     }
                     return;
                 }
-                console.warn("KYC dossiers could not be fetched!", result.error);
+                throwError("KYC dossiers could not be fetched!", 'getDossiers', result.error, null, element);
             }
         };
         callApi(options);
@@ -204,11 +220,11 @@
             callback: function (result) {
                 if (!!result.success) {
                     var tasks = result.success.filter(function (task) {
-                        return task.visible;
+                        return task.visible && task.shared;
                     });
                     if (!element) {
-                        var event_2 = createEvent('tasks', { tasks: tasks });
-                        notify(event_2, window);
+                        var event_3 = createEvent('tasks', { tasks: tasks });
+                        notify(event_3, window);
                         return;
                     }
                     element['kyc'].status.changed = new Date();
@@ -221,7 +237,7 @@
                     notify('tasks', element, details);
                     return;
                 }
-                console.warn("KYC dossier tasks could not be fetched!", result.error);
+                throwError("KYC dossier tasks could not be fetched!", 'getTasks', result.error, { dossierId: dossierId }, element);
             }
         };
         if (!!element) {
@@ -248,8 +264,8 @@
             callback: function (result) {
                 if (!!result.success) {
                     if (!element) {
-                        var event_3 = createEvent('task', { task: result.success });
-                        notify(event_3, window);
+                        var event_4 = createEvent('task', { task: result.success });
+                        notify(event_4, window);
                         return;
                     }
                     element['kyc'].status.changed = new Date();
@@ -261,7 +277,7 @@
                     notify('task', element);
                     return;
                 }
-                console.warn("KYC dossier tasks could not be fetched!", result.error);
+                throwError("KYC dossier task could not be fetched!", 'getTask', result.error, { taskId: taskId, dossierId: dossierId }, element);
             }
         };
         if (!!element) {
@@ -280,12 +296,41 @@
                     return;
                 }
                 else {
-                    console.warn("KYC dossier could not be fetched!");
+                    throwError("KYC dossier could not be fetched!", 'getTask', { description: 'invalid KYC dossier' }, { taskId: taskId, dossierId: dossierId }, element);
+                    return;
                 }
             }
             callApi(options);
             return;
         }
+    }, saveTask = function (task, element, callback) {
+        var options = {
+            'url': kycApiEndPoint + '/api/v1/tasks/' + task.id,
+            method: 'POST',
+            params: JSON.stringify(task),
+            callback: function (result) {
+                if (!!result.success) {
+                    if (!element) {
+                        var event_5 = createEvent('saveTask', { task: task });
+                        notify(event_5, window);
+                        return;
+                    }
+                    element['kyc'].status.changed = new Date();
+                    var details = safeKyc(element);
+                    details['task'] = task;
+                    notify('savetask', element, details);
+                    if (!!callback) {
+                        callback({ 'success': result.success });
+                    }
+                    return;
+                }
+                throwError("The task could not be saved!", 'saveTask', result.error, { task: task }, element);
+                if (!!callback) {
+                    callback({ 'error': result.error });
+                }
+            }
+        };
+        callApi(options);
     }, checkSdkConditions = function (elementId, inContext) {
         if (!window['kyc_config']) {
             if (!!showWarning) {
@@ -366,7 +411,7 @@
             event['detail'] = detail;
         }
         return event;
-    }, triggerLoadEvent = function (target, type) {
+    }, triggerLoadEvent = function (target, type, detail) {
         if (target != window) {
             target['kyc'].eventType = type;
         }
@@ -374,10 +419,40 @@
             var event = document.createEvent("HTMLEvents");
             event.initEvent("load", false, true);
             event['kyctype'] = type;
+            if (!!detail) {
+                event['detail'] = detail;
+            }
             target.dispatchEvent(event);
             return;
         }
         target['fireEvent']("onload");
+    }, throwError = function (errorMessage, action, error, details, element) {
+        console.warn(errorMessage, action, error, details);
+        var errorDetial = {
+            action: action,
+            message: errorMessage,
+            error: error
+        };
+        if (!!details) {
+            for (var i in details) {
+                if (!(!!errorDetial[i])) {
+                    errorDetial[i] = details[i];
+                }
+            }
+        }
+        if (!element) {
+            console.info('throw', errorDetial);
+            var event_6 = createEvent('error', errorDetial);
+            notify(event_6, window);
+            return;
+        }
+        details = safeKyc(element);
+        for (var i in details) {
+            if (!(!!errorDetial[i])) {
+                errorDetial[i] = details[i];
+            }
+        }
+        notify('error', element, errorDetial);
     }, formatDate = function (date) {
         if (!!window['kyc_config'] && !!window['kyc_config'].formatDate && typeof window['kyc_config'].formatDate == 'function') {
             return window['kyc_config'].formatDate(date);
@@ -406,7 +481,7 @@
         event.type = inEvent.type.toString();
         if (!!target) {
             event.target = target;
-            triggerLoadEvent(target, event.type);
+            triggerLoadEvent(target, event.type, event.detail);
         }
         else {
             event.target = 'kyc_sdk';
@@ -584,7 +659,7 @@
             notify('dossierlist', target);
         }
         catch (error) {
-            console.warn('A templating error has occured while building the dossier list!', error);
+            throwError('A templating error has occured while building the dossier list!', 'dossierlist', error, { template: target['kyc'].template }, target);
             return;
         }
     }, buildDossiersList = function (target) {
@@ -623,7 +698,7 @@
             notify('dossierlist', target);
         }
         catch (error) {
-            console.warn('A templating error has occured while building the dossier list!', error);
+            throwError('A templating error has occured while building the dossier list!', 'dossierlist', error, { template: target['kyc'].template }, target);
             return;
         }
     }, buildTaskList = function (target, dossier) {
@@ -674,7 +749,7 @@
             notify('tasklist', target);
         }
         catch (error) {
-            console.warn('A templating error has occured while building the dossier task list!', error);
+            throwError('A templating error has occured while building the dossier task list!', 'tasklist', error, { template: target['kyc'].template }, target);
             return;
         }
     }, buildTaskOverView = function (target, dossier, task) {
@@ -824,10 +899,11 @@
             target.innerHTML = '';
             target.appendChild(dossierElement);
             target.setAttribute('kyc-sdk-status', 'task');
-            notify('taskform', target);
+            notify('taskoverview', target);
         }
         catch (error) {
-            console.warn('A templating error has occured while building the dossier task check form!', error);
+            throwError('A templating error has occured while building the dossier task check overview!', 'taskoverview', error, { template: target['kyc'].template }, target);
+            return;
         }
     }, buildTaskForm = function (target, dossier, task, checkid) {
         if (!target || !target.appendChild) {
@@ -1148,24 +1224,13 @@
                         return;
                     }
                     buildLoader(target);
-                    target['kyc'].history.back.push(function () {
-                        buildLoader(target);
-                        buildTaskForm(target, dossier, task, check.id);
-                    });
-                    var options = {
-                        'url': kycApiEndPoint + '/api/v1/tasks/' + task.id,
-                        method: 'POST',
-                        params: JSON.stringify(task),
-                        callback: function (result) {
-                            if (!!result.success) {
-                                buildTaskList(target, dossier);
-                            }
-                            else {
-                                console.warn("The task could not be saved!", result.error);
-                            }
+                    saveTask(task, target, function (result) {
+                        if (!!result.success) {
+                            buildTaskList(target, dossier);
                         }
-                    };
-                    callApi(options);
+                        else {
+                        }
+                    });
                 };
                 ap.slice.call(dossierElement.querySelectorAll('[data-kyc-task-next]')).map(function (nextbutton) {
                     nextbutton.disabled = !!taskFormElement_1 && !taskFormElement_1.checkValidity();
@@ -1197,11 +1262,11 @@
                 notify('taskform', target);
             }
             catch (error) {
-                console.warn('A templating error has occured while building the dossier task check form!', error);
+                throwError('A templating error has occured while building the dossier task check form!', 'taskform', error, { template: target['kyc'].template, dossier: dossier, task: task, checkid: checkid }, target);
             }
             return;
         }
-        console.warn('The check could not be determined!');
+        throwError('The check could not be determined!', 'taskform', { description: 'check is undefined' }, { dossier: dossier, task: task, checkid: checkid }, target);
     }, safeKyc = function (element) {
         return {
             context: element['kyc'].context,
@@ -1266,23 +1331,29 @@
                 if (!!KYCToken) {
                     return getDossiers();
                 }
-                return { error: 'no valid Identification' };
+                throwError('no valid Identification', 'getDossiers', { description: 'missing KYCToken' });
             },
             getTasks: function (dossierId) {
                 if (!!KYCToken) {
                     return getTasks(dossierId);
                 }
-                return { error: 'no valid Identification' };
+                throwError('no valid Identification', 'getTasks', { description: 'missing KYCToken' });
             },
             getTask: function (taskId) {
                 if (!!KYCToken) {
                     return getTask(taskId);
                 }
-                return { error: 'no valid Identification' };
+                throwError('no valid Identification', ' getTask', { description: 'missing KYCToken' });
+            },
+            saveTask: function (task) {
+                if (!!KYCToken) {
+                    return saveTask(task);
+                }
+                throwError('no valid Identification', 'saveTask', { description: 'missing KYCToken' });
             }
         };
-        var event_4 = createEvent('ready', { status: { initialised: initialised, version: version } });
-        notify(event_4, window);
+        var event_7 = createEvent('ready', { status: { initialised: initialised, version: version } });
+        notify(event_7, window);
         domReady(function () {
             if (checkSdkConditions()) {
                 init();
