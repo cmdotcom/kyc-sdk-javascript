@@ -18,7 +18,7 @@ First run `npm i` to install all (dev) dependencies before continuing.
 
 ### Developing
 
-run `gulp watch` to automatically update the changes in the ./src folder (this uses `gulp build` but doe not clean up the build folder)
+run `gulp watch` to automatically update the changes in the ./src folder (this uses `gulp build` but does not clean up the build folder)
 
 run `gulp` or `gulp build` to create a distribution  in the ./dist folder
 
