@@ -106,7 +106,7 @@
                             } catch (e) {
                                 response = 'invalid http status';
                             }
-                            callback({error:response, xhr: xhr})
+                            callback({error: response, xhr: xhr})
                         }
                     }
                 });
@@ -141,13 +141,28 @@
                 options.headers = {'Authorization': 'Bearer ' + KYCToken.userToken};
                 http(options);
             },
-            getToken = function (element: HTMLElement) {
+            getToken = function (element?: HTMLElement) {
                 if (KYCToken && KYCToken.userToken) {
-
+                    if (!element) {
+                        const
+                            event = createEvent('getToken', {KYCToken: KYCToken});
+                        notify(event, window);
+                        return;
+                    }
                     getMe(element)
 
 
                 } else {
+                    const base = element || window;
+                    if (!base || (!(!!base['kyc'] && !!base['kyc'].context) && !(!!base['kyc_config'] && !!base['kyc_config'].context))) {
+                        throwError(
+                            "No kyc config found",
+                            'getToken',
+                            {description: 'invalid KYC configuration'},
+                            {config: !!base ? (base['kyc_config'] || base['kyc']) : null},
+                            element);
+                        return
+                    }
                     const options = {
                         url: authorisationEndPoint,
                         method: 'POST',
@@ -155,29 +170,36 @@
                         headers: {'Content-Type': 'application/json;charset=UTF-8'},
                         params: JSON.stringify({
 
-                            "clientId": element['kyc'].context.clientId,
-                            "templateId": element['kyc'].context.templateId,
-                            "customerName": element['kyc'].context.customerName,
-                            "externalReference": element['kyc'].context.externalReference,
-                            "firstName": element['kyc'].context.firstName,
-                            "lastName": element['kyc'].context.lastName,
-                            "msisdn": element['kyc'].context.msisdn,
-                            "userIdentifier": element['kyc'].context.userIdentifier,
+                            "clientId": (base['kyc_config'] || base['kyc']).context.clientId,
+                            "templateId": (base['kyc_config'] || base['kyc']).context.templateId,
+                            "customerName": (base['kyc_config'] || base['kyc']).context.customerName,
+                            "externalReference": (base['kyc_config'] || base['kyc']).context.externalReference,
+                            "firstName": (base['kyc_config'] || base['kyc']).context.firstName,
+                            "lastName": (base['kyc_config'] || base['kyc']).context.lastName,
+                            "msisdn": (base['kyc_config'] || base['kyc']).context.msisdn,
+                            "userIdentifier": (base['kyc_config'] || base['kyc']).context.userIdentifier,
                         }),
                         callback: function (result) {
                             if (!!result.success) {
-                                notify('login', element);
+
+
                                 KYCToken = result.success;
                                 KYCToken.data = jwtDecode(KYCToken.userToken);
+                                if (!element) {
+                                    const
+                                        event = createEvent('getToken', {KYCToken: KYCToken});
+                                    notify(event, window);
+                                    return;
+                                }
+                                notify('login', element);
                                 getMe(element);
                                 //getDossiers(element);
                             } else {
 
 
-
                                 throwError(
                                     "No kyc Token could be retrieved from " + authorisationEndPoint + "!",
-                                    'saveTask',
+                                    'getToken',
                                     result,
                                     {authorisationEndPoint: authorisationEndPoint},
                                     element);
@@ -191,11 +213,19 @@
 
                 }
             },
-            getMe = function (element: HTMLElement) {
+            getMe = function (element?: HTMLElement) {
                 const options = {
                     'url': kycApiEndPoint + '/api/v1/users/me',
                     callback: function (result) {
                         if (!!result.success) {
+
+                            if (!element) {
+                                const
+                                    event = createEvent('me', {me: result.success});
+                                notify(event, window);
+                                return;
+                            }
+
                             element['kyc'].status.changed = new Date();
                             element['kyc'].context.firstName = result.success.firstName;
                             element['kyc'].context.lastName = result.success.lastName;
@@ -206,6 +236,7 @@
 
 
                             getDossiers(element);
+
                             return;
                         }
                         const errorMessage = "KYC identity could not be verified!",
@@ -394,18 +425,59 @@
                                 /* element['kyc'].status.changed = new Date();
                                  element['kyc'].context.dossierId = dossierId;
                                  element['kyc'].context.taskId = taskId;*/
-
+                                const task = result.success;
                                 if (!element) {
                                     const
-                                        event = createEvent('task', {task: result.success});
+                                        event = createEvent('task', {task: task});
                                     notify(event, window);
                                     return;
 
                                 }
                                 element['kyc'].status.changed = new Date();
                                 if (!!curDossier && curTask) {
+
+                                    /*PREFILLING*/
+                                    if (!!window['kyc_config'] && !!window['kyc_config'].prefill && typeof window['kyc_config'].prefill == 'function') {
+                                        let metaData;
+                                        task.checks.map(function (check) {
+                                            if (!!check && !(!!check.value) && !!check.definition && !!check.definition.metaDataKey) {
+                                                if (!(!!metaData)) {
+                                                    metaData = {};
+                                                }
+                                                metaData[check.definition.metaDataKey] = '';
+                                            }
+                                        })
+                                        if (!!metaData) {
+                                            window['kyc_config'].prefill(metaData, function (retMetaData) {
+                                                if (!!retMetaData) {
+                                                    task.checks = task.checks.map(function (check) {
+                                                        if (!!check && !(!!check.value) && !!check.definition && !!check.definition.metaDataKey) {
+                                                            if (!!retMetaData[check.definition.metaDataKey]) {
+                                                                check.value = retMetaData[check.definition.metaDataKey];
+                                                            }
+
+                                                        }
+                                                        return check;
+                                                    })
+                                                }
+                                                element['kyc'].status.changed = new Date()
+                                                curTask = task;
+
+
+                                                buildTaskForm(element, curDossier, curTask);
+                                                notify('task', element);
+                                                return;
+                                            })
+                                        }
+
+                                        return;
+                                    }
+                                    /*END PREFILLING*/
+
                                     element['kyc'].status.changed = new Date()
-                                    curTask = result.success;
+                                    curTask = task;
+
+
                                     buildTaskForm(element, curDossier, curTask);
                                 }
                                 notify('task', element);
@@ -417,7 +489,9 @@
                                 'getTask',
                                 result.error,
                                 {taskId: taskId, dossierId: dossierId},
-                                element);
+                                element
+                            )
+                            ;
 
 
                         }
@@ -432,6 +506,7 @@
                             }).shift();
                             if (curTask) {
                                 if (curTask.checks) {
+
                                     buildTaskForm(element, curDossier, curTask);
                                     return;
                                 }
@@ -461,6 +536,89 @@
 
 
                 }
+            },
+            getUpload = function (uploadId: string, element?: HTMLElement, callback?: Function) {
+                const options = {
+                    'url': kycApiEndPoint + '/api/v1/uploads/' + uploadId,
+                    method: 'GET',
+                    callback: function (result) {
+                        if (!!result.success) {
+                            if (!element) {
+                                const
+                                    event = createEvent('uploadId', {uploadId: uploadId, content: result.success});
+                                notify(event, window);
+
+                                return;
+                            }
+                            if (!!callback) {
+                                callback({'success': result.success})
+
+                            }
+                            return;
+
+
+                        }
+                        throwError(
+                            "No upload with the id " + uploadId + " could be retrieved!",
+                            'getUpload',
+                            result.error,
+                            {uploadId: uploadId},
+                            element);
+
+
+                        if (!!callback) {
+                            callback({'error': result.error})
+
+                        }
+
+
+                    }
+
+                }
+                callApi(options);
+            },
+            saveUpload = function (content: string, element?: HTMLElement, callback?: Function) {
+                const options = {
+                    'url': kycApiEndPoint + '/api/v1/uploads/',
+                    params: content,
+                    method: 'POST',
+                    callback: function (result) {
+
+                        if (!!result.success && !!result.success.uuid) {
+                            if (!element) {
+                                const
+                                    event = createEvent('saveUpload', {
+                                        uploadId: result.success.uuid,
+                                        content: content
+                                    });
+                                notify(event, window);
+
+                                return;
+                            }
+                            if (!!callback) {
+                                callback({'success': result.success})
+
+                            }
+                            return;
+
+                        }
+
+                        throwError(
+                            "The upload could not be saved!",
+                            'saveUpload',
+                            result.error || {description: 'no uploadId returned'},
+                            {contant: content},
+                            element);
+
+
+                        if (!!callback) {
+                            callback({'error': result.error || {description: 'no uploadId returned'}})
+
+                        }
+                    }
+
+                }
+                callApi(options);
             },
             saveTask = function (task, element?: HTMLElement, callback?: Function) {
                 /*POST DATA*/
@@ -594,7 +752,7 @@
                 }
                 return event;
             },
-            triggerLoadEvent = function (target: any, type: string,detail?:any) {
+            triggerLoadEvent = function (target: any, type: string, detail?: any) {
                 if (target != window) {
                     target['kyc'].eventType = type;
                 }
@@ -603,7 +761,7 @@
 
                     event.initEvent("load", false, true);
                     event['kyctype'] = type;
-                    if(!!detail){
+                    if (!!detail) {
                         event['detail'] = detail;
                     }
                     target.dispatchEvent(event);
@@ -615,7 +773,7 @@
             },
             throwError = function (errorMessage: string, action: string, error: any, details?: any, element?: HTMLElement) {
 
-                console.warn(errorMessage,  action,error,details);
+                console.warn(errorMessage, action, error, details);
                 let errorDetial = {
                     action: action,
                     message: errorMessage,
@@ -625,8 +783,8 @@
 
                 if (!!details) {
                     for (var i in details) {
-                        if(!(!!errorDetial[i])){
-                            errorDetial[i]= details[i];
+                        if (!(!!errorDetial[i])) {
+                            errorDetial[i] = details[i];
                         }
                     }
                 }
@@ -640,8 +798,8 @@
                 }
                 details = safeKyc(element);
                 for (var i in details) {
-                    if(!(!!errorDetial[i])){
-                        errorDetial[i]= details[i];
+                    if (!(!!errorDetial[i])) {
+                        errorDetial[i] = details[i];
                     }
                 }
 
@@ -683,7 +841,7 @@
 
                 if (!!target) {
                     event.target = target
-                    triggerLoadEvent(target, event.type,event.detail);
+                    triggerLoadEvent(target, event.type, event.detail);
                 } else {
                     event.target = 'kyc_sdk';
 
@@ -1613,23 +1771,15 @@
                                                         //filepreview.setAttribute('style', 'background-image:url("' + fileEvent.target['result']+ '")');
 
                                                         /*UPLOAD FILE*/
-                                                        const options = {
-                                                            'url': kycApiEndPoint + '/api/v1/uploads/',
-                                                            params: fileEvent.target['result'],
-                                                            method: 'POST',
-                                                            callback: function (result) {
-                                                                if (!!result.success && !!result.success.uuid) {
-                                                                    uploads[result.success.uuid] = !!fileEvent && !!fileEvent.target && fileEvent.target['result'] ? fileEvent.target['result'] : '';
-                                                                    filepreview.setAttribute('style', 'background-image:url("' + uploads[result.success.uuid] + '")');
 
-                                                                } else {
-                                                                    console.warn("The upload  did not succeed!", result.error);
+                                                        saveUpload(fileEvent.target['result'], target, function (result) {
+                                                            if (!!result.success && !!result.success.uuid) {
+                                                                uploads[result.success.uuid] = !!fileEvent && !!fileEvent.target && fileEvent.target['result'] ? fileEvent.target['result'] : '';
+                                                                filepreview.setAttribute('style', 'background-image:url("' + uploads[result.success.uuid] + '")');
 
-                                                                }
                                                             }
+                                                        })
 
-                                                        }
-                                                        callApi(options);
                                                     }
 
 
@@ -1642,22 +1792,14 @@
                                             if (!!uploads[check.value]) {
                                                 filepreview.setAttribute('style', 'background-image:url("' + uploads[check.value] + '")');
                                             } else {
-                                                const options = {
-                                                    'url': kycApiEndPoint + '/api/v1/uploads/' + check.value,
-                                                    method: 'GET',
-                                                    callback: function (result) {
-                                                        if (!!result.success) {
-                                                            uploads[check.value] = result.success;
-                                                            filepreview.setAttribute('style', 'background-image:url("' + uploads[check.value] + '")');
+                                                getUpload(check.value, target, function (result) {
+                                                    if (!!result.success) {
+                                                        uploads[check.value] = result.success;
+                                                        filepreview.setAttribute('style', 'background-image:url("' + uploads[check.value] + '")');
 
-                                                        } else {
-                                                            console.warn("No upload with the id " + check.value + " could be retrieved!", result.error);
-
-                                                        }
                                                     }
+                                                })
 
-                                                }
-                                                callApi(options);
 
                                             }
                                         }
@@ -1889,6 +2031,21 @@
                     return version
                 },
                 init: init,
+                getToken() {
+
+                    return getToken();
+
+                },
+                getMe() {
+                    if (!!KYCToken) {
+                        return getMe();
+                    }
+                    throwError(
+                        'no valid Identification',
+                        'getDossiers',
+                        {description: 'missing KYCToken'}
+                    );
+                },
                 getDossiers() {
                     if (!!KYCToken) {
                         return getDossiers();
@@ -1922,6 +2079,26 @@
                         {description: 'missing KYCToken'}
                     );
 
+                },
+                getUpload(uploadId) {
+                    if (!!KYCToken) {
+                        return getUpload(uploadId);
+                    }
+                    throwError(
+                        'no valid Identification',
+                        ' getTask',
+                        {description: 'missing KYCToken'}
+                    );
+                },
+                saveUpload(uploadId) {
+                    if (!!KYCToken) {
+                        return saveUpload(uploadId);
+                    }
+                    throwError(
+                        'no valid Identification',
+                        ' getTask',
+                        {description: 'missing KYCToken'}
+                    );
                 },
                 saveTask(task) {
                     if (!!KYCToken) {

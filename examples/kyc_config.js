@@ -104,7 +104,7 @@ console.info('KYC EVENT',event.type,event.detail)
                 //the task has been saved
                 break;
             case 'error':
-                //something went wrong (defined in action)
+                //something went wrong
                 break;
             case 'initialised':
                 if (event.target && event.target.classList) {
