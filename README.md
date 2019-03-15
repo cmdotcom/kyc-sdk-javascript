@@ -148,7 +148,7 @@ kyc_config = {
 }
  ```
 
-The SDK will kickstart itself as soon as possible, (when the kyc_config and the Element defined is ready).
+When the kyc_config and the Element definition are ready, the KYC SDK will kickstart itself.
 If you want to be in charge (asynchronious initializing the KYC SDK element) you can use the window 'load' event like this to initiate the Element whenever you want.
 
 
@@ -164,9 +164,11 @@ window.addEventListener('load', function (e) {
  ```
 
 ### Demo
-You can start the Demo by opening examples/index.html in your browser
-You'll be asked to enter some information first to start the KYC experience
-This information automatically fills the kyc_config needed to start the KYC SDK
+You can start the Demo by opening examples/index.html in your browser.
+
+You'll be asked to enter some information first to start the KYC experience.
+
+This information automatically fills the kyc_config needed to start the KYC SDK.
 
  ```
         
