@@ -55,14 +55,13 @@
                 }
             },
             http = function (options) {
-                /* Native XMLHttpRequest as Promise
-                 * @see https://stackoverflow.com/a/30008115/933951
+                /* Native XMLHttpRequest with callback
                  * @param {Object} options - Options object
                  * @param {String} options.method - Type of XHR
                  * @param {String} options.url - URL for XHR
                  * @param {String|Object} options.params - Query parameters for XHR
                  * @param {Object} options.headers - Query parameters for XHR
-                 * @return {Promise} Promise object of XHR
+                 * @param {Object} options.callback - Function that will be called when the XHR has done loading (or errors)
                  */
                 if (!!options && typeof(options) == 'string') {
                     options = {
@@ -193,7 +192,7 @@
                                 }
                                 notify('login', element);
                                 getMe(element);
-                                //getDossiers(element);
+
                             } else {
 
 
@@ -340,7 +339,6 @@
 
 
                 const options = {
-                    // 'url': kycApiEndPoint + '/api/v1/users/' + KYCToken.data.uuid + '/dossiers/'+dossierid+'/tasks',
                     'url': kycApiEndPoint + '/api/v1/dossiers/' + dossierId + '/tasks',
                     callback: function (result) {
 
@@ -349,9 +347,6 @@
                                 //only show visible and shared tasks
                                 return task.visible && task.shared
                             });
-                            /*  element['kyc'].status.changed = new Date();
-                              element['kyc'].dossierId = dossierId;
-                              notify('dossier', element);*/
 
 
                             if (!element) {
@@ -857,8 +852,6 @@
                 }
 
             },
-
-
             template = function (custom: string) {
                 kycTemplate = document.createElement('kyc-template');
                 const customTemplate = document.createElement('kyc-custom-template'),
@@ -2032,9 +2025,7 @@
                 },
                 init: init,
                 getToken() {
-
                     return getToken();
-
                 },
                 getMe() {
                     if (!!KYCToken) {
@@ -2055,7 +2046,6 @@
                         'getDossiers',
                         {description: 'missing KYCToken'}
                     );
-
                 },
                 getTasks(dossierId) {
                     if (!!KYCToken) {
@@ -2067,8 +2057,7 @@
                         {description: 'missing KYCToken'}
                     );
 
-                }
-                ,
+                },
                 getTask(taskId) {
                     if (!!KYCToken) {
                         return getTask(taskId);
@@ -2090,9 +2079,9 @@
                         {description: 'missing KYCToken'}
                     );
                 },
-                saveUpload(uploadId) {
+                saveUpload(content) {
                     if (!!KYCToken) {
-                        return saveUpload(uploadId);
+                        return saveUpload(content);
                     }
                     throwError(
                         'no valid Identification',

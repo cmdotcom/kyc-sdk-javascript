@@ -82,6 +82,7 @@ my_kyc_config = {
          *  event.target can be 'kyc_sdk' (the KYC SDK script) or the KYC SDK container, defined by the elementId in the kyc_config)
          */
 console.info('KYC EVENT',event.type,event.detail)
+        console.log('KYC EVENT custom eventlistener', event.kyctype, event.detail,event.target)
         switch (event.type) {
             case 'changed':
                 //something has changed
