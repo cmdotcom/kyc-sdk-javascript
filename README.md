@@ -233,4 +233,4 @@ This information automatically fills the kyc_config needed to start the KYC SDK.
 ```
 
 ### License
-@cmdotcom/kyc-sdk is under the MIT license. See [LICENSE](/LICENSE.md) file.
+@cmdotcom/kyc-sdk is under the MIT license. See [LICENSE](/LICENSE) file.
