@@ -231,3 +231,6 @@ This information automatically fills the kyc_config needed to start the KYC SDK.
        authorisationEndPoint: '',// string  URL of the to use serverside KYC Authorisation Service
        kycApiEndPoint: '',// string  URL of the to use KYC API
 ```
+
+### License
+@cmdotcom/kyc-sdk is under the MIT license. See [LICENSE](/LICENSE.md) file.
