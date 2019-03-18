@@ -66,7 +66,21 @@ my_kyc_config = {
      */
     prefill: function (inMetaDataObject,callback) {
         //Custom SDK Consumer Code
-        callback?callback(outMetaDataObject || inMetaDataObject):(outMetaDataObject || inMetaDataObject);
+        var outMetaDataObject={};
+        for(var key in inMetaDataObject){
+            var val= inMetaDataObject[key];
+            switch(key){
+                case 'MY_CUSTOM_KNOWN_METEDATAKEY':
+                    val='my vustom known metaData Value';
+                    break;
+            }
+            outMetaDataObject[key]=val;
+        }
+        if(!!callback){
+            callback(outMetaDataObject);
+            return;
+        }
+
     },
     /**
      * Optional function that is called when the KYC SDK throws an event Changes (changed dossier, task, ckeck);

@@ -65,7 +65,7 @@
                     catch (e) {
                         response = (xhr.response || xhr.responseText);
                     }
-                    callback({ success: response, xhr: xhr });
+                    callback({ success: response || 'OK', xhr: xhr });
                 }
                 else {
                     try {
@@ -74,7 +74,7 @@
                     catch (e) {
                         response = 'invalid http status';
                     }
-                    callback({ error: response, xhr: xhr });
+                    callback({ error: response || 'ERROR', xhr: xhr });
                 }
             }
         });
@@ -165,6 +165,7 @@
                     element['kyc'].context.firstName = result.success.firstName;
                     element['kyc'].context.lastName = result.success.lastName;
                     element['kyc'].context.msisdn = result.success.msisdn;
+                    element['kyc'].context.userIdentifier = result.success.id;
                     notify('identification', element);
                     getDossiers(element);
                     return;
@@ -240,7 +241,7 @@
             callback: function (result) {
                 if (!!result.success) {
                     var tasks = result.success.filter(function (task) {
-                        return task.visible && task.shared;
+                        return task.visible;
                     });
                     if (!element) {
                         var event_6 = createEvent('tasks', { tasks: tasks });
@@ -863,7 +864,7 @@
                 e.removeAttribute('name');
             });
             var dossierTitleElement = dossierElement.querySelector('[data-kyc-dossier-title] kyc-text'), dossierNavigationElement = dossierElement.querySelector(' [data-kyc-dossier-tasks-navigation]'), taskFormElement = dossierElement.querySelector('[data-kyc-task]'), taskTitleElement = taskFormElement.querySelector('[data-kyc-task-title] kyc-text'), checkElement = taskFormElement.querySelector('[data-kyc-check]'), checkStatusElement = taskFormElement.querySelector('[data-kyc-check-status]'), statusnode = checkStatusElement.querySelector('kyc-task-status'), overviewElement = taskFormElement.querySelector('[data-kyc-task-overview]'), overviewCheckElement_1 = overviewElement.querySelector('[data-kyc-task-overview-check]'), taskNavigationElement = taskFormElement.querySelector('[data-kyc-task-navigation]'), validatorInput_1 = document.createElement('input'), textinput = checkElement.querySelector('[data-kyc-input]').cloneNode(true), overrulestatus = ['ACCEPTED', 'SUBMITTED'].indexOf(dossier.status) > -1 ? dossier.status : (['ACCEPTED', 'SUBMITTED'].indexOf(task.status) > -1 ? task.status : null);
-            var newinput_1, last_3 = overviewElement;
+            var newinput_1, last_3 = overviewCheckElement_1;
             if (!!dossierTitleElement) {
                 dossierTitleElement.parentNode.replaceChild(document.createTextNode(dossier.customerName), dossierTitleElement);
             }
@@ -1170,7 +1171,14 @@
                                                 newinput_2.setAttribute('type', 'tel');
                                                 break;
                                             default:
-                                                newinput_2.setAttribute('type', 'text');
+                                                switch (check.definition.method) {
+                                                    case 'MANUAL_DATE_INPUT':
+                                                        newinput_2.setAttribute('type', 'date');
+                                                        break;
+                                                    default:
+                                                        newinput_2.setAttribute('type', 'text');
+                                                        break;
+                                                }
                                         }
                                         newinput_2.setAttribute('placeholder', translate(check.definition.description));
                                         newinput_2.setAttribute('name', check.id);
@@ -1444,9 +1452,9 @@
                 }
                 throwError('no valid Identification', ' getTask', { description: 'missing KYCToken' });
             },
-            saveUpload: function (uploadId) {
+            saveUpload: function (content) {
                 if (!!KYCToken) {
-                    return saveUpload(uploadId);
+                    return saveUpload(content);
                 }
                 throwError('no valid Identification', ' getTask', { description: 'missing KYCToken' });
             },

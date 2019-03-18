@@ -97,7 +97,7 @@
                             } catch (e) {
                                 response = (xhr.response || xhr.responseText);
                             }
-                            callback({success: response, xhr: xhr});
+                            callback({success: response||'OK', xhr: xhr});
 
                         } else {
                             try {
@@ -105,7 +105,7 @@
                             } catch (e) {
                                 response = 'invalid http status';
                             }
-                            callback({error: response, xhr: xhr})
+                            callback({error: response||'ERROR', xhr: xhr})
                         }
                     }
                 });
@@ -345,7 +345,7 @@
                         if (!!result.success) {
                             const tasks = result.success.filter(function (task) {
                                 //only show visible and shared tasks
-                                return task.visible && task.shared
+                                return task.visible //&& task.shared
                             });
 
 
@@ -417,9 +417,7 @@
                         'url': kycApiEndPoint + '/api/v1/tasks/' + taskId,
                         callback: function (result) {
                             if (!!result.success) {
-                                /* element['kyc'].status.changed = new Date();
-                                 element['kyc'].context.dossierId = dossierId;
-                                 element['kyc'].context.taskId = taskId;*/
+
                                 const task = result.success;
                                 if (!element) {
                                     const
@@ -1271,7 +1269,7 @@
                         overrulestatus = ['ACCEPTED', 'SUBMITTED'].indexOf(dossier.status) > -1 ? dossier.status : (['ACCEPTED', 'SUBMITTED'].indexOf(task.status) > -1 ? task.status : null);
 
                     let newinput,
-                        last = overviewElement;
+                        last =  overviewCheckElement;
                     if (!!dossierTitleElement) {
                         dossierTitleElement.parentNode.replaceChild(document.createTextNode(dossier.customerName), dossierTitleElement);
                     }
@@ -1692,7 +1690,15 @@
                                                         newinput.setAttribute('type', 'tel');
                                                         break;
                                                     default:
-                                                        newinput.setAttribute('type', 'text');
+                                                        switch(check.definition.method){
+                                                            case 'MANUAL_DATE_INPUT':
+                                                                newinput.setAttribute('type', 'date');
+                                                                break;
+                                                            default:
+                                                                newinput.setAttribute('type', 'text');
+                                                                break;
+                                                        }
+
 
                                                 }
                                                 newinput.setAttribute('placeholder', translate(check.definition.description));

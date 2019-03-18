@@ -159,3 +159,6 @@ label.form-radio > input[type="radio"]:not(:checked) + .label:before {
     border-top: 2px solid rgba(60,72,89,0.1);
     padding-top:8px;
 }
+[data-kyc-task-overview]>[data-kyc-task-overview-check] .form-input-value{
+    order:2;
+}
