@@ -229,7 +229,7 @@
                             element['kyc'].context.firstName = result.success.firstName;
                             element['kyc'].context.lastName = result.success.lastName;
                             element['kyc'].context.msisdn = result.success.msisdn;
-
+                            element['kyc'].context.userIdentifier=result.success.id;
 
                             notify('identification', element);
 

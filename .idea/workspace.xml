@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f42237c5-f980-4c96-8b62-4e32d12f24fc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +19,8 @@
               <entry file="file://$PROJECT_DIR$/README.md">
                 <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
                   <state split_layout="SPLIT">
-                    <first_editor relative-caret-position="757">
-                      <caret line="235" column="66" selection-start-line="235" selection-start-column="66" selection-end-line="235" selection-end-column="66" />
+                    <first_editor relative-caret-position="638">
+                      <caret line="228" column="123" lean-forward="true" selection-start-line="228" selection-start-column="123" selection-end-line="228" selection-end-column="123" />
                     </first_editor>
                     <second_editor />
                   </state>
@@ -64,7 +64,7 @@
           <entry key="Markdown" value="3142" />
           <entry key="PLAIN_TEXT" value="135" />
           <entry key="RegExp" value="1" />
-          <entry key="TypeScript" value="28714" />
+          <entry key="TypeScript" value="28718" />
           <entry key="tsconfig" value="75" />
         </counts>
       </usages-collector>
@@ -77,11 +77,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/index.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="473">
-              <caret line="529" column="27" lean-forward="true" selection-start-line="529" selection-start-column="27" selection-end-line="529" selection-end-column="27" />
+            <state relative-caret-position="456">
+              <caret line="231" column="84" selection-start-line="231" selection-start-column="84" selection-end-line="231" selection-end-column="84" />
               <folding>
                 <element signature="e#907#1403#0" />
                 <element signature="e#1446#2193#0" />
@@ -112,7 +112,6 @@
                 <element signature="e#53496#53578#0" />
                 <element signature="e#87936#88098#0" />
                 <element signature="e#88169#90157#0" />
-                <element signature="e#88818#88858#0" />
                 <element signature="e#90461#90937#0" />
                 <element signature="e#65709#65902#0" />
                 <element signature="e#65953#66142#0" />
@@ -122,7 +121,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LICENSE">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
@@ -157,8 +156,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/kyc_config.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="19" column="16" lean-forward="true" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="16" />
+            <state relative-caret-position="278">
+              <caret line="81" column="24" selection-start-line="81" selection-start-column="24" selection-end-line="81" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -229,7 +228,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>gett</find>
       <find>formdate</find>
       <find>ap.</find>
       <find>tokyc</find>
@@ -259,6 +257,7 @@
       <find>event</find>
       <find>identifica</find>
       <find>kyc_sdk</find>
+      <find>getme</find>
     </findStrings>
     <replaceStrings>
       <replace>document.</replace>
@@ -311,8 +310,8 @@
         <option value="$PROJECT_DIR$/examples/index.html" />
         <option value="$PROJECT_DIR$/examples/kyc_config.js" />
         <option value="$PROJECT_DIR$/secret/secret.js" />
-        <option value="$PROJECT_DIR$/src/index.ts" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/src/index.ts" />
       </list>
     </option>
   </component>
@@ -424,12 +423,12 @@
       <option name="presentableId" value="Default" />
       <updated>1551351172455</updated>
       <workItem from="1551351173698" duration="397367000" />
-      <workItem from="1552459453044" duration="47151000" />
+      <workItem from="1552459453044" duration="48052000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="444518000" />
+    <option name="totallyTimeSpent" value="445419000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -665,17 +664,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/LICENSE">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="638">
+            <caret line="228" column="123" lean-forward="true" selection-start-line="228" selection-start-column="123" selection-end-line="228" selection-end-column="123" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/examples/kyc_config.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="16" lean-forward="true" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="16" />
+        <state relative-caret-position="278">
+          <caret line="81" column="24" selection-start-line="81" selection-start-column="24" selection-end-line="81" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/index.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="473">
-          <caret line="529" column="27" lean-forward="true" selection-start-line="529" selection-start-column="27" selection-end-line="529" selection-end-column="27" />
+        <state relative-caret-position="456">
+          <caret line="231" column="84" selection-start-line="231" selection-start-column="84" selection-end-line="231" selection-end-column="84" />
           <folding>
             <element signature="e#907#1403#0" />
             <element signature="e#1446#2193#0" />
@@ -706,25 +718,11 @@
             <element signature="e#53496#53578#0" />
             <element signature="e#87936#88098#0" />
             <element signature="e#88169#90157#0" />
-            <element signature="e#88818#88858#0" />
             <element signature="e#90461#90937#0" />
             <element signature="e#65709#65902#0" />
             <element signature="e#65953#66142#0" />
             <element signature="e#91999#92329#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LICENSE">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="757">
-            <caret line="235" column="66" selection-start-line="235" selection-start-column="66" selection-end-line="235" selection-end-column="66" />
-          </first_editor>
-          <second_editor />
         </state>
       </provider>
     </entry>
