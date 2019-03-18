@@ -320,7 +320,6 @@
                                     return;
                                 });
                             }
-                            return;
                         }
                         element['kyc'].status.changed = new Date();
                         curTask = task_1;
