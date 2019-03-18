@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f42237c5-f980-4c96-8b62-4e32d12f24fc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/kyc_config.js" beforeDir="false" afterPath="$PROJECT_DIR$/examples/kyc_config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,8 +19,8 @@
               <entry file="file://$PROJECT_DIR$/README.md">
                 <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
                   <state split_layout="SPLIT">
-                    <first_editor relative-caret-position="374">
-                      <caret line="199" column="6" lean-forward="true" selection-start-line="199" selection-start-column="6" selection-end-line="199" selection-end-column="6" />
+                    <first_editor relative-caret-position="102">
+                      <caret line="6" selection-start-line="6" selection-end-line="6" />
                     </first_editor>
                     <second_editor />
                   </state>
@@ -63,7 +61,7 @@
           <entry key="HTML" value="14884" />
           <entry key="JSON" value="24" />
           <entry key="JavaScript" value="4626" />
-          <entry key="Markdown" value="2823" />
+          <entry key="Markdown" value="3124" />
           <entry key="PLAIN_TEXT" value="135" />
           <entry key="RegExp" value="1" />
           <entry key="TypeScript" value="28714" />
@@ -82,8 +80,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/index.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="745">
-              <caret line="584" column="67" lean-forward="true" selection-start-line="584" selection-start-column="57" selection-end-line="584" selection-end-column="67" />
+            <state relative-caret-position="473">
+              <caret line="529" column="27" lean-forward="true" selection-start-line="529" selection-start-column="27" selection-end-line="529" selection-end-column="27" />
               <folding>
                 <element signature="e#907#1403#0" />
                 <element signature="e#1446#2193#0" />
@@ -421,12 +419,12 @@
       <option name="presentableId" value="Default" />
       <updated>1551351172455</updated>
       <workItem from="1551351173698" duration="397367000" />
-      <workItem from="1552459453044" duration="46261000" />
+      <workItem from="1552459453044" duration="46777000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="443628000" />
+    <option name="totallyTimeSpent" value="444144000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -434,7 +432,7 @@
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info id="npm" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" sideWeight="0.7775647" visible="true" weight="0.25266525" />
+      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.7775647" visible="true" weight="0.25266525" />
       <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="1" show_stripe_button="false" />
@@ -448,7 +446,7 @@
       <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="11" />
-      <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.22243528" visible="true" weight="0.12559924" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.22243528" visible="true" weight="0.12559924" />
       <window_info anchor="right" id="Database" order="0" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
@@ -671,8 +669,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/index.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="745">
-          <caret line="584" column="67" lean-forward="true" selection-start-line="584" selection-start-column="57" selection-end-line="584" selection-end-column="67" />
+        <state relative-caret-position="473">
+          <caret line="529" column="27" lean-forward="true" selection-start-line="529" selection-start-column="27" selection-end-line="529" selection-end-column="27" />
           <folding>
             <element signature="e#907#1403#0" />
             <element signature="e#1446#2193#0" />
@@ -715,8 +713,8 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="374">
-            <caret line="199" column="6" lean-forward="true" selection-start-line="199" selection-start-column="6" selection-end-line="199" selection-end-column="6" />
+          <first_editor relative-caret-position="102">
+            <caret line="6" selection-start-line="6" selection-end-line="6" />
           </first_editor>
           <second_editor />
         </state>

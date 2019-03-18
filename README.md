@@ -4,9 +4,9 @@ This SDK works in conjucntion with the [kyc-service](https://github.com/cmdotcom
 
 
 ## Browser Compatibility
-| Chrome |  FF  | Safari |  IE  | Chrome Android | Mobile Safari | IE Mob |
-| :----: | :--: | :----: | :--: | :------------: | :-----------: | :----: |
-|   ✓   |  ✓   |    ?   |  11  |       ?        |       ?       |    ?   |
+| Chrome| FF  | Safari |  IE  | Chrome Android | Mobile Safari | IE Mob 
+|:------:|:---:|:------:|:----:|:--------------:|:-------------:|:------:|
+|   ✓  |  ✓   |    ?   |  11  |       ?        |       ?       |    ?   |
 
 
 ## Development
@@ -188,16 +188,16 @@ run `gulp` or `gulp build` to create a distribution  in the ./dist folder
  
 4.  Methods
 
-    | Method |   Returns |
-    | :----: | :--: |
-    |  ``` window.kyc_sdk.getToken() ```   |   Gets the Token from the authorisationEndPoint to use with the KYC API on the kycApiEndPoint  |
-    |  ``` window.kyc_sdk.getMe() ```   |   Gets the User information from the KYC API on the kycApiEndPoint  |
-    |  ``` window.kyc_sdk.getDossiers() ```   |   Gets the List of Dossiers for this User/clientId combination from the KYC API on the kycApiEndPoint |
-    |  ``` window.kyc_sdk.getTasks(dossierId) ```   |   Gets the List of Tasks for a Dossier the KYC API on the kycApiEndPoint |
-    |  ``` window.kyc_sdk.getTask(taskId) ```   |   Gets the Task and its Checks for a Task the KYC API on the kycApiEndPoint |
-    |  ``` window.kyc_sdk.getUpload(uploadId) ```   |   Gets the content of an Upload from  the KYC API on the kycApiEndPoint |           
-    |  ``` window.kyc_sdk.saveUpload(content) ```   |   Saves the content of an Upload to the KYC API on the kycApiEndPoint  and returns an object containing its uploadId in a 'saveUpload' KYC SDK event |
-    |  ``` window.kyc_sdk.saveTask(task) ```   |   Saves a task (and it's checks) to the KYC API on the kycApiEndPoint  and returns the status in a 'saveTask' KYC SDK event |
+     Method | Returns
+    ------- |--------
+    window.kyc_sdk.getToken()  |   Gets the Token from the authorisationEndPoint to use with the KYC API on the kycApiEndPoint
+    window.kyc_sdk.getMe()    |   Gets the User information from the KYC API on the kycApiEndPoint
+    window.kyc_sdk.getDossiers()  |   Gets the List of Dossiers for this User/clientId combination from the KYC API on the kycApiEndPoint
+    window.kyc_sdk.getTasks(dossierId)   |   Gets the List of Tasks for a Dossier the KYC API on the kycApiEndPoint
+    window.kyc_sdk.getTask(taskId)    |   Gets the Task and its Checks for a Task the KYC API on the kycApiEndPoint
+    window.kyc_sdk.getUpload(uploadId)   |   Gets the content of an Upload from  the KYC API on the kycApiEndPoint           
+    window.kyc_sdk.saveUpload(content)    |   Saves the content of an Upload to the KYC API on the kycApiEndPoint  and returns an object containing its uploadId in a 'saveUpload' KYC SDK event
+    window.kyc_sdk.saveTask(task)   |   Saves a task (and it's checks) to the KYC API on the kycApiEndPoint  and returns the status in a 'saveTask' KYC SDK event
 
   
 
