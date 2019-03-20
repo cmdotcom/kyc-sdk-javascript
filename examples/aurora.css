@@ -18,13 +18,31 @@ label.form-radio > input[type="radio"]:not(:checked) + .label:before {
 [data-kyc-task-overview] .form-group  .form-input p.form-input-value{
     font-family: "Gotham",sans-serif;
     margin: 0;
-    height: 40px;
+    height: auto;
+    min-height:40px;
     width: 100%;
     font-size: 14px;
     background: #fff;
     color: #3c4859;
     font-weight: 600;
 }
+[data-kyc-task-overview]>[data-kyc-task-overview-check] p.form-input-value > img{
+    display:block;
+    position: relative;
+    height:auto;
+    max-height:20vh;
+}
+
+[data-kyc-task-overview]>[data-kyc-task-overview-check]:not(:first-of-type){
+    border-top: 2px solid rgba(60,72,89,0.1);
+    padding-top:8px;
+}
+[data-kyc-task-overview]>[data-kyc-task-overview-check] .form-input-value{
+    order:2;
+    height:auto;
+    min-height: 40px;
+}
+
 .form-group .form-input .form-control.form-options {
     border: none;
     border-radius: 0px;
@@ -153,12 +171,4 @@ label.form-radio > input[type="radio"]:not(:checked) + .label:before {
 [data-kyc-task-item][data-kyc-status="ACCEPTED"]{
     cursor:pointer;
     background-color: rgba(0,189, 151,.1) !important;
-}
-
-[data-kyc-task-overview]>[data-kyc-task-overview-check]:not(:first-of-type){
-    border-top: 2px solid rgba(60,72,89,0.1);
-    padding-top:8px;
-}
-[data-kyc-task-overview]>[data-kyc-task-overview-check] .form-input-value{
-    order:2;
 }

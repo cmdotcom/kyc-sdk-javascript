@@ -14,6 +14,7 @@
             showWarning = false,
             authorisationEndPoint,
             kycApiEndPoint,
+            returnUrl,
             KYCToken,
             KycSdkReference,
             KYCStorage;
@@ -140,6 +141,11 @@
                 }
 
             },
+            getLocation = function (href:string,parts?:boolean) {
+                var l = document.createElement("a");
+                l.href = href;
+                return parts?l:(l.origin + l.pathname + l.search + l.hash);
+            },
             callApi = function (options) {
                 options.headers = {'Authorization': 'Bearer ' + KYCToken.userToken};
                 http(options);
@@ -216,8 +222,6 @@
                 }
                 document.cookie = cname + "=" + cvalue + ";" + "expires=" + exdatetime.toUTCString() + ";path=/";
             },
-
-
             clearKycStorage = function () {
                 if (typeof(Storage) !== "undefined") {
                     // Code for localStorage/sessionStorage.
@@ -279,8 +283,14 @@
                             if (key == 'trxid') {
 
                                 //return from IDIN
-                                KycSdkReference = KycSdkReference || {};
                                 keys['IDIN'] = {transactionId: val.join('=').trim()};
+
+                            }
+                            if (key == 'testkyc') {
+
+                                //return from IDIN
+                                keys['TESTKYC'] = {testkyc: val.join('=').trim()};
+
 
                             }
                             if (key.split('kycs_').shift() == 'kycs_' && key.split('kycs_').length == 2) {
@@ -298,31 +308,31 @@
 
 
                                 }
-
-
                             }
-
                         }
                         return false;
 
 
                     });
-                    if (!!KycSdkReference
-                        && !!KycSdkReference['IDIN']
-                        && !!KycSdkReference['IDIN'].transactionId
-                        && !!keys['IDIN']
-                        && !!keys['IDIN'].transactionId
-                        && !!keys['IDIN'].transactionId === !!KycSdkReference['IDIN'].transactionId
-                    ) {
-                        getIdinTransaction(KycSdkReference['IDIN'].transactionId, function (ret) {
-                            if (!!ret) {
-                                KycSdkReference['IDIN'] = ret;
-                            }
+                    if (!!KycSdkReference && !!KycSdkReference['IDIN']) {
+                        if (
+                            !!KycSdkReference['IDIN'].transactionId
+                            && !!keys['IDIN']
+                            && !!keys['IDIN'].transactionId
+                            && !!keys['IDIN'].transactionId === !!KycSdkReference['IDIN'].transactionId
+                        ) {
+                            getIdinTransaction(KycSdkReference['IDIN'].transactionId, function (ret) {
+                                if (!!ret) {
+                                    KycSdkReference['IDIN'] = ret;
+                                }
 
-                        });
-                    } else {
-                        delete(KycSdkReference['IDIN']);
+                            });
+                        } else {
+                            delete(KycSdkReference['IDIN']);
+                        }
+
                     }
+
 
                 }
                 return KycSdkReference;
@@ -500,7 +510,9 @@
             },
             startIdinTransaction = function (issuerId: string, idinKeys: [string], ref?: any) {
 
-                const search = location.search.substring(1).split('&').filter(function (q) {
+                const _location=getLocation(ref.returnUrl||returnUrl,true),
+
+                    search = _location.search.toString().substring(1).split('&').filter(function (q) {
                         return ['trxid', 'ec'].indexOf(q.toLowerCase().split('=').shift() || '') === -1 &&
                             !(
                                 (q.toLowerCase().split('=').shift() || '').split('kycs_').shift() == 'kycs_'
@@ -509,14 +521,17 @@
                             )
 
                     }).join('&').trim(),
-                    returnUrl = ref instanceof String ? ref : (ref.returnUrl || location.origin + location.pathname + location.hash + !!search ? '?' + search + (!!ref.KYCSECRET && !!ref.KYCStorage ? '&kycs_' + ref.KYCsecret + '=1' : '') : (!!ref.KYCSECRET && !!ref.KYCStorage ? '?kycs_' + ref.KYCSECRET + '=1' : '')),
+                    idinReturnUrl = _location['origin'] +
+                        _location['pathname'] +
+                        ( !!search ? '?' + search + (!!ref.KYCSECRET && !!ref.KYCStorage ? '&kycs_' + ref.KYCsecret + '=1' : '') : (!!ref.KYCSECRET && !!ref.KYCStorage ? '?kycs_' + ref.KYCSECRET + '=1' : ''))+
+                        _location['hash'] ,
                     options = {
                         'url': kycApiEndPoint + '/api/v1/identityservices/idin/transaction',
                         'method': 'POST',
                         'params': {
                             "issuerId": issuerId,
                             "idinKeys": idinKeys,
-                            "merchantReturnUrl": returnUrl
+                            "merchantReturnUrl": idinReturnUrl
                         },
                         callback: function (result) {
                             if (!!result.success) {
@@ -752,10 +767,10 @@
 
 
             },
-            getTask = function (taskId: string, dossierId?: string, element?: HTMLElement) {
+            getTask = function (taskId: string, dossierId?: string, element?: any) {
                 let curTask;
 
-                const curDossier = !!element ? element['kyc'].dossiers.filter(function (dossier) {
+                const curDossier = !!element && element['kyc'] ? element['kyc'].dossiers.filter(function (dossier) {
 
                         return dossier.id == dossierId
 
@@ -774,56 +789,66 @@
                                     return;
 
                                 }
-                                element['kyc'].status.changed = new Date();
-                                if (!!curDossier && curTask) {
-
-                                    /*PREFILLING*/
-                                    if (!!window['kyc_config'] && !!window['kyc_config'].prefill && typeof window['kyc_config'].prefill == 'function') {
-                                        let metaData;
-                                        task.checks.map(function (check) {
-                                            if (!!check && !(!!check.value) && !!check.definition && !!check.definition.metaDataKey) {
-                                                if (!(!!metaData)) {
-                                                    metaData = {};
-                                                }
-                                                metaData[check.definition.metaDataKey] = '';
-                                            }
-                                        })
-                                        if (!!metaData) {
-                                            window['kyc_config'].prefill(metaData, function (retMetaData) {
-                                                if (!!retMetaData) {
-                                                    task.checks = task.checks.map(function (check) {
-                                                        if (!!check && !(!!check.value) && !!check.definition && !!check.definition.metaDataKey) {
-                                                            if (!!retMetaData[check.definition.metaDataKey]) {
-                                                                check.value = retMetaData[check.definition.metaDataKey];
-                                                            }
-
-                                                        }
-                                                        return check;
-                                                    })
-                                                }
-                                                element['kyc'].status.changed = new Date()
-                                                curTask = task;
-
-
-                                                buildTaskForm(element, curDossier, curTask);
-                                                notify('task', element);
-                                                return;
-                                            })
-                                        }
-
-
-                                    }
-                                    /*END PREFILLING*/
-
-                                    element['kyc'].status.changed = new Date()
-                                    curTask = task;
-
-
-                                    buildTaskForm(element, curDossier, curTask);
+                                if (typeof element == 'function') {
+                                    element(task);
+                                    return;
                                 }
-                                notify('task', element);
+                                if (!!element && element['kyc']) {
+                                    element['kyc'].status.changed = new Date();
+                                    if (!!curDossier && curTask) {
+
+                                        /*PREFILLING*/
+                                        if (!!window['kyc_config'] && !!window['kyc_config'].prefill && typeof window['kyc_config'].prefill == 'function') {
+                                            let metaData;
+                                            task.checks.map(function (check) {
+                                                if (!!check && !(!!check.value) && !!check.definition && !!check.definition.metaDataKey) {
+                                                    if (!(!!metaData)) {
+                                                        metaData = {};
+                                                    }
+                                                    metaData[check.definition.metaDataKey] = '';
+                                                }
+                                            })
+                                            if (!!metaData) {
+                                                window['kyc_config'].prefill(metaData, function (retMetaData) {
+                                                    if (!!retMetaData) {
+                                                        task.checks = task.checks.map(function (check) {
+                                                            if (!!check && !(!!check.value) && !!check.definition && !!check.definition.metaDataKey) {
+                                                                if (!!retMetaData[check.definition.metaDataKey]) {
+                                                                    check.value = retMetaData[check.definition.metaDataKey];
+                                                                }
+
+                                                            }
+                                                            return check;
+                                                        })
+                                                    }
+                                                    element['kyc'].status.changed = new Date()
+                                                    curTask = task;
+
+
+                                                    buildTaskForm(element, curDossier, curTask);
+                                                    notify('task', element);
+                                                    return;
+                                                })
+                                            }
+
+
+                                        }
+                                        /*END PREFILLING*/
+
+                                        element['kyc'].status.changed = new Date()
+                                        curTask = task;
+
+
+                                        buildTaskForm(element, curDossier, curTask);
+                                    }
+                                    notify('task', element);
+                                }
                                 return;
 
+                            }
+                            if (typeof element == 'function') {
+                                element({error: result.error});
+                                return;
                             }
                             throwError(
                                 "KYC dossier task could not be fetched!",
@@ -839,7 +864,7 @@
                     }
 
 
-                if (!!element) {
+                if (!!element && element['kyc']) {
                     if (!!curDossier) {
                         if (!!curDossier.tasks) {
                             curTask = curDossier.tasks.filter(function (task) {
@@ -872,11 +897,11 @@
 
 
                     }
-                    callApi(options);
-                    return;
 
 
                 }
+                callApi(options);
+                return;
             },
             getUpload = function (uploadId: string, element?: HTMLElement, callback?: Function) {
                 const options = {
@@ -884,7 +909,7 @@
                     method: 'GET',
                     callback: function (result) {
                         if (!!result.success) {
-                            uploads[uploadId]= result.success;
+                            uploads[uploadId] = result.success;
                             if (!element) {
                                 const
                                     event = createEvent('uploadId', {uploadId: uploadId, content: result.success});
@@ -927,7 +952,7 @@
                     callback: function (result) {
 
                         if (!!result.success && !!result.success.uuid) {
-                            uploads[result.success.uuid]=content;
+                            uploads[result.success.uuid] = content;
                             if (!element) {
 
                                 const
@@ -972,23 +997,46 @@
                     params: JSON.stringify(task),
                     callback: function (result) {
                         if (!!result.success) {
-                            if (!element) {
-                                const
-                                    event = createEvent('saveTask', {task: task});
-                                notify(event, window);
 
-                                return;
-                            }
 
-                            element['kyc'].status.changed = new Date();
-                            const details = safeKyc(element);
-                            details['task'] = task;
-                            notify('savetask', element, details);
+                            getTask(task.id, '', function (result) {
 
-                            if (!!callback) {
-                                callback({'success': result.success})
+                                if (!!result.error) {
+                                    throwError(
+                                        "The task could not be fetched!",
+                                        'getTask',
+                                        result.error,
+                                        {task: task},
+                                        element);
+                                    if (!!callback) {
+                                        callback({'error': result.error})
 
-                            }
+                                    }
+                                }
+                                task.checks = result.checks || task.checks;
+                                task.status = result.status || task.status;
+                                task.visible = result.visible || task.visible;
+                                task.shared = result.shared || task.shared;
+                                if (!element) {
+                                    const
+                                        event = createEvent('saveTask', {task: task});
+                                    notify(event, window);
+
+                                    return;
+                                }
+
+                                element['kyc'].status.changed = new Date();
+                                const details = safeKyc(element);
+                                details['task'] = task;
+                                notify('savetask', element, details);
+
+                                if (!!callback) {
+                                    callback({'success': task})
+
+                                }
+                            })
+
+
                             return;
 
                         }
@@ -1012,6 +1060,7 @@
                 }
                 callApi(options);
             },
+
             checkSdkConditions = function (elementId?: string, inContext?: object) {
                 if (!window['kyc_config']) {
                     if (!!showWarning) {
@@ -1037,6 +1086,8 @@
                 }
                 authorisationEndPoint = window['kyc_config'].authorisationEndPoint;
                 kycApiEndPoint = window['kyc_config'].kycApiEndPoint;
+                returnUrl = getLocation(window['kyc_config'].returnUrl || location.href);
+
                 if (!inContext) {
                     if (!window['kyc_config'].context) {
                         if (!!showWarning) {
@@ -1239,18 +1290,6 @@
                     }
                 }
             },
-            submit = function (element: HTMLElement) {
-
-                const form = element.querySelector('form'),
-                    values = {};
-                if (!!form && !!form.elements) {
-                    ([].slice.call(form.elements) || []).map(function (e) {
-                        if (!!e['name']) {
-                            values[encodeURIComponent(e['name'])] = !!e['value'] ? encodeURIComponent(e['value']) : null;
-                        }
-                    });
-                }
-            },
             Validators = {
                 IBAN: function isValidIBANNumber(input) {
                     var CODE_LENGTHS = {
@@ -1285,8 +1324,6 @@
                     return checksum;
                 }
             },
-
-
             validateInputOnEvent = function (event) {
 
                 /**
@@ -1681,23 +1718,11 @@
                                         if (!!uploads[check.value]) {
                                             newinput.setAttribute('src', uploads[check.value]);
                                         } else {
-                                            const options = {
-                                                'url': kycApiEndPoint + '/api/v1/uploads/' + check.value,
-                                                method: 'GET',
-                                                callback: function (result) {
-                                                    if (!!result.success) {
-
-                                                        newinput.setAttribute('src', uploads[check.value]);
-
-                                                    } else {
-                                                        console.warn("No upload with the id " + check.value + " could be retrieved!", result.error);
-
-                                                    }
+                                            getUpload(check.value, target, function (result) {
+                                                if (!!result.success) {
+                                                    newinput.setAttribute('src', result.success);
                                                 }
-
-                                            }
-                                            callApi(options);
-
+                                            });
                                         }
                                     }
                                     break;
@@ -1924,6 +1949,10 @@
 
                             saveTask(task, target, function (result) {
                                 if (!!result.success) {
+
+                                    task = result.success;
+
+                                    //  buildTaskForm(element, curDossier, curTask);
                                     buildTaskList(target, dossier);
 
                                 } else {
@@ -1949,7 +1978,11 @@
                             taskTitleElement = taskFormElement.querySelector('[data-kyc-task-title] kyc-text'),
                             checkElement = taskFormElement.querySelector('[data-kyc-check]'),
                             checkStatusElement = taskFormElement.querySelector('[data-kyc-check-status]'),
-                            taskNavigationElement = taskFormElement.querySelector('[data-kyc-task-navigation]');
+                            taskNavigationElement = taskFormElement.querySelector('[data-kyc-task-navigation]'),
+                            errorClassElement = checkElement.hasAttribute('data-kyc-errorclass') ? checkElement : checkElement.querySelector('data-kyc-errorclass'),
+                            successClassElement = checkElement.hasAttribute('data-kyc-successclass') ? checkElement : checkElement.querySelector('data-kyc-successclass'),
+                            errorClass = !!errorClassElement ? errorClassElement.getAttribute('data-kyc-errorclass') : null,
+                            successClass = !!successClassElement ? errorClassElement.getAttribute('data-kyc-successclass') : null;
 
 
                         let newinput,
@@ -1969,6 +2002,8 @@
                             overviewElement.parentNode.removeChild(overviewElement);
                         }
                         const curCheck = checkElement.cloneNode(true),
+                            curErrorClassElement = !!errorClass ? (checkElement == errorClassElement ? curCheck : curCheck.querySelector('data-kyc-errorclass')) : null,
+                            curSuccessClassElement = !!successClass ? (checkElement == successClassElement ? curCheck : curCheck.querySelector('data-kyc-successclass')) : null,
                             inputElement = curCheck.querySelector('kyc-input');
                         let focusel;
 
@@ -2162,28 +2197,30 @@
                                         }
                                         ['keypress', 'paste', 'change', 'input'].map(function (type) {
                                             newinput.addEventListener(type, function (event) {
-                                                return validateInputOnEvent(event)
+                                                validateInputOnEvent(event)
+                                                if (event.target.checkValidity()) {
+                                                    if (!!curSuccessClassElement) {
+                                                        curSuccessClassElement.classList.add(successClass);
+                                                    }
+                                                    if (!!curErrorClassElement) {
+                                                        curErrorClassElement.classList.remove(errorClass);
+                                                    }
+
+                                                } else {
+                                                    if (!!curSuccessClassElement) {
+                                                        curSuccessClassElement.classList.remove(successClass);
+                                                    }
+                                                    if (!!curErrorClassElement) {
+                                                        curErrorClassElement.classList.add(errorClass);
+                                                    }
+                                                }
                                             });
                                         })
 
                                         break;
                                     case 'IDIN':
 
-                                        /*
-                                        if (!!KycSdkReference
-                                                                && !!KycSdkReference['IDIN']
-                                                                && !!KycSdkReference['IDIN'].transactionId
-                                                                && !!keys['IDIN']
-                                                                && !!keys['IDIN'].transactionId
-                                                                && !!keys['IDIN'].transactionId === !!KycSdkReference['IDIN'].transactionId
-                                                            ) {
-                                                                getIdinTransaction(KycSdkReference['IDIN'].transactionId, function (ret) {
-                                                                    if (!!ret) {
-                                                                        KycSdkReference['IDIN'] = ret;
-                                                                    }
 
-                                                                });
-                                         */
                                         if (!(!!check.value)) {
 
                                             /**/
@@ -2203,9 +2240,9 @@
                                                             case 'success':
                                                                 //save the value;
                                                                 delete KycSdkReference.IDIN;
-                                                                target['kyc'].context.checkId=null;
-                                                                target['kyc'].context.taskId=null;
-                                                                target['kyc'].context.dossierId=null;
+                                                                target['kyc'].context.checkId = null;
+                                                                target['kyc'].context.taskId = null;
+                                                                target['kyc'].context.dossierId = null;
                                                                 check.value = idin.transactionId;
                                                                 gotoNext(next);
                                                                 break;
@@ -2229,10 +2266,8 @@
                                                     return;
 
 
-
-
                                                 }
-                                                IdinCallback(KycSdkReference);
+                                                IdinCallback(KycSdkReference.IDIN);
 
                                                 return;
                                             }
@@ -2463,11 +2498,31 @@
                                                             if (!!result.success && !!result.success.uuid) {
                                                                 uploads[result.success.uuid] = !!fileEvent && !!fileEvent.target && fileEvent.target['result'] ? fileEvent.target['result'] : '';
                                                                 filepreview.setAttribute('style', 'background-image:url("' + uploads[result.success.uuid] + '")');
-                                                                realinput.value=result.success.uuid;
-                                                                realinput.setAttribute('value',result.success.uuid);
-                                                                validateInputOnEvent({target: realinput, type:'change'});
+                                                                realinput.value = result.success.uuid;
+                                                                realinput.setAttribute('value', result.success.uuid);
+                                                                validateInputOnEvent({
+                                                                    target: realinput,
+                                                                    type: 'change'
+                                                                });
+                                                                if (realinput.checkValidity()) {
+                                                                    if (!!curSuccessClassElement) {
+                                                                        curSuccessClassElement.classList.add(successClass);
+                                                                    }
+                                                                    if (!!curErrorClassElement) {
+                                                                        curErrorClassElement.classList.remove(errorClass);
+                                                                    }
+
+                                                                } else {
+                                                                    if (!!curSuccessClassElement) {
+                                                                        curSuccessClassElement.classList.remove(successClass);
+                                                                    }
+                                                                    if (!!curErrorClassElement) {
+                                                                        curErrorClassElement.classList.add(errorClass);
+                                                                    }
+                                                                }
                                                             }
                                                         })
+
 
                                                     }
 
@@ -2484,6 +2539,22 @@
                                                 getUpload(check.value, target, function (result) {
                                                     if (!!result.success) {
                                                         filepreview.setAttribute('style', 'background-image:url("' + uploads[check.value] + '")');
+                                                        if (realinput.checkValidity()) {
+                                                            if (!!curSuccessClassElement) {
+                                                                curSuccessClassElement.classList.add(successClass);
+                                                            }
+                                                            if (!!curErrorClassElement) {
+                                                                curErrorClassElement.classList.remove(errorClass);
+                                                            }
+
+                                                        } else {
+                                                            if (!!curSuccessClassElement) {
+                                                                curSuccessClassElement.classList.remove(successClass);
+                                                            }
+                                                            if (!!curErrorClassElement) {
+                                                                curErrorClassElement.classList.add(errorClass);
+                                                            }
+                                                        }
 
                                                     }
                                                 })
@@ -2623,9 +2694,7 @@
                     {dossier: dossier, task: task, checkid: checkid},
                     target);
 
-            }
-            ,
-
+            },
             safeKyc = function (element: HTMLElement) {
                 return {
                     context: element['kyc'].context,

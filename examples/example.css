@@ -1,9 +1,5 @@
-#myKYCelement {
+#myKYCelement:not(.ready) {
     display: none;
-}
-
-#myKYCelement.ready {
-    display: block;
 }
 
 body {
@@ -81,11 +77,13 @@ body[data-toggle-css="kyc"] #login {
     max-width: calc(100vw - 20px);
     margin: 0px auto;
 }
-body #login >p >small{
-  display:block;
+
+body #login > p > small {
+    display: block;
     font-size: inherit;
     position: relative;
 }
+
 body[data-toggle-css="kyc"] #login .form-input {
     display: flex;
     flex-direction: column;
@@ -102,73 +100,143 @@ body[data-toggle-css="kyc"] #login .form-input label {
 
 }
 
-body #login .form-input label > .required , body #login .required{
+body #login .form-input label > .required, body #login .required {
     color: #F03A47;
     position: relative;
     display: inline-block;
 
     font-weight: bold;
 }
-body #login .form-input label > .required{
+
+body #login .form-input label > .required {
     margin-left: 4px;
 }
 
 body[data-toggle-css="kyc"] #login
-body #login .form-group-box{
-    padding:16px;
-    border-top:2px solid rgba(60,72,89,0.1);
+body #login .form-group-box {
+    padding: 16px;
+    border-top: 2px solid rgba(60, 72, 89, 0.1);
 
-    margin-bottom:16px;
+    margin-bottom: 16px;
 }
 
-platform-header .sidenav-wrapper{
-    display: none!important;
+platform-header .sidenav-wrapper {
+    display: none !important;
 }
 
-body[data-toggle-css="kyc"] #login input,
-body[data-toggle-css="kyc"] #login button,
-body[data-toggle-css="kyc"] #login input[type="button"],
-body[data-toggle-css="kyc"] #login input[type="submit"] {
+body[data-toggle-css="kyc"] > .container input,
+body[data-toggle-css="kyc"] > .container button,
+body[data-toggle-css="kyc"] > .container input[type="button"],
+body[data-toggle-css="kyc"] > .container input[type="submit"] {
 
     padding: 8px;
 }
 
-body[data-toggle-css="kyc"] #login button,
-body[data-toggle-css="kyc"] #login input[type="button"],
-body[data-toggle-css="kyc"] #login input[type="submit"] {
+body[data-toggle-css="kyc"] > .container button,
+body[data-toggle-css="kyc"] > .container input[type="button"],
+body[data-toggle-css="kyc"] > .container input[type="submit"] {
     text-transform: uppercase;
     cursor: pointer;
 }
 
-body[data-toggle-css="kyc"] #login button:disabled,
-body[data-toggle-css="kyc"] #login input[type="button"]:disabled,
-body[data-toggle-css="kyc"] #login input[type="submit"]:disabled {
+body[data-toggle-css="kyc"] > .container button:disabled,
+body[data-toggle-css="kyc"] > .container input[type="button"]:disabled,
+body[data-toggle-css="kyc"] > .container input[type="submit"]:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-body[data-toggle-css="kyc"] #login .form-input input {
+[data-kyc-status] .kyc-status ~ [class*="status-"],
+[data-kyc-dossier-item] .kyc-status ~ [class*="status-"] {
+    font-size: 24px;
+    margin-left: 8px;
+    transform: translateY(6px);
+}
+
+body[data-toggle-css="kyc"] [data-kyc-dossier-item] > div,
+body[data-toggle-css="kyc"] [data-kyc-task-item] > div {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    max-width: calc(100% - 50% - 20px);
+    text-align: right;
+}
+
+body[data-toggle-css="kyc"] [data-kyc-task-item] > div {
+    max-width: calc(100% - 80% - 20px);
+}
+
+body[data-toggle-css="kyc"] [data-kyc-dossier-item] > div:first-child,
+body[data-toggle-css="kyc"] [data-kyc-task-item] > div:first-child {
+    max-width: 50%;
+    text-align: left;
+}
+
+body[data-toggle-css="kyc"] [data-kyc-task-item] > div:first-child {
+    max-width: 80%;
+}
+
+body[data-toggle-css="kyc"] [data-kyc-dossier-item] > div > .kyc-status,
+body[data-toggle-css="kyc"] [data-kyc-task-item] > div > .kyc-status {
+    display: inline-block;
+    font-size: 60%;
+    min-width: 6em;
+    margin-left: 10px;
+    text-align: right;
+
+}
+
+body[data-toggle-css="kyc"] [data-kyc-dossier-title] .kyc-status,
+body[data-toggle-css="kyc"] [data-kyc-task-title] .kyc-status {
+    display: inline-block;
+    font-size: 60%;
+}
+
+body[data-toggle-css="kyc"] .cm-icon {
+    display: none
+}
+
+body[data-toggle-css="kyc"] > .container .form-input {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+body[data-toggle-css="kyc"] > .container .form-input input {
     margin-bottom: 1em;
     order: 2;
 }
-[data-kyc-status] .kyc-status~ [class*="status-"],
-[data-kyc-dossier-item] .kyc-status~ [class*="status-"]{
-    font-size: 24px;
-    margin-left:8px;
-    transform: translateY(6px);
+
+body[data-toggle-css="kyc"] > .container .form-input > .form-input-value {
+    order: 2;
+    margin: 0 0 8px 0;
+    -webkit-appearance: textfield;
 }
-[data-kyc-dossier-item] .kyc-status,
-[data-kyc-task-item] .kyc-status,
-[data-kyc-check-status] .kyc-status,
-[data-kyc-status] [class*="status-"]{
+
+body[data-toggle-css="kyc"] > .container .form-input > label {
+    order: 1;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+
+}
+
+body[data-toggle-css="aurora"] > .container  [data-kyc-dossier-item] .kyc-status,
+body[data-toggle-css="aurora"] > .container  [data-kyc-task-item] .kyc-status,
+body[data-toggle-css="aurora"] > .container [data-kyc-check-status] .kyc-status,
+body > .container [data-kyc-status] [class*="status-"] {
 
     text-align: center;
     display: none !important;
 }
-[data-kyc-status="SUBMITTED"] .status-SUBMITTED[class*="status-"],
-[data-kyc-status="OPEN"] .status-OPEN[class*="status-"],
-[data-kyc-status="REJECTED"] .status-REJECTED[class*="status-"],
-[data-kyc-status="ACCEPTED"] .status-ACCEPTED[class*="status-"]
-{
-    display: inline-block  !important;;
+
+body > .container [data-kyc-status="SUBMITTED"] .status-SUBMITTED[class*="status-"],
+body > .container [data-kyc-status="OPEN"] .status-OPEN[class*="status-"],
+body > .container [data-kyc-status="REJECTED"] .status-REJECTED[class*="status-"],
+body > .container [data-kyc-status="ACCEPTED"] .status-ACCEPTED[class*="status-"] {
+    display: inline-block !important;;
 }
+.text-center{
+    text-align: center;
+}
+

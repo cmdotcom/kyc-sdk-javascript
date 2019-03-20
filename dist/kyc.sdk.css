@@ -1,0 +1,76 @@
+body [kyc-sdk-status="dossiers"],
+body [kyc-sdk-status="tasks"],
+body [kyc-sdk-status="task"] {
+    display: block;
+    margin: 0px auto;
+    width: 750px;
+    max-width: calc(100vw - 20px);
+}
+
+body [kyc-sdk-status="dossiers"] [data-kyc-dossier-list],
+body [kyc-sdk-status="tasks"] [data-kyc-task-list] {
+    display: block;
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+
+body [kyc-sdk-status="dossiers"] [data-kyc-dossier-list] [data-kyc-dossier-item],
+body [kyc-sdk-status="tasks"] [data-kyc-task-list] [data-kyc-task-item] {
+    display: block;
+    margin: 10px 0px;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    cursor: pointer;
+    position: relative;
+
+}
+
+body [kyc-sdk-status="dossiers"] [data-kyc-dossier-list] [data-kyc-dossier-item] > *,
+body [kyc-sdk-status="tasks"] [data-kyc-task-list] [data-kyc-task-item] > * {
+    display: inline-block;
+    position: relative;
+}
+
+body [kyc-sdk-status="dossiers"] [data-kyc-dossier-list] [data-kyc-dossier-item]:first-child,
+body [kyc-sdk-status="tasks"] [data-kyc-task-list] [data-kyc-task-item]:first-child {
+    margin-top: 0px;
+}
+body [kyc-sdk-status="dossiers"]  button,
+body [kyc-sdk-status="tasks"]  button,
+body [kyc-sdk-status="task"]  button{
+    padding:8px;
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
+
+
+body [kyc-sdk-status="dossiers"] h1 button,
+body [kyc-sdk-status="tasks"] h1 button,
+body [kyc-sdk-status="task"] h1 button,
+body [kyc-sdk-status="dossiers"] h2 button,
+body [kyc-sdk-status="tasks"] h2 button,
+body [kyc-sdk-status="task"] h2 button{
+    font-size: inherit;
+    font-weight:inherit;
+    background-color: transparent;
+    border:none;
+    cursor: pointer;
+}
+
+[data-kyc-to-dossiers]:before,
+[data-kyc-to-tasks]:before{
+    content:'\02039';
+    display:block;
+    position: relative;
+    font-size: inherit;
+    font-weight:inherit;
+
+}
+
+[data-kyc-task] [data-kyc-task-navigation]{
+    display: block;
+    position: relative;
+    margin-top:10px;
+}

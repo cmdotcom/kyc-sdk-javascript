@@ -23,6 +23,13 @@ var formisLoaded = false,
                 required: true,
             },
             {
+                label: 'returnUrl',
+                type: 'url',
+                value: '',
+                link: my_kyc_config
+
+            },
+            {
                 label: 'Enduser Identification',
                 type: 'seperator',
 

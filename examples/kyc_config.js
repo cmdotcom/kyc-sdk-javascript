@@ -33,6 +33,11 @@ my_kyc_config = {
     authorisationEndPoint: '',// string  URL of the to use serverside KYC Authorisation Service
     kycApiEndPoint: '',// string  URL of the to use KYC API
     /**
+     * optional string  URL to use to return to when using external verification tools like IDIN. Extra query parameteres will be added to this URL.
+     * It should take the form of location.origin+location.pathname+location.search+location.hash
+     */
+    returnUrl: '',
+    /**
      * Optional function to translate strings (description and longDescription from the KYC check definitions and the predefined UX strings)
      * Translates strings
      *
