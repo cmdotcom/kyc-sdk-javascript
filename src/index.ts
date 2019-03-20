@@ -510,7 +510,7 @@
             },
             startIdinTransaction = function (issuerId: string, idinKeys: [string], ref?: any) {
 
-                const _location=getLocation(ref.returnUrl||returnUrl,true),
+                const _location=getLocation(ref.returnUrl||(!!returnUrl?returnUrl:(location.href)),true),
 
                     search = _location.search.toString().substring(1).split('&').filter(function (q) {
                         return ['trxid', 'ec'].indexOf(q.toLowerCase().split('=').shift() || '') === -1 &&
@@ -610,12 +610,10 @@
             getDossiers = function (element?: HTMLElement) {
                 const options = {
                     'url': kycApiEndPoint + '/api/v1/users/' + KYCToken.data.uuid + '/dossiers',
-                    callback: function (result) {
+                     callback: function (result) {
                         if (!!result.success) {
-
                             const ref = getKycSdkReference(),
                                 dossiers = (result.success.filter(function (client) {
-
                                     return !!KYCToken.data.clientId && client.clientId == KYCToken.data.clientId;
                                 }).shift() || {dossiers: []}).dossiers;
 
@@ -629,7 +627,6 @@
 
                             element['kyc'].status.changed = new Date();
                             //filter the dossiers on the clientId and customerName/externalReference
-
                             element['kyc'].dossiers = dossiers.filter(function (dossier) {
                                 /*If dossierId is known in the ref return only that dossier**/
                                 if (!!ref && !!ref.dossierId) {
@@ -1060,7 +1057,6 @@
                 }
                 callApi(options);
             },
-
             checkSdkConditions = function (elementId?: string, inContext?: object) {
                 if (!window['kyc_config']) {
                     if (!!showWarning) {
@@ -1086,7 +1082,7 @@
                 }
                 authorisationEndPoint = window['kyc_config'].authorisationEndPoint;
                 kycApiEndPoint = window['kyc_config'].kycApiEndPoint;
-                returnUrl = getLocation(window['kyc_config'].returnUrl || location.href);
+                returnUrl = !!window['kyc_config'].returnUrl?getLocation(window['kyc_config'].returnUrl ):null;
 
                 if (!inContext) {
                     if (!window['kyc_config'].context) {

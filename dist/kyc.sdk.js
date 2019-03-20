@@ -362,7 +362,7 @@
         };
         callApi(options);
     }, startIdinTransaction = function (issuerId, idinKeys, ref) {
-        var _location = getLocation(ref.returnUrl || returnUrl, true), search = _location.search.toString().substring(1).split('&').filter(function (q) {
+        var _location = getLocation(ref.returnUrl || (!!returnUrl ? returnUrl : (location.href)), true), search = _location.search.toString().substring(1).split('&').filter(function (q) {
             return ['trxid', 'ec'].indexOf(q.toLowerCase().split('=').shift() || '') === -1 &&
                 !((q.toLowerCase().split('=').shift() || '').split('kycs_').shift() == 'kycs_'
                     && (q.toLowerCase().split('=').shift() || '').split('kycs_').length == 2);
@@ -722,7 +722,7 @@
         }
         authorisationEndPoint = window['kyc_config'].authorisationEndPoint;
         kycApiEndPoint = window['kyc_config'].kycApiEndPoint;
-        returnUrl = getLocation(window['kyc_config'].returnUrl || location.href);
+        returnUrl = !!window['kyc_config'].returnUrl ? getLocation(window['kyc_config'].returnUrl) : null;
         if (!inContext) {
             if (!window['kyc_config'].context) {
                 if (!!showWarning) {
