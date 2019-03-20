@@ -1722,6 +1722,10 @@
                                         }
                                     }
                                     break;
+                                case 'MANUAL_DATE_INPUT':
+                                    newinput = document.createTextNode(formatDate(new Date(Date.parse(check.value))));
+
+                                    break;
                                 default:
 
 

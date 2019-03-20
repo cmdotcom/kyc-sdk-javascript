@@ -60,7 +60,7 @@ my_kyc_config = {
         //Custom SDK Consumer Code
         //var options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
         var options = { year: 'numeric', month: '2-digit', day: '2-digit'};
-        return date.toLocaleDateString('nl-NL', options) + ' ' + date.toLocaleTimeString('nl-NL');
+        return date.toLocaleDateString('nl-NL', options); //+ ' ' + date.toLocaleTimeString('nl-NL');
     },
     /**
      * Optional function to prefill KYC requested data based on MetaDataKeys in a KYC check definition

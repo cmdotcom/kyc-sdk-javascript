@@ -84,7 +84,7 @@ run `gulp` or `gulp build` to create a distribution  in the ./dist folder
         formatDate: function (date) {
             //Custom SDK Consumer Code
             var options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
-            return date.toLocaleDateString('en-GB', options) + ' ' + date.toLocaleTimeString('en-GB');
+            return date.toLocaleDateString('en-GB', options) ;
         },
         /**
          * Optional function to prefill KYC requested data based on MetaDataKeys in a KYC check definition

@@ -1173,6 +1173,9 @@
                                 }
                             }
                             break;
+                        case 'MANUAL_DATE_INPUT':
+                            newinput_1 = document.createTextNode(formatDate(new Date(Date.parse(check.value))));
+                            break;
                         default:
                             validatorInput_1.value = check.value || null;
                             switch (check.definition.valueFormat) {
