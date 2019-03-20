@@ -1158,16 +1158,21 @@
                         case 'RAW_DOCUMENT_SCAN':
                         case 'DOCUMENT_FILE_UPLOAD':
                         case 'SELFIE_CHECK':
-                            newinput_1 = document.createTextNode('');
+                            newinput_1 = document.createComment(check.value);
                             if (!!check.value) {
                                 newinput_1 = document.createElement('img');
                                 if (!!uploads[check.value]) {
                                     newinput_1.setAttribute('src', uploads[check.value]);
                                 }
                                 else {
+                                    newinput_1.setAttribute('value', check.value);
                                     getUpload(check.value, target, function (result) {
                                         if (!!result.success) {
-                                            newinput_1.setAttribute('src', result.success);
+                                            ap.slice.call(target.querySelectorAll('img[value="' + check.value + '"]')).map(function (el) {
+                                                console.log(el);
+                                                el.setAttribute('src', uploads[check.value]);
+                                                el.removeAttribute('value');
+                                            });
                                         }
                                     });
                                 }

@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f42237c5-f980-4c96-8b62-4e32d12f24fc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/kyc.sdk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/kyc.sdk.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/kyc.sdk.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/kyc.sdk.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/kyc_config.js" beforeDir="false" afterPath="$PROJECT_DIR$/examples/kyc_config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,7 +44,7 @@
           <entry key="Markdown" value="3145" />
           <entry key="PLAIN_TEXT" value="135" />
           <entry key="RegExp" value="1" />
-          <entry key="TypeScript" value="38351" />
+          <entry key="TypeScript" value="38529" />
           <entry key="tsconfig" value="75" />
         </counts>
       </usages-collector>
@@ -59,11 +57,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/index.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="428">
-              <caret line="1726" lean-forward="true" selection-start-line="1726" selection-end-line="1726" />
+            <state relative-caret-position="224">
+              <caret line="1710" column="69" selection-start-line="1710" selection-start-column="69" selection-end-line="1710" selection-end-column="69" />
               <folding>
                 <element signature="e#1623#2370#0" />
                 <element signature="e#2410#5894#0" />
@@ -84,7 +82,6 @@
                 <element signature="e#23691#24931#0" />
                 <element signature="e#28554#31397#0" />
                 <element signature="e#31482#37563#0" />
-                <element signature="e#37661#39024#0" />
                 <element signature="e#39122#40718#0" />
                 <element signature="e#40803#43404#0" />
                 <element signature="e#43489#46494#0" />
@@ -103,6 +100,7 @@
                 <element signature="e#61997#64871#0" />
                 <element signature="e#64941#68514#0" />
                 <element signature="e#68648#68724#0" />
+                <element signature="e#74646#74809#0" />
                 <element signature="e#79678#134392#0" />
                 <element signature="e#134462#134624#0" />
                 <element signature="e#136873#140215#0" />
@@ -138,12 +136,12 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="570">
-                <caret line="86" column="61" selection-start-line="86" selection-start-column="61" selection-end-line="86" selection-end-column="61" />
+              <first_editor relative-caret-position="587">
+                <caret line="87" column="10" lean-forward="true" selection-start-line="83" selection-start-column="7" selection-end-line="87" selection-end-column="10" />
               </first_editor>
               <second_editor />
             </state>
@@ -298,9 +296,9 @@
         <option value="$PROJECT_DIR$/examples/example.css" />
         <option value="$PROJECT_DIR$/examples/example.js" />
         <option value="$PROJECT_DIR$/secret/secret.js" />
-        <option value="$PROJECT_DIR$/src/index.ts" />
         <option value="$PROJECT_DIR$/examples/kyc_config.js" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/src/index.ts" />
       </list>
     </option>
   </component>
@@ -412,12 +410,12 @@
       <option name="presentableId" value="Default" />
       <updated>1551351172455</updated>
       <workItem from="1551351173698" duration="397367000" />
-      <workItem from="1552459453044" duration="96316000" />
+      <workItem from="1552459453044" duration="96982000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="493683000" />
+    <option name="totallyTimeSpent" value="494349000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -655,10 +653,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/examples/kyc_config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="62" column="57" selection-start-line="62" selection-start-column="57" selection-end-line="62" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="587">
+            <caret line="87" column="10" lean-forward="true" selection-start-line="83" selection-start-column="7" selection-end-line="87" selection-end-column="10" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/index.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="1726" lean-forward="true" selection-start-line="1726" selection-end-line="1726" />
+        <state relative-caret-position="224">
+          <caret line="1710" column="69" selection-start-line="1710" selection-start-column="69" selection-end-line="1710" selection-end-column="69" />
           <folding>
             <element signature="e#1623#2370#0" />
             <element signature="e#2410#5894#0" />
@@ -679,7 +694,6 @@
             <element signature="e#23691#24931#0" />
             <element signature="e#28554#31397#0" />
             <element signature="e#31482#37563#0" />
-            <element signature="e#37661#39024#0" />
             <element signature="e#39122#40718#0" />
             <element signature="e#40803#43404#0" />
             <element signature="e#43489#46494#0" />
@@ -698,27 +712,11 @@
             <element signature="e#61997#64871#0" />
             <element signature="e#64941#68514#0" />
             <element signature="e#68648#68724#0" />
+            <element signature="e#74646#74809#0" />
             <element signature="e#79678#134392#0" />
             <element signature="e#134462#134624#0" />
             <element signature="e#136873#140215#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/kyc_config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="62" column="57" selection-start-line="62" selection-start-column="57" selection-end-line="62" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="570">
-            <caret line="86" column="61" selection-start-line="86" selection-start-column="61" selection-end-line="86" selection-end-column="61" />
-          </first_editor>
-          <second_editor />
         </state>
       </provider>
     </entry>
