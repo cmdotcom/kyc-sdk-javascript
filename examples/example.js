@@ -331,12 +331,36 @@ window.addEventListener('load', function (e) {
     toggleCss(true);
     buildStartform();
     // test if the event has a property kyctype an it equals to 'ready'
-    if (!!e && !!e.kyctype && e.kyctype == 'ready') {
-        //KYC SDK is Loaded
-        console.log('KYC SDK is Loaded');
+    if (!!e && !!e.kyctype) {
 
+        if (e.kyctype == 'ready') {
+            //KYC SDK is Loaded
+          //  console.log('KYC SDK is Loaded');
+        }
+        if (e.kyctype == 'forceinit') {
+            //KYC SDK asks for a forced Initiation
+           // console.log('KYC SDK asks for a forced Initiation',e.detail);
+            if (!!e.detail && !!e.detail.context) {
+
+                if (!!window['my_kyc_config']) {
+                    window['kyc_config'] = window['my_kyc_config'];
+
+                }
+                if (!!window['kyc_config']) {
+                    window['kyc_config'].context = e.detail.context
+                } else {
+                    window['kyc_config'] = {context: e.detail.context};
+                }
+                window['kyc_sdk'].init();
+                document.querySelector('form#login').setAttribute('style', 'display:none');
+                document.querySelector('#myKYCelement').classList.remove('ready');
+            }
+        }
 
     }
+
+
+
 })
 
 

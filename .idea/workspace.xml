@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f42237c5-f980-4c96-8b62-4e32d12f24fc" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/kyc.sdk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/kyc.sdk.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/kyc.sdk.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/kyc.sdk.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/example.js" beforeDir="false" afterPath="$PROJECT_DIR$/examples/example.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/kyc_config.js" beforeDir="false" afterPath="$PROJECT_DIR$/examples/kyc_config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,21 +19,23 @@
     <session id="799551903">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.open.time.0" value="1" />
+          <entry key="project.closed" value="3" />
+          <entry key="project.open.time.0" value="3" />
+          <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.19" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.opened" value="5" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CSS" value="13" />
+          <entry key="CSS" value="14" />
           <entry key="HTML" value="37" />
           <entry key="JSON" value="15" />
-          <entry key="JavaScript" value="48" />
+          <entry key="JavaScript" value="51" />
           <entry key="Markdown" value="7" />
           <entry key="PLAIN_TEXT" value="6" />
           <entry key="SourceMap" value="3" />
-          <entry key="TypeScript" value="17" />
+          <entry key="TypeScript" value="19" />
           <entry key="YAML" value="2" />
           <entry key="tsconfig" value="8" />
         </counts>
@@ -38,72 +43,34 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CSS" value="2879" />
-          <entry key="HTML" value="14959" />
+          <entry key="HTML" value="15039" />
           <entry key="JSON" value="24" />
-          <entry key="JavaScript" value="5222" />
+          <entry key="JavaScript" value="6500" />
           <entry key="Markdown" value="3145" />
           <entry key="PLAIN_TEXT" value="135" />
           <entry key="RegExp" value="1" />
-          <entry key="TypeScript" value="38529" />
+          <entry key="TypeScript" value="40932" />
           <entry key="tsconfig" value="75" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
         <counts>
-          <entry key="TypeScriptServerServiceImpl" value="2" />
+          <entry key="TypeScriptServerServiceImpl" value="5" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/index.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="1710" column="69" selection-start-line="1710" selection-start-column="69" selection-end-line="1710" selection-end-column="69" />
+            <state relative-caret-position="160">
+              <caret line="271" column="38" lean-forward="true" selection-start-line="271" selection-start-column="38" selection-end-line="271" selection-end-column="38" />
               <folding>
-                <element signature="e#1623#2370#0" />
-                <element signature="e#2410#5894#0" />
-                <element signature="e#5967#6131#0" />
-                <element signature="e#5937#6068#0" />
-                <element signature="e#6109#6759#0" />
-                <element signature="e#6823#7450#0" />
-                <element signature="e#7513#8139#0" />
-                <element signature="e#8190#8757#0" />
-                <element signature="e#8843#9203#0" />
-                <element signature="e#9249#9763#0" />
-                <element signature="e#9822#10531#0" />
-                <element signature="e#10605#11021#0" />
-                <element signature="e#13567#16874#0" />
-                <element signature="e#16929#19047#0" />
-                <element signature="e#19109#20700#0" />
-                <element signature="e#20796#23602#0" />
-                <element signature="e#23691#24931#0" />
-                <element signature="e#28554#31397#0" />
-                <element signature="e#31482#37563#0" />
-                <element signature="e#39122#40718#0" />
-                <element signature="e#40803#43404#0" />
-                <element signature="e#43489#46494#0" />
-                <element signature="e#46546#46968#0" />
-                <element signature="e#47052#47650#0" />
-                <element signature="e#47775#48832#0" />
-                <element signature="e#48881#49307#0" />
-                <element signature="e#49356#49652#0" />
-                <element signature="e#49723#50967#0" />
-                <element signature="e#51018#51562#0" />
-                <element signature="e#51639#52101#0" />
-                <element signature="e#52156#52487#0" />
-                <element signature="e#53036#55156#0" />
-                <element signature="e#59930#60385#0" />
-                <element signature="e#60452#61932#0" />
-                <element signature="e#61997#64871#0" />
-                <element signature="e#64941#68514#0" />
-                <element signature="e#68648#68724#0" />
-                <element signature="e#74646#74809#0" />
-                <element signature="e#79678#134392#0" />
-                <element signature="e#134462#134624#0" />
-                <element signature="e#136873#140215#0" />
+                <element signature="e#38308#39671#0" />
+                <element signature="e#81294#81370#0" />
+                <element signature="e#81930#85792#0" />
               </folding>
             </state>
           </provider>
@@ -112,17 +79,38 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/example.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="659">
-              <caret line="239" column="22" selection-start-line="239" selection-start-column="22" selection-end-line="239" selection-end-column="22" />
+            <state>
+              <caret selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/example.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="492">
+              <caret line="350" column="24" lean-forward="true" selection-start-line="350" selection-start-column="24" selection-end-line="350" selection-end-column="24" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dist/kyc.sdk.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="15" column="62" lean-forward="true" selection-start-line="15" selection-start-column="62" selection-end-line="15" selection-end-column="62" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/secret/secret.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="67" column="28" lean-forward="true" selection-start-line="67" selection-start-column="28" selection-end-line="67" selection-end-column="28" />
+            <state relative-caret-position="-494">
+              <caret line="124" column="18" selection-start-line="124" selection-start-column="18" selection-end-line="124" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -130,20 +118,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/template.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="54" column="87" selection-start-line="54" selection-start-column="27" selection-end-line="54" selection-end-column="87" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="587">
-                <caret line="87" column="10" lean-forward="true" selection-start-line="83" selection-start-column="7" selection-end-line="87" selection-end-column="10" />
-              </first_editor>
-              <second_editor />
+            <state relative-caret-position="323">
+              <caret line="19" selection-start-line="19" selection-end-line="19" />
             </state>
           </provider>
         </entry>
@@ -151,8 +127,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/kyc_config.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="62" column="57" selection-start-line="62" selection-start-column="57" selection-end-line="62" selection-end-column="57" />
+            <state relative-caret-position="1751">
+              <caret line="103" column="100" selection-start-line="103" selection-start-column="100" selection-end-line="103" selection-end-column="100" />
             </state>
           </provider>
         </entry>
@@ -160,8 +136,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="152" column="51" selection-start-line="152" selection-start-column="51" selection-end-line="152" selection-end-column="51" />
+            <state relative-caret-position="221">
+              <caret line="37" column="66" selection-start-line="37" selection-start-column="47" selection-end-line="37" selection-end-column="66" />
               <folding>
                 <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -172,29 +148,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/secret/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="152" column="51" selection-start-line="152" selection-start-column="51" selection-end-line="152" selection-end-column="51" />
+            <state relative-caret-position="328">
+              <caret line="44" selection-start-line="44" selection-end-line="44" />
               <folding>
                 <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/aurora.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="735">
-              <caret line="174" selection-start-line="174" selection-end-line="174" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dist/kyc.sdk.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="667">
-              <caret line="71" column="14" selection-start-line="71" selection-start-column="14" selection-end-line="71" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -215,36 +173,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>showWarning</find>
-      <find>curs</find>
+      <find>customval</find>
       <find>console.log</find>
-      <find>postTask</find>
-      <find>thro</find>
-      <find>saveUpload</find>
-      <find>prefill</find>
-      <find>KYC SDK is Loaded</find>
-      <find>event</find>
-      <find>identifica</find>
-      <find>kyc_sdk</find>
-      <find>shared</find>
-      <find>saveTask</find>
-      <find>over</find>
-      <find>focusel</find>
-      <find>getIdinIssuers</find>
-      <find>startIdinTransaction</find>
-      <find>KycSdkReference</find>
-      <find>!!ref</find>
-      <find>getToken</find>
-      <find>transactionID</find>
-      <find>uploads</find>
-      <find>getme</find>
-      <find>savetask</find>
-      <find>authori</find>
-      <find>IDIN.tr</find>
+      <find>kycs_</find>
+      <find>getKycst</find>
+      <find>getKycStorage</find>
+      <find>start</find>
+      <find>orig</find>
+      <find>kycsdkr</find>
+      <find>templateID</find>
+      <find>identityservice</find>
+      <find>getLocation</find>
+      <find>getKycSt</find>
+      <find>storage</find>
+      <find>getKy</find>
+      <find>login</find>
+      <find>getIdin</find>
+      <find>idin</find>
       <find>IDIN</find>
-      <find>tasks</find>
-      <find>getUploa</find>
-      <find>getLo</find>
+      <find>init</find>
+      <find>init(</find>
+      <find>data-kyc-task-title</find>
+      <find>triggerLo</find>
+      <find>data-kyc-to-tasks</find>
+      <find>authorisationEndPoint,</find>
+      <find>kycApiEndPoint</find>
+      <find>kycApiEndPoint:</find>
+      <find>getDossiers</find>
+      <find>validateLoginFrom</find>
+      <find>console</find>
+      <find>cons</find>
     </findStrings>
     <replaceStrings>
       <replace>document.</replace>
@@ -287,18 +245,18 @@
         <option value="$PROJECT_DIR$/secret/aurora.css" />
         <option value="$PROJECT_DIR$/secret/example.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/dist/kyc.sdk.js" />
         <option value="$PROJECT_DIR$/src/template.html" />
         <option value="$PROJECT_DIR$/examples/aurora.css" />
         <option value="$PROJECT_DIR$/examples/index.html" />
-        <option value="$PROJECT_DIR$/secret/index.html" />
         <option value="$PROJECT_DIR$/dist/kyc.sdk.css" />
         <option value="$PROJECT_DIR$/examples/example.css" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/examples/kyc_config.js" />
+        <option value="$PROJECT_DIR$/secret/index.html" />
+        <option value="$PROJECT_DIR$/src/index.ts" />
+        <option value="$PROJECT_DIR$/dist/kyc.sdk.js" />
         <option value="$PROJECT_DIR$/examples/example.js" />
         <option value="$PROJECT_DIR$/secret/secret.js" />
-        <option value="$PROJECT_DIR$/examples/kyc_config.js" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/src/index.ts" />
       </list>
     </option>
   </component>
@@ -319,10 +277,10 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="422" />
+    <option name="y" value="213" />
     <option name="width" value="1936" />
-    <option name="height" value="1176" />
+    <option name="height" value="1179" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -372,7 +330,7 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../payments-platform" />
+    <property name="last_opened_file_path" value="Z:/helpcenter-frontend" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -380,11 +338,11 @@
     <property name="ts.external.directory.path" value="C:\projects\kyc-sdk-javascript\node_modules\typescript\lib" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\projects\kyc-sdk-javascript\secret" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\projects\kyc-sdk-javascript" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\projects\kyc-sdk-javascript\secret" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -410,12 +368,15 @@
       <option name="presentableId" value="Default" />
       <updated>1551351172455</updated>
       <workItem from="1551351173698" duration="397367000" />
-      <workItem from="1552459453044" duration="96982000" />
+      <workItem from="1552459453044" duration="101955000" />
+      <workItem from="1553606633959" duration="11323000" />
+      <workItem from="1554710129700" duration="1025000" />
+      <workItem from="1554808521236" duration="31619000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="494349000" />
+    <option name="totallyTimeSpent" value="543289000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -423,8 +384,8 @@
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info id="npm" order="1" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.7775647" visible="true" weight="0.25266525" />
-      <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.6074241" visible="true" weight="0.26066098" />
+      <window_info id="Structure" order="3" sideWeight="0.39257592" side_tool="true" visible="true" weight="0.26066098" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="1" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
@@ -437,7 +398,7 @@
       <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="11" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.22243528" visible="true" weight="0.14860977" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.22243528" visible="true" weight="0.147651" />
       <window_info anchor="right" id="Database" order="0" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
@@ -581,142 +542,111 @@
     <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="1479">
+            <caret line="87" column="10" selection-start-line="83" selection-start-column="7" selection-end-line="87" selection-end-column="10" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/aurora.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2431">
+          <caret line="143" column="17" selection-start-line="143" selection-start-column="17" selection-end-line="143" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/kyc.sdk.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1207">
+          <caret line="71" column="14" selection-start-line="71" selection-start-column="14" selection-end-line="71" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="37" column="66" selection-start-line="37" selection-start-column="47" selection-end-line="37" selection-end-column="66" />
+          <folding>
+            <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/example.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/kyc_config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1751">
+          <caret line="103" column="100" selection-start-line="103" selection-start-column="100" selection-end-line="103" selection-end-column="100" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="6979" column="4" selection-start-line="6979" selection-start-column="4" selection-end-line="6979" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/template.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/secret/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
+          <folding>
+            <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="271" column="38" lean-forward="true" selection-start-line="271" selection-start-column="38" selection-end-line="271" selection-end-column="38" />
+          <folding>
+            <element signature="e#38308#39671#0" />
+            <element signature="e#81294#81370#0" />
+            <element signature="e#81930#85792#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/dist/kyc.sdk.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="673">
-          <caret line="191" column="41" lean-forward="true" selection-start-line="191" selection-start-column="41" selection-end-line="191" selection-end-column="41" />
+        <state relative-caret-position="255">
+          <caret line="15" column="62" lean-forward="true" selection-start-line="15" selection-start-column="62" selection-end-line="15" selection-end-column="62" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/examples/example.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
+        <state relative-caret-position="492">
+          <caret line="350" column="24" lean-forward="true" selection-start-line="350" selection-start-column="24" selection-end-line="350" selection-end-column="24" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/template.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="54" column="87" selection-start-line="54" selection-start-column="27" selection-end-line="54" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="152" column="51" selection-start-line="152" selection-start-column="51" selection-end-line="152" selection-end-column="51" />
-          <folding>
-            <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/secret/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="152" column="51" selection-start-line="152" selection-start-column="51" selection-end-line="152" selection-end-column="51" />
-          <folding>
-            <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/aurora.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="174" selection-start-line="174" selection-end-line="174" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/kyc.sdk.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="667">
-          <caret line="71" column="14" selection-start-line="71" selection-start-column="14" selection-end-line="71" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/example.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="659">
-          <caret line="239" column="22" selection-start-line="239" selection-start-column="22" selection-end-line="239" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/secret/secret.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="67" column="28" lean-forward="true" selection-start-line="67" selection-start-column="28" selection-end-line="67" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/kyc_config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="62" column="57" selection-start-line="62" selection-start-column="57" selection-end-line="62" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="587">
-            <caret line="87" column="10" lean-forward="true" selection-start-line="83" selection-start-column="7" selection-end-line="87" selection-end-column="10" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="1710" column="69" selection-start-line="1710" selection-start-column="69" selection-end-line="1710" selection-end-column="69" />
-          <folding>
-            <element signature="e#1623#2370#0" />
-            <element signature="e#2410#5894#0" />
-            <element signature="e#5967#6131#0" />
-            <element signature="e#5937#6068#0" />
-            <element signature="e#6109#6759#0" />
-            <element signature="e#6823#7450#0" />
-            <element signature="e#7513#8139#0" />
-            <element signature="e#8190#8757#0" />
-            <element signature="e#8843#9203#0" />
-            <element signature="e#9249#9763#0" />
-            <element signature="e#9822#10531#0" />
-            <element signature="e#10605#11021#0" />
-            <element signature="e#13567#16874#0" />
-            <element signature="e#16929#19047#0" />
-            <element signature="e#19109#20700#0" />
-            <element signature="e#20796#23602#0" />
-            <element signature="e#23691#24931#0" />
-            <element signature="e#28554#31397#0" />
-            <element signature="e#31482#37563#0" />
-            <element signature="e#39122#40718#0" />
-            <element signature="e#40803#43404#0" />
-            <element signature="e#43489#46494#0" />
-            <element signature="e#46546#46968#0" />
-            <element signature="e#47052#47650#0" />
-            <element signature="e#47775#48832#0" />
-            <element signature="e#48881#49307#0" />
-            <element signature="e#49356#49652#0" />
-            <element signature="e#49723#50967#0" />
-            <element signature="e#51018#51562#0" />
-            <element signature="e#51639#52101#0" />
-            <element signature="e#52156#52487#0" />
-            <element signature="e#53036#55156#0" />
-            <element signature="e#59930#60385#0" />
-            <element signature="e#60452#61932#0" />
-            <element signature="e#61997#64871#0" />
-            <element signature="e#64941#68514#0" />
-            <element signature="e#68648#68724#0" />
-            <element signature="e#74646#74809#0" />
-            <element signature="e#79678#134392#0" />
-            <element signature="e#134462#134624#0" />
-            <element signature="e#136873#140215#0" />
-          </folding>
+        <state relative-caret-position="-494">
+          <caret line="124" column="18" selection-start-line="124" selection-start-column="18" selection-end-line="124" selection-end-column="18" />
         </state>
       </provider>
     </entry>

@@ -141,10 +141,16 @@
                 }
 
             },
-            getLocation = function (href:string,parts?:boolean) {
+            getLocation = function (href: string, parts?: boolean) {
                 var l = document.createElement("a");
                 l.href = href;
-                return parts?l:(l.origin + l.pathname + l.search + l.hash);
+                return parts ? {
+                    href: href,
+                    origin: l.origin,
+                    pathname: l.pathname,
+                    search: l.search,
+                    hash: l.hash
+                } : (l.origin + l.pathname + l.search + l.hash);
             },
             callApi = function (options) {
                 options.headers = {'Authorization': 'Bearer ' + KYCToken.userToken};
@@ -237,19 +243,30 @@
                 }
             },
             getKycStorage = function (KYCSecret: string) {
+
                 let temp;
                 if (typeof(Storage) !== "undefined") {
                     // Code for localStorage/sessionStorage.
+
                     if (!!sessionStorage['KYCStorage']) {
-                        temp = JSON.parse(decrypt(sessionStorage['KYCStorage'] || '', KYCSecret));
+                        try {
+                            temp = JSON.parse(decrypt(sessionStorage['KYCStorage'] || '', KYCSecret));
+
+                        } catch (err) {
+
+                        }
 
                     }
 
                 } else {
                     // Sorry! No Web Storage support..
-                    temp = JSON.parse(decrypt(getCookie('KYCStorage') || '', KYCSecret));
+                    try {
+                        temp = JSON.parse(decrypt(getCookie('KYCStorage') || '', KYCSecret));
+                    } catch (err) {
 
+                    }
                 }
+
                 if (!!temp && temp instanceof Object) {
                     KYCStorage = temp;
                     return KYCStorage;
@@ -258,6 +275,12 @@
 
             },
             setKycStorage = function (KYCSecret: string, value: object) {
+
+                if (!!value) {
+                    value['KYCToken'] = KYCToken;
+                    value['kycApiEndPoint'] = kycApiEndPoint;
+                    value['authorisationEndPoint'] = authorisationEndPoint;
+                }
                 const _value = encrypt(JSON.stringify(value), KYCSecret);
 
                 if (typeof(Storage) !== "undefined") {
@@ -269,12 +292,19 @@
                 }
             },
             getKycSdkReference = function () {
+
                 if (!!KycSdkReference) {
                     return KycSdkReference
                 }
                 const keys = {};
-                if (!!origLocation && !!origLocation.search) {
-                    const search = origLocation.search.substr(1).split('&').map(function (val) {
+
+                if (!!origLocation && origLocation.href && origLocation.href.split('?').length > 1) {
+
+                    let search = origLocation.href.split('?');
+                    search.shift();
+
+                    search.join('&').split('&').map(function (val) {
+
                         val = val.split('=');
                         if (val.length > 1) {
 
@@ -293,13 +323,21 @@
 
 
                             }
-                            if (key.split('kycs_').shift() == 'kycs_' && key.split('kycs_').length == 2) {
+
+
+                            if (key.split('_').shift() == 'kycs' && key.split('kycs_').length == 2) {
+
                                 let temp = getKycStorage((key.split('kycs_').pop().trim()));
                                 if (!!temp) {
                                     for (let i in temp) {
                                         if (i == 'KYCToken') {
                                             KYCToken = temp[i];
 
+                                        } else if (i == 'kycApiEndPoint') {
+                                            kycApiEndPoint = temp[i];
+
+                                        } else if (i == 'authorisationEndPoint') {
+                                            authorisationEndPoint = temp[i];
                                         } else {
                                             KycSdkReference = KycSdkReference || {};
                                             KycSdkReference[i] = temp[i];
@@ -314,6 +352,8 @@
 
 
                     });
+
+
                     if (!!KycSdkReference && !!KycSdkReference['IDIN']) {
                         if (
                             !!KycSdkReference['IDIN'].transactionId
@@ -323,8 +363,23 @@
                         ) {
                             getIdinTransaction(KycSdkReference['IDIN'].transactionId, function (ret) {
                                 if (!!ret) {
+
                                     KycSdkReference['IDIN'] = ret;
+                                    /*  status = {
+                                          initialised: new Date(),
+                                          version: version
+                                      }*/
+
+
+                                    //triggerLoadEvent()
+                                    const event = createEvent('forceinit', {
+                                        'reason': 'IDIN',
+                                        context: KycSdkReference.context
+                                    });
+
+                                    notify(event, window);
                                 }
+                                delete(KycSdkReference['IDIN']);
 
                             });
                         } else {
@@ -337,14 +392,21 @@
                 }
                 return KycSdkReference;
             },
+            notempty = function (clue) {
+                return !!clue ? clue : null;
+            },
             getToken = function (element?: HTMLElement) {
                 if (KYCToken && KYCToken.userToken) {
                     if (!element) {
                         const
                             event = createEvent('getToken', {KYCToken: KYCToken});
+
+
                         notify(event, window);
+
                         return;
                     }
+                    notify('login', element);
                     getMe(element)
 
 
@@ -366,29 +428,38 @@
                         headers: {'Content-Type': 'application/json;charset=UTF-8'},
                         params: JSON.stringify({
 
-                            "clientId": (base['kyc_config'] || base['kyc']).context.clientId,
-                            "templateId": (base['kyc_config'] || base['kyc']).context.templateId,
-                            "customerName": (base['kyc_config'] || base['kyc']).context.customerName,
-                            "externalReference": (base['kyc_config'] || base['kyc']).context.externalReference,
-                            "firstName": (base['kyc_config'] || base['kyc']).context.firstName,
-                            "lastName": (base['kyc_config'] || base['kyc']).context.lastName,
-                            "msisdn": (base['kyc_config'] || base['kyc']).context.msisdn,
-                            "userIdentifier": (base['kyc_config'] || base['kyc']).context.userIdentifier,
+                            "clientId": notempty((base['kyc_config'] || base['kyc']).context.clientId),
+                            "templateId": notempty((base['kyc_config'] || base['kyc']).context.templateId),
+                            "customerName": notempty((base['kyc_config'] || base['kyc']).context.customerName),
+                            "externalReference": notempty((base['kyc_config'] || base['kyc']).context.externalReference),
+                            "firstName": notempty((base['kyc_config'] || base['kyc']).context.firstName),
+                            "lastName": notempty((base['kyc_config'] || base['kyc']).context.lastName),
+                            "msisdn": notempty((base['kyc_config'] || base['kyc']).context.msisdn),
+                            "userIdentifier": notempty((base['kyc_config'] || base['kyc']).context.userIdentifier)
                         }),
                         callback: function (result) {
                             if (!!result.success) {
 
 
                                 KYCToken = result.success;
-                                KYCToken.data = jwtDecode(KYCToken.userToken);
-                                if (!element) {
-                                    const
-                                        event = createEvent('getToken', {KYCToken: KYCToken});
-                                    notify(event, window);
-                                    return;
+                                if (!!KYCToken.userToken) {
+                                    KYCToken.data = jwtDecode(KYCToken.userToken);
+                                    if (!element) {
+                                        const
+                                            event = createEvent('getToken', {KYCToken: KYCToken});
+                                        notify(event, window);
+                                        return;
+                                    }
+                                    notify('login', element);
+                                    getMe(element);
+                                } else {
+                                    notify('login', element);
+                                    if (!!element) {
+
+                                        buildNoDossiersList(element);
+
+                                    }
                                 }
-                                notify('login', element);
-                                getMe(element);
 
                             } else {
 
@@ -504,45 +575,53 @@
 
 
                     }
-                }
+                };
 
                 callApi(options);
             },
             startIdinTransaction = function (issuerId: string, idinKeys: [string], ref?: any) {
 
-                const _location=getLocation(ref.returnUrl||(!!returnUrl?returnUrl:(location.href)),true),
+                const _location = getLocation(ref.returnUrl || (!!returnUrl ? returnUrl : (location.href)), true);
 
-                    search = _location.search.toString().substring(1).split('&').filter(function (q) {
-                        return ['trxid', 'ec'].indexOf(q.toLowerCase().split('=').shift() || '') === -1 &&
-                            !(
-                                (q.toLowerCase().split('=').shift() || '').split('kycs_').shift() == 'kycs_'
-                                && (q.toLowerCase().split('=').shift() || '').split('kycs_').length == 2
 
-                            )
+                let search = _location['href'].split('?');
+                search.shift();
 
-                    }).join('&').trim(),
-                    idinReturnUrl = _location['origin'] +
-                        _location['pathname'] +
-                        ( !!search ? '?' + search + (!!ref.KYCSECRET && !!ref.KYCStorage ? '&kycs_' + ref.KYCsecret + '=1' : '') : (!!ref.KYCSECRET && !!ref.KYCStorage ? '?kycs_' + ref.KYCSECRET + '=1' : ''))+
-                        _location['hash'] ,
+
+                search = search.join('&').split('&').filter(function (q) {
+                    return ['trxid', 'ec'].indexOf(q.toLowerCase().split('=').shift() || '') === -1 &&
+                        !(
+                            (q.toLowerCase().split('=').shift() || '').split('kycs_').shift() == 'kycs_'
+                            && (q.toLowerCase().split('=').shift() || '').split('kycs_').length == 2
+
+                        )
+
+                }).join('&').trim();
+
+
+                const idinReturnUrl = _location['origin'] +
+                    _location['pathname'] +
+                    (!!search ? '?' + search + (!!ref.KYCSECRET && !!ref.KYCStorage ? '&kycs_' + ref.KYCSECRET + '=1' : '') : (!!ref.KYCSECRET && !!ref.KYCStorage ? '?kycs_' + ref.KYCSECRET + '=1' : '')) +
+                    _location['hash'],
                     options = {
                         'url': kycApiEndPoint + '/api/v1/identityservices/idin/transaction',
                         'method': 'POST',
-                        'params': {
+                        'params': JSON.stringify({
                             "issuerId": issuerId,
                             "idinKeys": idinKeys,
                             "merchantReturnUrl": idinReturnUrl
-                        },
+                        }),
                         callback: function (result) {
                             if (!!result.success) {
-                                if (!!result.issuerAuthenticationUrl) {
+                                if (!!result.success.issuerAuthenticationUrl) {
                                     if (ref instanceof Object && !!ref.KYCSECRET && !!ref.KYCStorage) {
 
-                                        if (!!result.transaction_id) {
+                                        if (!!result.success.transactionId) {
                                             ref.KYCStorage.IDIN = {
-                                                transactionId: result.transactionId,
-                                                issuerAuthenticationUrl: result.issuerAuthenticationUrl
+                                                transactionId: result.success.transactionId,
+                                                issuerAuthenticationUrl: result.success.issuerAuthenticationUrl
                                             };
+
                                             //save to memory
                                             setKycStorage(ref.KYCSECRET, ref.KYCStorage)
 
@@ -550,9 +629,7 @@
 
 
                                     }
-
-
-                                    window.location.replace(result.issuerAuthenticationUrl);
+                                    window.location.replace(result.success.issuerAuthenticationUrl);
                                     return;
                                 }
 
@@ -575,7 +652,7 @@
             getIdinTransaction = function (transactionId: string, callback?: Function) {
 //status = open|success|cancelled|failure|expired
                 const options = {
-                    'url': kycApiEndPoint + '/api/v1/identityservices/idin/transaction/transactionId',
+                    'url': kycApiEndPoint + '/api/v1/identityservices/idin/transaction/' + transactionId,
                     callback: function (result) {
                         if (!!result.success) {
 
@@ -610,7 +687,8 @@
             getDossiers = function (element?: HTMLElement) {
                 const options = {
                     'url': kycApiEndPoint + '/api/v1/users/' + KYCToken.data.uuid + '/dossiers',
-                     callback: function (result) {
+                    callback: function (result) {
+
                         if (!!result.success) {
                             const ref = getKycSdkReference(),
                                 dossiers = (result.success.filter(function (client) {
@@ -633,8 +711,8 @@
                                     return dossier.id == ref.dossierId
                                 }
                                 /*If templateId is known  return only that dossier**/
-                                if (!!dossier.templateId && !!element['kyc'].context.templateId) {
-                                    return dossier.templateId == element['kyc'].context.templateId;
+                                if (!!dossier.dossierTemplate && !!dossier.dossierTemplate.id && !!element['kyc'].context.templateId) {
+                                    return dossier.dossierTemplate.id == element['kyc'].context.templateId;
                                 }
                                 /*If dossierId is known return only that dossier*/
                                 if (!!dossier.id && !!element['kyc'].context.dossierId) {
@@ -1082,7 +1160,7 @@
                 }
                 authorisationEndPoint = window['kyc_config'].authorisationEndPoint;
                 kycApiEndPoint = window['kyc_config'].kycApiEndPoint;
-                returnUrl = !!window['kyc_config'].returnUrl?getLocation(window['kyc_config'].returnUrl ):null;
+                returnUrl = !!window['kyc_config'].returnUrl ? getLocation(window['kyc_config'].returnUrl) : null;
 
                 if (!inContext) {
                     if (!window['kyc_config'].context) {
@@ -1330,7 +1408,7 @@
                  * SHORT_TEXT, LONG_TEXT, NATURAL_NUMBER, REAL_NUMBER, ALPHANUMERIC, EMAIL, PHONE_NUMBER, URL, IBAN
                  **/
 
-                const valueFormat = event.target.getAttribute('data-value-format');
+                const valueFormat = !!event.target ? event.target.getAttribute('data-value-format') : '';
                 switch (event.type) {
                     case 'prefill':
                         switch (valueFormat) {
@@ -1715,13 +1793,12 @@
                                         if (!!uploads[check.value]) {
                                             newinput.setAttribute('src', uploads[check.value]);
                                         } else {
-                                            newinput.setAttribute('value',check.value);
+                                            newinput.setAttribute('value', check.value);
                                             getUpload(check.value, target, function (result) {
                                                 if (!!result.success) {
 
-                                                    ap.slice.call(target.querySelectorAll('img[value="'+check.value+'"]')).map(function(el){
-                                                        console.log(el);
-                                                        el.setAttribute('src',uploads[check.value]);
+                                                    ap.slice.call(target.querySelectorAll('img[value="' + check.value + '"]')).map(function (el) {
+                                                        el.setAttribute('src', uploads[check.value]);
                                                         el.removeAttribute('value');
                                                     })
                                                 }
@@ -1795,19 +1872,19 @@
 
                     });
                     ap.slice.call(dossierElement.querySelectorAll('[data-kyc-to-tasks]')).map(function (backbutton) {
-                        if (task.checks.length > 1) {
-                            ap.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
+                        // if (task.checks.length > 1) {
+                        ap.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
 
-                                e.parentNode.replaceChild(document.createTextNode(translate('Back')), e);
+                            e.parentNode.replaceChild(document.createTextNode(translate('Back')), e);
 
-                            });
+                        });
 
-                            backbutton.addEventListener('click', function () {
-                                buildTaskList(target, dossier);
-                            })
-                        } else {
-                            backbutton.parentNode.removeChild(backbutton);
-                        }
+                        backbutton.addEventListener('click', function () {
+                            buildTaskList(target, dossier);
+                        })
+                        /* } else {
+                             backbutton.parentNode.removeChild(backbutton);
+                         }*/
 
 
                     });
@@ -1957,10 +2034,23 @@
                             saveTask(task, target, function (result) {
                                 if (!!result.success) {
 
-                                    task = result.success;
+                                    getTask(task.id, '', function (res) {
+                                        task = res;
+
+                                        dossier.tasks.map(function (tt) {
+                                            if (tt.id == task.id) {
+                                                ['status', 'shared', 'name', 'visible'].map(function (ff) {
+                                                    tt[ff] = task[ff];
+                                                })
+
+
+                                            }
+                                        });
+                                        buildTaskList(target, dossier);
+                                    })
 
                                     //  buildTaskForm(element, curDossier, curTask);
-                                    buildTaskList(target, dossier);
+                                    // buildTaskList(target, dossier);
 
                                 } else {
                                     //error (already thrown by saveTask
@@ -1994,6 +2084,7 @@
 
                         let newinput,
                             formname = check.id.trim(),
+                            checkedonly = false,
                             last = checkElement;
                         if (!!dossierTitleElement) {
                             dossierTitleElement.parentNode.replaceChild(document.createTextNode(dossier.customerName), dossierTitleElement);
@@ -2056,13 +2147,29 @@
                                 switch (check.definition.method) {
                                     case 'MANUAL_SINGLE_CHOICE_ENUM':
                                         if (check.definition.enumSpecification.length < 4) {
-                                            (check.definition.enumSpecification || []).map(function (keyvalue) {
+                                            checkedonly = true;
+                                            (check.definition.enumSpecification || []).map(function (keyvalue, idx) {
                                                 const currentOption = inputElement.querySelector('[data-kyc-radiobutton]').cloneNode(true),
                                                     radio = currentOption.querySelector('[data-kyc-radio-input]');
 
                                                 radio.setAttribute('type', 'radio')
                                                 radio.setAttribute('name', formname)
                                                 radio.setAttribute('value', keyvalue.name);
+
+                                                if (idx == 0) {
+                                                    radio.required = !(!!check.definition.optional);
+                                                }
+                                                if (!(!!check.definition.optional)) {
+                                                    radio.addEventListener('change', function (evt) {
+                                                        newinput.querySelector('[type="radio"]').setCustomValidity('');
+                                                        validateInputOnEvent({
+                                                            'type': 'test',
+                                                            'path': evt.path,
+                                                            'target': newinput
+                                                        });
+                                                    });
+                                                }
+
                                                 radio.value = keyvalue.name;
                                                 radio.checked = !!check.value && keyvalue.name.trim() === check.value.trim();
                                                 ap.slice.call(currentOption.querySelectorAll('kyc-text')).map(function (e) {
@@ -2076,9 +2183,23 @@
                                                 newinput.appendChild(currentOption);
 
                                             });
+                                            if (!(!!check.definition.optional)) {
+                                                let radio = newinput.querySelector('[type="radio"]:checked');
+                                                if (!(!!radio)) {
+                                                    radio = newinput.querySelector('[type="radio"]');
+                                                    if (!!radio) {
+                                                        radio.setCustomValidity('pick one')
+                                                    }
+
+                                                }
+
+                                            }
+
+
                                         } else {
 
                                             newinput = inputElement.querySelector('[data-kyc-select-input]').cloneNode(false);
+                                            newinput.required = !(!!check.definition.optional);
 
                                             let currentOption = (inputElement.querySelector('[data-kyc-select-input]').querySelector('option') || document.createElement('option')).cloneNode(false);
                                             newinput.setAttribute('name', formname)
@@ -2099,6 +2220,13 @@
 
 
                                             });
+                                            newinput.addEventListener('change', function (evt) {
+                                                validateInputOnEvent({
+                                                    'type': 'test',
+                                                    'path': evt.path,
+                                                    'target': newinput
+                                                });
+                                            });
                                             if (!focusel) {
                                                 focusel = newinput;
                                             }
@@ -2108,7 +2236,8 @@
                                         break;
                                     case 'MANUAL_MULTIPLE_CHOICE_ENUM':
                                         formname = check.id.trim() + '[]';
-                                        (check.definition.enumSpecification || []).map(function (keyvalue) {
+                                        checkedonly = true;
+                                        (check.definition.enumSpecification || []).map(function (keyvalue, idx) {
                                             const currentOption = inputElement.querySelector('[data-kyc-checkbox]').cloneNode(true),
                                                 checkbox = currentOption.querySelector('[data-kyc-checkbox-input]');
                                             checkbox.setAttribute('type', 'checkbox')
@@ -2116,10 +2245,22 @@
 
                                             checkbox.setAttribute('value', keyvalue.name);
 
-
                                             checkbox.checked = !!check.value && JSON.parse(check.value || '[]').filter(function (v) {
                                                 return v.trim() == keyvalue.name.trim();
                                             }).length > 0;
+                                            if (!(!!check.definition.optional)) {
+                                                checkbox.addEventListener('change', function (evt) {
+                                                    [].slice.call(newinput.querySelectorAll('[type="checkbox"]')).map(function (element: any) {
+                                                        element.setCustomValidity('');
+
+                                                    })
+                                                    validateInputOnEvent({
+                                                        'type': 'test',
+                                                        'path': evt.path,
+                                                        'target': newinput
+                                                    });
+                                                });
+                                            }
                                             ap.slice.call(currentOption.querySelectorAll('kyc-text')).map(function (e) {
 
                                                 e.parentNode.replaceChild(document.createTextNode(translate(!!keyvalue.explanation ? keyvalue.explanation : keyvalue.name)), e);
@@ -2130,6 +2271,19 @@
                                                 focusel = currentOption;
                                             }
                                         });
+                                        if (!(!!check.definition.optional)) {
+                                            let checkbox = newinput.querySelector('[type="checkbox"]:checked');
+                                            if (!(!!checkbox)) {
+                                                checkbox = newinput.querySelector('[type="checkbox"]');
+                                                if (!!checkbox) {
+                                                    checkbox.setCustomValidity('pick one')
+
+                                                }
+
+                                            }
+
+                                        }
+
                                         break;
                                 }
 
@@ -2232,6 +2386,7 @@
 
                                             /**/
                                             if (!!KycSdkReference && !!KycSdkReference.IDIN) {
+                                                let retry = 0, maxretry = 1;
                                                 const IdinCallback = function (idin) {
                                                     //status = open|success|cancelled|failure|expired
                                                     if (!!idin && !!idin.status && !!idin.transactionId) {
@@ -2239,10 +2394,16 @@
                                                         switch (idin.status) {
                                                             case 'open':
                                                                 //wait a bit...
-
-                                                                setTimeout(function () {
-                                                                    getIdinTransaction(idin.transactionId, IdinCallback);
-                                                                }, 1000);
+                                                                if (retry < maxretry) {
+                                                                    retry++;
+                                                                    setTimeout(function () {
+                                                                        getIdinTransaction(idin.transactionId, IdinCallback);
+                                                                    }, 1000);
+                                                                } else {
+                                                                    //still open so not really ok
+                                                                    delete KycSdkReference.IDIN;
+                                                                    buildTaskForm(target, dossier, task, checkid);
+                                                                }
                                                                 break;
                                                             case 'success':
                                                                 //save the value;
@@ -2370,7 +2531,6 @@
                                                                         keys = check.definition.requestedIdinKeys,
                                                                         secret = makeId(32),
                                                                         storage = {
-                                                                            KYCToken: KYCToken,
                                                                             context: JSON.parse(JSON.stringify(target['kyc'].context))
                                                                         }
                                                                     buildLoader(target);
@@ -2427,7 +2587,6 @@
                                                                 keys = check.definition.requestedIdinKeys,
                                                                 secret = makeId(32),
                                                                 storage = {
-                                                                    KYCToken: KYCToken,
                                                                     context: JSON.parse(JSON.stringify(target['kyc'].context))
                                                                 }
                                                             buildLoader(target);
@@ -2604,19 +2763,19 @@
 
                         });
                         ap.slice.call(dossierElement.querySelectorAll('[data-kyc-to-tasks]')).map(function (backbutton) {
-                            if (task.checks.length > 1) {
-                                ap.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
+                            // if (task.checks.length > 1) {
+                            ap.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
 
-                                    e.parentNode.replaceChild(document.createTextNode(translate('Back')), e);
+                                e.parentNode.replaceChild(document.createTextNode(translate('Back')), e);
 
-                                });
+                            });
 
-                                backbutton.addEventListener('click', function () {
-                                    buildTaskList(target, dossier);
-                                })
-                            } else {
-                                backbutton.parentNode.removeChild(backbutton);
-                            }
+                            backbutton.addEventListener('click', function () {
+                                buildTaskList(target, dossier);
+                            })
+                            /* } else {
+                                 backbutton.parentNode.removeChild(backbutton);
+                             }*/
 
 
                         });
@@ -2635,9 +2794,23 @@
                             });
 
                         } else {
+
                             ap.slice.call(dossierElement.querySelectorAll('[data-kyc-task-navigation] [data-kyc-task-previous]')).map(function (backbutton) {
                                 backbutton.parentNode.removeChild(backbutton);
                             });
+                            /*ap.slice.call(dossierElement.querySelectorAll('[data-kyc-task-previous]')).map(function (backbutton) {
+                                ap.slice.call(backbutton.querySelectorAll('kyc-text')).map(function (e) {
+
+                                    e.parentNode.replaceChild(document.createTextNode(translate('Back')), e);
+
+                                });
+
+                                backbutton.addEventListener('click', function () {
+                                    buildTaskList(target, dossier);
+                                })
+
+                            });*/
+
                         }
 
 
@@ -2653,14 +2826,15 @@
                                 const values = {};
                                 if (!!taskFormElement && taskFormElement.checkValidity()) {
 
-                                    check.value = (formname == check.id)
+
+                                    check.value = ((formname == check.id)
                                         ? validateInputOnEvent({
                                             'type': 'tokyc',
-                                            'target': taskFormElement.querySelector('[name="' + formname + '"]')
+                                            'target': taskFormElement.querySelector('[name="' + formname + '"]' + (checkedonly ? ':checked' : ''))
                                         })
-                                        : JSON.stringify(ap.slice.call(taskFormElement.querySelectorAll('[name="' + formname + '"]')).map(function (field) {
+                                        : JSON.stringify(ap.slice.call(taskFormElement.querySelectorAll('[name="' + formname + '"]' + (checkedonly ? ':checked' : ''))).map(function (field) {
                                             return validateInputOnEvent({'type': 'tokyc', 'target': field});
-                                        }));
+                                        }))) || null;
 
 
                                     gotoNext(next);
